@@ -8,10 +8,12 @@ import { MainPage } from './main';
 import { MorePage } from './more';
 import { MyCertPage } from './my-cert';
 import { MyStudyPage } from './my-study';
+import { AdminComponents } from './admin-components';
 
 const fadeRoutes = [
   { path: '/', element: <MainPage /> },
   { path: '/more', element: <MorePage /> },
+  { path: '/admin-components', element: <AdminComponents /> },
 ];
 
 const slideRoutes = [
