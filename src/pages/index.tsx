@@ -14,13 +14,12 @@ const fadeRoutes = [
   { path: '/', element: <MainPage /> },
   { path: '/more', element: <MorePage /> },
   { path: '/admin-components', element: <AdminComponents /> },
-];
-
-const slideRoutes = [
   { path: '/caleander', element: <CaleanderPage /> },
   { path: '/my-cert', element: <MyCertPage /> },
   { path: '/my-study', element: <MyStudyPage /> },
 ];
+
+const slideRoutes = [];
 
 export const Routing = () => {
   const location = useLocation();
