@@ -1,0 +1,38 @@
+{
+  //test
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    // 절대경로
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    // "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    //   /* Linting */
+    //   "strict": true,
+    //   "noUnusedLocals": true,
+    //   "noUnusedParameters": true,
+    //   "noFallthroughCasesInSwitch": true
+    // },
+    /* 테스트 빌드를 위한 조건 */
+
+    "strict": false, // 엄격한 타입 체크 해제
+    "noUnusedLocals": false, // 사용되지 않는 지역 변수 경고 해제
+    "noUnusedParameters": false, // 사용되지 않는 매개변수 경고 해제
+    "noFallthroughCasesInSwitch": false // switch 문에서의 case 절의 모든 경우 처리 경고 해제
+  },
+  "include": ["src", "src/config/svg.d.ts"]
+}

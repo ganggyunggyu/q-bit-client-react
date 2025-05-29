@@ -1,0 +1,120 @@
+@theme {
+  /* System Color */
+  --color-primary: #4790e4;
+  --color-blue-good: #3899e8;
+  --color-urgent: #f96363;
+  --color-cautious: #f99063;
+  --color-purple: #9885db;
+  --color-green: #48bc8a;
+
+  /* Text Color */
+  --color-black-normal: #131415;
+  --color-black-alternative: #37383c;
+  --color-black-assistive: #1e1f24;
+  --color-black-disabled: #dfdfe0;
+  --color-black-primary: #436a8b;
+  --color-white: #ffffff;
+
+  /* Container Color */
+  --bg-normal: #ffffff;
+  --bg-alternative: #f9f9f9;
+  --bg-divide: #eaeaea;
+  --bg-primary: #f0f8fe;
+
+  /* Font Size */
+  --text-display-1: 36px;
+  --text-display-2: 27px;
+  --text-title-sb: 22px;
+  --text-title-m: 21px;
+  --text-headline: 18px;
+  --text-body: 16px;
+  --text-caption: 12px;
+
+  /* Line Height (Percentage 기반) */
+  --leading-display: 135%;
+  --leading-title: 130%;
+  --leading-headline: 140%;
+  --leading-body-sb: 150%;
+  --leading-body-m: 160%;
+  --leading-caption: 130%;
+
+  /* Font Weight */
+  --font-weight-sb: 600;
+  --font-weight-m: 500;
+  --font-weight-r: 400;
+
+  /* Font Family */
+  --font-default: 'Inter', sans-serif;
+}
+
+@layer utilities {
+  .text-display-1 {
+    font-size: var(--text-display-1);
+    line-height: var(--leading-display);
+    font-weight: var(--font-weight-r);
+    font-family: var(--font-default);
+  }
+
+  .text-display-2 {
+    font-size: var(--text-display-2);
+    line-height: var(--leading-display);
+    font-weight: var(--font-weight-r);
+    font-family: var(--font-default);
+  }
+
+  .text-title-sb {
+    font-size: var(--text-title-sb);
+    line-height: var(--leading-title);
+    font-weight: var(--font-weight-sb);
+    font-family: var(--font-default);
+  }
+
+  .text-title-m {
+    font-size: var(--text-title-m);
+    line-height: var(--leading-title);
+    font-weight: var(--font-weight-m);
+    font-family: var(--font-default);
+  }
+
+  .text-headline-sb {
+    font-size: var(--text-headline);
+    line-height: var(--leading-headline);
+    font-weight: var(--font-weight-sb);
+    font-family: var(--font-default);
+  }
+
+  .text-headline-m {
+    font-size: var(--text-headline);
+    line-height: var(--leading-headline);
+    font-weight: var(--font-weight-m);
+    font-family: var(--font-default);
+  }
+
+  .text-body-sb {
+    font-size: var(--text-body);
+    line-height: var(--leading-body-sb);
+    font-weight: var(--font-weight-sb);
+    font-family: var(--font-default);
+  }
+
+  .text-body-m {
+    font-size: var(--text-body);
+    line-height: var(--leading-body-m);
+    font-weight: var(--font-weight-m);
+    font-family: var(--font-default);
+  }
+
+  .text-caption-sb {
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+    font-weight: var(--font-weight-sb);
+    font-family: var(--font-default);
+  }
+
+  .text-caption-m {
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+    font-weight: var(--font-weight-m);
+    font-family: var(--font-default);
+  }
+}
