@@ -9,6 +9,7 @@ import { MorePage } from './more';
 import { MyCertPage } from './my-cert';
 import { MyStudyPage } from './my-study';
 import { AdminComponents } from './admin-components';
+import { KakaoCallbackPage } from './kakao-callback-page';
 
 const fadeRoutes = [
   { path: '/', element: <MainPage /> },
@@ -17,6 +18,7 @@ const fadeRoutes = [
   { path: '/caleander', element: <CaleanderPage /> },
   { path: '/my-cert', element: <MyCertPage /> },
   { path: '/my-study', element: <MyStudyPage /> },
+  { path: '/auth/kakao-callback', element: <KakaoCallbackPage /> },
 ];
 
 const slideRoutes = [];
