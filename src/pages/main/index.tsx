@@ -1,4 +1,16 @@
+import { Button, ChatIcon } from '@/shared';
 import React from 'react';
+
+export const IconButton = () => {
+  return (
+    <Button className="flex flex-col">
+      <span>
+        <ChatIcon />
+      </span>
+      <p>asd</p>
+    </Button>
+  );
+};
 
 export const MainPage = () => {
   return (

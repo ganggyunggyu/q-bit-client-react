@@ -4,12 +4,12 @@ import { cn } from '@/shared/lib/cn';
 import { RightArrow } from '@/shared/icons';
 
 const inputVariants = cva(
-  'block w-full px-2 lg:px-4 py-2 text-sm border rounded-md outline-none transition-all rounded-lg disabled:p-0',
+  'block w-full px-4 py-2 text-sm border rounded-md outline-none transition-all rounded-full disabled:p-0 place',
   {
     variants: {
       variant: {
         default:
-          'border border-black-alt focus:border-primary hover:border-black',
+          'border border-primary focus:border-primary placeholder-primary/50',
         underline:
           'border-0 border-b border-black-assist rounded-none focus:border-primary',
         ghost: 'border-transparent bg-transparent focus:border-primary',
