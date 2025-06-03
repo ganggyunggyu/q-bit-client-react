@@ -1,4 +1,3 @@
-import React, { HTMLAttributes } from 'react';
 import {
   CaleanderAppBar,
   ColorVariants,
@@ -7,8 +6,7 @@ import {
   TitleBackAppBar,
 } from '@/widgets';
 import { TitleAppBar, TitleBellAppBar } from '@/widgets';
-import { cva, VariantProps } from 'class-variance-authority';
-import { Button, SelectBox } from '@/shared';
+import { Button, Chip, SelectBox } from '@/shared';
 
 export const AdminComponents = () => {
   return (
@@ -56,6 +54,10 @@ export const AdminComponents = () => {
         </Button>
       </section>
 
+      <section className="flex flex-col gap-3">
+        <h1 className="text-display-2">Chip</h1>
+        <Chip variant="default">Chip</Chip>
+      </section>
       <section className="flex flex-col gap-3">
         <h1 className="text-display-2">SelectBox</h1>
         <SelectBox children={'Default'} />
