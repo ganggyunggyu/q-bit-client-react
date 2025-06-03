@@ -20,18 +20,20 @@ export const ColorVariants = () => {
   return (
     <section className="space-y-4">
       <h2 className="text-display-2">🎨 컬러 팔레트</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="flex flex-col gap-3">
         {colorVars.map(({ label, name }) => (
           <div
             key={label}
-            className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md border bg-white"
+            className="flex items-center gap-10 p-4 rounded-lg shadow-xl bg-white"
           >
             <div
-              className="w-16 h-16 rounded-md border"
+              className="w-16 h-16 rounded-md border border-primary/30"
               style={{ backgroundColor: `var(${label})` }}
             />
-            <span className="text-caption-sb text-black-normal">{name}</span>
-            <code className="text-caption-m text-black-disabled">{label}</code>
+            <div className="flex flex-col">
+              <span className="text-caption-sb text-black-normal">{name}</span>
+              <span className="text-caption-sb text-black-normal">{label}</span>
+            </div>
           </div>
         ))}
       </div>

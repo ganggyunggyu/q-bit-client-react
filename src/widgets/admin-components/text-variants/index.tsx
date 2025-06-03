@@ -17,10 +17,7 @@ export const TextVariants = () => {
       <h2 className="text-display-2">🖋 텍스트 스타일</h2>
       {textClasses.map(({ className, label }) => (
         <div key={className} className="flex items-center gap-6">
-          <p className={`text-black-normal ${className}`}>
-            The quick brown fox jumps over the lazy dog
-          </p>
-          <span className="text-caption-m text-black-disabled">{label}</span>
+          <p className={`text-black-normal ${className}`}>{label}</p>
         </div>
       ))}
     </section>
