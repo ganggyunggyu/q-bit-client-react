@@ -2,38 +2,23 @@ import { cn } from '@/shared/lib/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  `
-  items-center justify-center rounded-lg transition-colors cursor-pointer box-border transition-all min-w-fit
-  disabled:opacity-50 disabled:pointer-events-none 
-  hover:scale-[101%] active:scale-[98%] active:opacity-50
-  `,
+  'flex items-center justify-center rounded-full transition-colors cursor-pointer box-border transition-all min-w-fit disabled:pointer-events-none',
+
   {
     variants: {
       variant: {
-        primary: 'bg-primary text-back hover:bg-primary-dark text-white',
-        primaryTrans: 'bg-primary-transparent text-primary',
-        secondary: 'bg-secondary text-black-normal hover:bg-[#e0e0e0]',
-        outlineAlt:
-          'border border-secondary bg-normal hover:bg-primary-transparent hover:text-primary',
-        outlinePrimary:
-          'border border-primary text-primary hover:bg-primary-transparent hover:text-primary',
-        outlineBgPrimary1:
-          'border border-primary text-primary bg-[#FFCCC8] hover:bg-primary hover:text-back',
-        outlineBgPrimary2:
-          'border border-primary text-primary bg-[#F9E0DD] hover:bg-primary hover:text-back',
-        ghost:
-          'bg-transparent hover:bg-black-assist/10 text-black-normal opacity-80 border border-alt',
-        muted: 'bg-primary-light text-white hover:bg-[#bb7269]',
-        kakao: 'bg-[#FFE812] border border-alt text-black-normal',
-        bgNone: 'bg-normal text-black-normal',
-        round: 'rounded-full p-3 bg-normal text-black-normal border border-alt',
-        white: 'bg-back text-black-normal',
-        sub: 'bg-sub text-white',
+        primary: 'bg-blue-good text-white active:bg-black-primary ',
+        outline:
+          'bg-normal text-primary border border-primary active:bg-divide',
+        disabled: 'bg-alternative text-disable border border-divide',
+        warning: 'bg-urgent/10 text-urgent active:bg-urgent/20',
+        normal:
+          'bg-alt text-[#2E2F33]/88 border border-divide active:bg-divide',
       },
       size: {
-        xs: 'px-7 py-1 text-xs w-fit min-w-fit',
-        sm: 'px-4 py-2 text-md w-[60px] h-[40px]',
-        md: 'px-5 py-3 text-base w-[68px] h-[48px] min-w-fit',
+        xs: 'px-7 py-1 text-xs w-fit min-w-fit max-w-fit',
+        sm: 'px-[16px] py-[8px] font-caption-m max-w-fit',
+        md: 'px-[24px] py-[12px] font-body-m max-w-fit',
         lg: 'w-full text-lg py-2.5',
         round: 'w-12 h-12',
       },
@@ -59,7 +44,7 @@ export const Button = ({
   return (
     <button
       type="button"
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
       {children}

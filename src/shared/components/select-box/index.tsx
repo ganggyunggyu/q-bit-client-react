@@ -10,7 +10,7 @@ const selectBoxVariants = cva(
         default:
           ' bg-white border border-divide text-black-normal active:bg-divide',
         selected:
-          ' bg-bg-primary border border-primary text-primary active:bg-primary/50',
+          'bg-bg-primary border border-primary text-primary active:bg-primary/50',
         disabled: ' bg-white border border-black-assistive text-black-disabled',
       },
     },

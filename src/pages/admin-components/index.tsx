@@ -8,7 +8,7 @@ import {
 } from '@/widgets';
 import { TitleAppBar, TitleBellAppBar } from '@/widgets';
 import { cva, VariantProps } from 'class-variance-authority';
-import { SelectBox } from '@/shared';
+import { Button, SelectBox } from '@/shared';
 
 export const AdminComponents = () => {
   return (
@@ -26,6 +26,34 @@ export const AdminComponents = () => {
         <CaleanderAppBar year="2012" month="05" />
 
         <SearchAppBar inputProps={{ placeholder: 'Search' }} />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h1 className="text-display-2">Button M</h1>
+        <Button variant="primary">Primary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="normal">Normal</Button>
+        <Button variant="warning">Warning</Button>
+        <Button variant="disabled">Disabled</Button>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h1 className="text-display-2">Button S</h1>
+        <Button size="sm" variant="primary">
+          Primary
+        </Button>
+        <Button size="sm" variant="outline">
+          Outline
+        </Button>
+        <Button size="sm" variant="normal">
+          Normal
+        </Button>
+        <Button size="sm" variant="warning">
+          Warning
+        </Button>
+        <Button size="sm" variant="disabled">
+          Disabled
+        </Button>
       </section>
 
       <section className="flex flex-col gap-3">
