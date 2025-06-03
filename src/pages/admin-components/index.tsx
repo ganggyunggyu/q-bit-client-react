@@ -17,7 +17,7 @@ export const AdminComponents = () => {
       <ColorVariants />
 
       <section className="flex flex-col gap-3">
-        <h1>App Bar</h1>
+        <h1 className="text-display-2">App Bar</h1>
 
         <TitleAppBar title={'Title'} />
         <TitleBellAppBar title={'Title'} />
@@ -28,9 +28,61 @@ export const AdminComponents = () => {
         <SearchAppBar inputProps={{ placeholder: 'Search' }} />
       </section>
 
-      <SelectBox chileren={'Default'} />
-      <SelectBox chileren={'Selected'} variant="selected" />
-      <SelectBox chileren={'Disabled'} variant="disabled" />
+      <section className="flex flex-col gap-3">
+        <h1 className="text-display-2">SelectBox</h1>
+        <SelectBox children={'Default'} />
+        <SelectBox children={'Selected'} variant="selected" />
+        <SelectBox children={'Disabled'} variant="disabled" />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h1 className="text-display-2">SelectBox Two Line</h1>
+        <article className="grid grid-cols-2 gap-4 w-8/12">
+          <SelectBox
+            children={
+              <div className="flex flex-col gap-3">
+                <p>Default</p>
+                <p>TwoLine</p>
+              </div>
+            }
+          />
+          <SelectBox
+            children={
+              <div className="flex flex-col gap-3">
+                <p>Default</p>
+                <p>TwoLine</p>
+              </div>
+            }
+          />
+          <SelectBox
+            children={
+              <div className="flex flex-col gap-3">
+                <p>Default</p>
+                <p>TwoLine</p>
+              </div>
+            }
+            variant="selected"
+          />
+          <SelectBox
+            children={
+              <div className="flex flex-col gap-3">
+                <p>Default</p>
+                <p>TwoLine</p>
+              </div>
+            }
+            variant="selected"
+          />
+          <SelectBox
+            children={
+              <div className="flex flex-col gap-3">
+                <p>Default</p>
+                <p>TwoLine</p>
+              </div>
+            }
+            variant="disabled"
+          />
+        </article>
+      </section>
     </main>
   );
 };
