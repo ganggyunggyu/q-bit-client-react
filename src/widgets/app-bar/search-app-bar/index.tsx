@@ -8,7 +8,7 @@ type SearchAppBarProps = {
 export const SearchAppBar: React.FC<SearchAppBarProps> = ({ inputProps }) => {
   return (
     <header className="flex items-center justify-center w-full">
-      <BackButton className="relative top-0 left-0 text-blue-good pr-0" />
+      <BackButton className="relative top-0 left-0 text-blue-good pl-0" />
       <Input {...inputProps} className="" />
     </header>
   );
