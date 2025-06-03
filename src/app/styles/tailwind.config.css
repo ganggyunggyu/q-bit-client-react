@@ -16,10 +16,10 @@
   --color-white: #ffffff;
 
   /* Container Color */
-  --bg-normal: #ffffff;
-  --bg-alternative: #f9f9f9;
-  --bg-divide: #eaeaea;
-  --bg-primary: #f0f8fe;
+  --color-normal: #ffffff;
+  --color-alternative: #f9f9f9;
+  --color-divide: #eaeaea;
+  --color-bg-primary: #f0f8fe;
 
   /* Font Size */
   --text-display-1: 36px;
