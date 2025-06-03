@@ -1,48 +1,11 @@
-import { BackButton, BellIcon, Input } from '@/shared';
-import { ColorVariants, TextVariants } from '@/widgets';
-
-export const TitleBackAppBar = () => {
-  return (
-    <header className="flex items-center justify-center w-full">
-      <BackButton className="relative top-0 left-0 text-blue-good pr-0" />
-      <p className="flex-1 text-title-sb">Title</p>
-    </header>
-  );
-};
-
-export const TitleAppBar = () => {
-  return (
-    <header className="flex items-center justify-center w-full">
-      <p className="flex-1 text-title-sb">Title</p>
-    </header>
-  );
-};
-export const TitleBellAppBar = () => {
-  return (
-    <header className="flex items-center justify-between w-full">
-      <p className="text-title-sb">Title</p>
-      <button className="text-black-primary">
-        <BellIcon />
-      </button>
-    </header>
-  );
-};
-export const SearchAppBar = () => {
-  return (
-    <header className="flex items-cetner justify-center w-full">
-      <BackButton className="relative top-0 left-0 text-blue-good pr-0" />
-      <Input placeholder="Search" />
-    </header>
-  );
-};
-export const CaleanderAppBar = () => {
-  return (
-    <header className="flex items-center justify-between w-full">
-      <p className="text-title-sb text-black-alternative/50">Year</p>
-      <p className="text-title-sb">Month</p>
-    </header>
-  );
-};
+import {
+  CaleanderAppBar,
+  ColorVariants,
+  SearchAppBar,
+  TextVariants,
+  TitleBackAppBar,
+} from '@/widgets';
+import { TitleAppBar, TitleBellAppBar } from '@/widgets';
 
 export const AdminComponents = () => {
   return (
@@ -52,6 +15,14 @@ export const AdminComponents = () => {
 
       <section className="flex flex-col gap-3">
         <h1>App Bar</h1>
+
+        <TitleAppBar title={'Title'} />
+        <TitleBellAppBar title={'Title'} />
+        <TitleBackAppBar title={'Title'} />
+
+        <CaleanderAppBar year="2012" month="05" />
+
+        <SearchAppBar inputProps={{ placeholder: 'Search' }} />
       </section>
     </main>
   );
