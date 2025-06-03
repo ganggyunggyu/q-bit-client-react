@@ -14,6 +14,7 @@ const buttonVariants = cva(
         warning: 'bg-urgent/10 text-urgent active:bg-urgent/20',
         normal:
           'bg-alt text-[#2E2F33]/88 border border-divide active:bg-divide',
+        kakao: '',
       },
       size: {
         xs: 'px-7 py-1 text-xs w-fit min-w-fit max-w-fit',
