@@ -1,3 +1,4 @@
+import React, { HTMLAttributes } from 'react';
 import {
   CaleanderAppBar,
   ColorVariants,
@@ -6,6 +7,8 @@ import {
   TitleBackAppBar,
 } from '@/widgets';
 import { TitleAppBar, TitleBellAppBar } from '@/widgets';
+import { cva, VariantProps } from 'class-variance-authority';
+import { SelectBox } from '@/shared';
 
 export const AdminComponents = () => {
   return (
@@ -24,6 +27,10 @@ export const AdminComponents = () => {
 
         <SearchAppBar inputProps={{ placeholder: 'Search' }} />
       </section>
+
+      <SelectBox chileren={'Default'} />
+      <SelectBox chileren={'Selected'} variant="selected" />
+      <SelectBox chileren={'Disabled'} variant="disabled" />
     </main>
   );
 };
