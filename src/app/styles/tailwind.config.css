@@ -48,70 +48,70 @@
 }
 
 @layer utilities {
-  .text-display-1 {
+  .font-display-1 {
     font-size: var(--text-display-1);
     line-height: var(--leading-display);
     font-weight: var(--font-weight-r);
     font-family: var(--font-default);
   }
 
-  .text-display-2 {
+  .font-display-2 {
     font-size: var(--text-display-2);
     line-height: var(--leading-display);
     font-weight: var(--font-weight-r);
     font-family: var(--font-default);
   }
 
-  .text-title-sb {
+  .font-title-sb {
     font-size: var(--text-title-sb);
     line-height: var(--leading-title);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
-  .text-title-m {
+  .font-title-m {
     font-size: var(--text-title-m);
     line-height: var(--leading-title);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
   }
 
-  .text-headline-sb {
+  .font-headline-sb {
     font-size: var(--text-headline);
     line-height: var(--leading-headline);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
-  .text-headline-m {
+  .font-headline-m {
     font-size: var(--text-headline);
     line-height: var(--leading-headline);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
   }
 
-  .text-body-sb {
+  .font-body-sb {
     font-size: var(--text-body);
     line-height: var(--leading-body-sb);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
-  .text-body-m {
+  .font-body-m {
     font-size: var(--text-body);
     line-height: var(--leading-body-m);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
   }
 
-  .text-caption-sb {
+  .font-caption-sb {
     font-size: var(--text-caption);
     line-height: var(--leading-caption);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
-  .text-caption-m {
+  .font-caption-m {
     font-size: var(--text-caption);
     line-height: var(--leading-caption);
     font-weight: var(--font-weight-m);
