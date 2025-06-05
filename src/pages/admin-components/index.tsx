@@ -1,4 +1,5 @@
 import {
+  BottomBar,
   CaleanderAppBar,
   ColorVariants,
   SearchAppBar,
@@ -6,8 +7,17 @@ import {
   TitleBackAppBar,
 } from '@/widgets';
 import { TitleAppBar, TitleBellAppBar } from '@/widgets';
-import { Button, CheckBoxInput, Chip, cn, Dropdown, SelectBox } from '@/shared';
+import {
+  Button,
+  CheckBoxInput,
+  CheckToggle,
+  Chip,
+  cn,
+  Dropdown,
+  SelectBox,
+} from '@/shared';
 import React from 'react';
+import { RemainingDateCard } from '@/entities';
 
 export const AdminComponents = () => {
   return (
@@ -130,9 +140,24 @@ export const AdminComponents = () => {
         <h1 className="font-display-1">Dropdown</h1>
 
         <Dropdown
-          options={['First', 'Second', 'Third']}
-          defaultLabel="Default"
+          options={['옵션1', '욥션2', '옵션3']}
+          defaultLabel="미선택"
           onChange={(val) => console.log('Selected:', val)}
+        />
+      </section>
+      <section className="flex flex-col gap-3">
+        <h1 className="font-display-1">My Qualification</h1>
+
+        <RemainingDateCard day={30} />
+        <RemainingDateCard day={20} />
+        <RemainingDateCard day={10} />
+      </section>
+      <section className="flex flex-col gap-3">
+        <h1 className="font-display-1">Check Toggle</h1>
+
+        <CheckToggle
+          defaultChecked={true}
+          onChange={(val) => console.log('체크:', val)}
         />
       </section>
     </main>
