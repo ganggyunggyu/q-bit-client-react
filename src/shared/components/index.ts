@@ -6,3 +6,5 @@ export * from './chip';
 export * from './check-box-input';
 export * from './dropdown';
 export * from './check-toggle';
+export * from './bottom-sheet';
+export * from './modal';
