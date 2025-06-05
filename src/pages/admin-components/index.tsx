@@ -6,7 +6,7 @@ import {
   TitleBackAppBar,
 } from '@/widgets';
 import { TitleAppBar, TitleBellAppBar } from '@/widgets';
-import { Button, Chip, cn, SelectBox } from '@/shared';
+import { Button, CheckBoxInput, Chip, cn, Dropdown, SelectBox } from '@/shared';
 import React from 'react';
 
 export const AdminComponents = () => {
@@ -119,79 +119,22 @@ export const AdminComponents = () => {
       <section className="flex flex-col gap-3 bg-divide p-5">
         <h1 className="font-display-1">Check Box</h1>
 
-        <CheckBox
-          status="default"
-          inputProps={{
-            placeholder: 'default',
-          }}
+        <CheckBoxInput
+          label="할일을 입력하세요"
+          checked={false}
+          onChange={(val) => console.log('체크 상태:', val)}
         />
-        <CheckBox
-          status="empty"
-          inputProps={{
-            placeholder: 'empty',
-          }}
-        />
-        <CheckBox
-          status="typing"
-          inputProps={{
-            placeholder: 'typing',
-          }}
-        />
-        <CheckBox
-          status="complate"
-          inputProps={{
-            placeholder: 'complate',
-          }}
+      </section>
+
+      <section>
+        <h1 className="font-display-1">Dropdown</h1>
+
+        <Dropdown
+          options={['First', 'Second', 'Third']}
+          defaultLabel="Default"
+          onChange={(val) => console.log('Selected:', val)}
         />
       </section>
     </main>
-  );
-};
-interface CheckBoxProps {
-  status: 'default' | 'empty' | 'typing' | 'complate';
-  onToggle?: () => void;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-  figureProps?: React.HTMLAttributes<HTMLElement>;
-}
-
-export const CheckBox: React.FC<CheckBoxProps> = ({
-  status,
-  inputProps,
-  figureProps,
-  onToggle,
-}) => {
-  const isComplate = status === 'complate';
-
-  const handleCircleClick = () => {
-    if (onToggle) onToggle();
-  };
-
-  return (
-    <figure
-      className={cn('flex gap-3 w-full', figureProps?.className)}
-      {...figureProps}
-    >
-      <div
-        onClick={handleCircleClick}
-        className={cn(
-          'w-6 h-6 rounded-full border border-white relative overflow-hidden flex items-center justify-center',
-          isComplate && 'bg-transparent',
-        )}
-      >
-        {isComplate && (
-          <div className="absolute w-4 h-4 bg-blue-good rounded-full" />
-        )}
-      </div>
-      <input
-        className={cn(
-          'flex-1',
-          inputProps?.className,
-          status === 'default' && '',
-          status === 'empty' && '',
-          status === 'typing' && '',
-        )}
-        {...inputProps}
-      />
-    </figure>
   );
 };
