@@ -19,12 +19,12 @@ export const IconColButton: React.FC<IconColButtonProps> = ({
       className={cn(
         'w-[50px] flex flex-col items-center justify-center gap-1 text-sm transition-all min-w-fit',
         isActive
-          ? 'text-[var(--color-primary)] font-bold'
-          : 'text-[var(--color-black-alt)]',
+          ? 'opacity-100 font-bold'
+          : 'opacity-50 text-[var(--color-black-alt)]',
       )}
       {...props}
     >
-      {icon}
+      <div>{icon}</div>
       <p className="min-w-fit">{label}</p>
     </button>
   );
