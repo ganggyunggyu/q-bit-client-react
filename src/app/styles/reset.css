@@ -1,0 +1,13 @@
+input,
+textarea,
+select {
+  /* all: unset; */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-sizing: border-box;
+  font: inherit;
+  background: transparent;
+  /* border: none; */
+  outline: none;
+}
