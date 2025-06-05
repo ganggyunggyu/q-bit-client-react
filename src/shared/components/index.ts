@@ -5,3 +5,4 @@ export * from './select-box';
 export * from './chip';
 export * from './check-box-input';
 export * from './dropdown';
+export * from './check-toggle';

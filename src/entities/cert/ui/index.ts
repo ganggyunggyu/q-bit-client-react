@@ -1,1 +1,1 @@
-export * from './cert.ui';
+export * from './remaining-date-card';
