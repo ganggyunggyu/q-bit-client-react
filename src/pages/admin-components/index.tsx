@@ -8,18 +8,24 @@ import {
 } from '@/widgets';
 import { TitleAppBar, TitleBellAppBar } from '@/widgets';
 import {
+  BottomSheet,
   Button,
   CheckBoxInput,
   CheckToggle,
   Chip,
   cn,
   Dropdown,
+  Modal,
   SelectBox,
 } from '@/shared';
 import React from 'react';
-import { RemainingDateCard } from '@/entities';
+import { Cert, RemainingDateCard } from '@/entities';
+import { certMock } from '@/entities/cert/mock/cert.mock';
+import { CertCard } from '@/features';
 
 export const AdminComponents = () => {
+  const [isBottomSheet, setIsBottomSheet] = React.useState(false);
+  const [isModal, setIsModal] = React.useState(false);
   return (
     <main className="p-3 space-y-16 bg-[var(--bg-alternative)] min-h-screen pb-20">
       <TextVariants />
@@ -159,6 +165,41 @@ export const AdminComponents = () => {
           defaultChecked={true}
           onChange={(val) => console.log('체크:', val)}
         />
+      </section>
+      <section className="flex flex-col gap-3">
+        <h1 className="font-display-1">BottonSheet, Modal</h1>
+        <Button onClick={() => setIsBottomSheet(true)}>바텀시트 오픈</Button>
+        <Button onClick={() => setIsModal(true)}>모달 오픈</Button>
+
+        <BottomSheet
+          isBottomSheet={isBottomSheet}
+          setIsBottomSheet={setIsBottomSheet}
+        >
+          <div className="h-[200px]">
+            <RemainingDateCard day={30} />
+            <RemainingDateCard day={20} />
+            <RemainingDateCard day={10} />
+          </div>
+        </BottomSheet>
+        <Modal isOpen={isModal} setIsOpen={setIsModal}>
+          <RemainingDateCard day={30} />
+          <RemainingDateCard day={20} />
+          <RemainingDateCard day={10} />
+        </Modal>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h1 className="font-display-1">Cert Card</h1>
+        {certMock.map((cert, index) => {
+          return (
+            <CertCard
+              key={cert.jmfldnm}
+              cert={cert}
+              dDay={7}
+              isLiked={index % 2 === 1}
+            />
+          );
+        })}
       </section>
     </main>
   );
