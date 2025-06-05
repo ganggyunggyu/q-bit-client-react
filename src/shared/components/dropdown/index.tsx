@@ -33,7 +33,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onClick={toggleDropdown}
       >
         <span className="">{selected}</span>
-        {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        <ChevronUp
+          className={`transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          size={20}
+        />
       </div>
 
       <AnimatePresence>
