@@ -132,7 +132,7 @@ export const AdminComponents = () => {
         </article>
       </section>
 
-      <section className="flex flex-col gap-3 bg-divide p-5">
+      <section className="flex flex-col gap-3 bg-divide py-2">
         <h1 className="font-display-1">Check Box</h1>
 
         <CheckBoxInput
