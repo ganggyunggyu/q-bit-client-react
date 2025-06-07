@@ -10,22 +10,44 @@ interface TabsProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   tabs: Tab[];
   selected: string;
+  key: string;
   onSelect: (tabId: string) => void;
 }
 
+/**
+ * Tabs - 탭 네비게이션 컴포넌트
+ * 개별 탭의 정보
+ * @property id 탭을 식별하는 고유 문자열
+ * @property label 탭에 표시할 텍스트 라벨
+ *
+ * Tabs 컴포넌트 Props
+ * @param tabs 탭 목록 (각 탭은 id와 label을 포함함)
+ * @param selected 현재 선택된 탭의 id
+ * @param onSelect 탭이 선택될 때 실행되는 콜백 (선택된 tab id를 인자로 받음)
+ * @param className 추가적인 Tailwind 클래스
+ *
+ * 선택된 탭에 하이라이트 애니메이션을 적용합니다.
+ */
 export const Tabs: React.FC<TabsProps> = ({
   tabs,
   selected,
   onSelect,
   className,
-  ...rest
+  key,
+  ...props
 }) => {
+  const isMounted = React.useRef(false);
+
+  React.useEffect(() => {
+    isMounted.current = true;
+  }, []);
+
   return (
     <nav
-      className={`relative top-0 z-10 border-b border-gray-200 pt-4 ${className ?? ''}`}
-      {...rest}
+      className={`relative top-0 z-10 border-b border-gray-200 pt-[15px] ${className ?? ''}`}
+      {...props}
     >
-      <div className="flex px-4 overflow-x-auto no-scrollbar space-x-4">
+      <div className="flex px-4 py-2 overflow-x-auto ">
         {tabs.map((tab) => {
           const isActive = selected === tab.id;
 
@@ -33,20 +55,19 @@ export const Tabs: React.FC<TabsProps> = ({
             <button
               key={tab.id}
               onClick={() => onSelect(tab.id)}
-              className="relative py-3 px-4 font-semibold text-sm whitespace-nowrap w-full"
+              className="relative py-2 font-semibold font-title-md-bold w-full"
             >
-              <span
-                className={
-                  isActive ? 'text-shadow-black' : 'text-shadow-black-alt'
-                }
-              >
+              <span className={isActive ? 'text-black' : 'text-black-alt'}>
                 {tab.label}
               </span>
 
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary-trans rounded" />
+
               {isActive && (
                 <motion.div
-                  layoutId="underline"
-                  className="absolute bottom-0 left-0 right-0 h-[4px] bg-black-alt rounded"
+                  key={key}
+                  layoutId={isMounted.current ? 'underline' : ''}
+                  className="w-full absolute bottom-0 left-0 right-0 h-[3px] bg-black rounded"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}

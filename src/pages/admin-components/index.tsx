@@ -17,6 +17,7 @@ import {
   Dropdown,
   Modal,
   SelectBox,
+  Tabs,
 } from '@/shared';
 import React from 'react';
 import { Cert, RemainingDateCard } from '@/entities';
@@ -24,6 +25,19 @@ import { certMock } from '@/entities/cert/mock/cert.mock';
 import { CertCard } from '@/features';
 
 export const AdminComponents = () => {
+  const tabs = [
+    { id: 'a', label: 'A' },
+    { id: 'b', label: 'B' },
+    { id: 'c', label: 'C' },
+  ];
+
+  const [searchPageSelectedTab, setSearchPageSelectedTab] = React.useState('a');
+  const [isPageInit, setIsPageInit] = React.useState(false);
+  const handleTabClick = (tab: 'map' | 'list') => {
+    if (!isPageInit) setIsPageInit(true);
+    setSearchPageSelectedTab(tab);
+  };
+
   const [isBottomSheet, setIsBottomSheet] = React.useState(false);
   const [isModal, setIsModal] = React.useState(false);
   return (
@@ -200,6 +214,17 @@ export const AdminComponents = () => {
             />
           );
         })}
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h1 className="font-display-1">Tab Bar</h1>
+
+        <Tabs
+          tabs={tabs}
+          selected={searchPageSelectedTab}
+          onSelect={handleTabClick}
+          key="search"
+        />
       </section>
     </main>
   );
