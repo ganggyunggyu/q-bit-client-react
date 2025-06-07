@@ -13,3 +13,28 @@ export type Cert = {
   seriescd?: string;
   seriesnm?: string;
 };
+
+// 상세 조회용
+export type getCertDto = {
+  certId: string;
+};
+
+// 필터 검색용
+export type getCertListParams = {
+  keyword?: string;
+  obligfldnm?: string;
+  mdobligfldnm?: string;
+  seriesnm?: string;
+  agency?: string;
+};
+
+// 다가오는 시험 (접수 마감순)
+export type getUpcomingCertListParams = {
+  limit: number;
+};
+
+// 정렬된 리스트 조회 (조회수/찜/마감순)
+export type getCertListSortedParams = {
+  sort: 'views' | 'likes' | 'deadline';
+  limit: number;
+};
