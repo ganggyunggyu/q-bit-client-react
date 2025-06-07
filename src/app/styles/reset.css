@@ -7,7 +7,7 @@ select {
   -moz-appearance: none;
   box-sizing: border-box;
   font: inherit;
-  background: transparent;
+  /* background: transparent; */
   /* border: none; */
   outline: none;
 }
