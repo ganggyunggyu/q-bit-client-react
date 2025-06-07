@@ -4,10 +4,14 @@ import { CertCard } from '@/features';
 
 import { certMock } from '@/entities/cert/mock/cert.mock';
 
-import { Input } from '@/shared';
+import { Button, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 
 export const MainPage = () => {
+  const { navigate } = useRouter();
+  const handleSearchClick = () => {
+    navigate('/search');
+  };
   return (
     <main className="flex flex-col gap-8 pb-[100px] pt-[85px]">
       <section
@@ -17,10 +21,17 @@ export const MainPage = () => {
         }}
       >
         <TitleBellAppBar title={PROJECT_NAME_EN} />
-        <Input
-          className="bg-white z-1 w-11/12"
-          placeholder="찾고있는 자격증을 검색해보세요."
-        />
+
+        <Button
+          className="w-11/12 mx-auto text-start border-[2px]"
+          variant="outline"
+          size="lg"
+          onClick={handleSearchClick}
+        >
+          <p className="w-full  pl-4 text-left text-primary/50">
+            찾고있는 자격증을 검색해보세요.
+          </p>
+        </Button>
         <CategoryGrid />
       </section>
 
