@@ -12,6 +12,7 @@ import { AdminComponents } from './admin-components';
 import { KakaoCallbackPage } from './kakao-callback-page';
 import { Step1Cert } from './onboarding/1-cert';
 import { Step2Style } from './onboarding/2-style';
+import { Search } from './search';
 
 const fadeRoutes = [
   { path: '/', element: <MainPage /> },
@@ -26,6 +27,7 @@ const fadeRoutes = [
 const slideRoutes = [
   { path: '/onboarding-1', element: <Step1Cert /> },
   { path: '/onboarding-2', element: <Step2Style /> },
+  { path: '/search', element: <Search /> },
 ];
 
 export const Routing = () => {
