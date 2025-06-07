@@ -1,14 +1,23 @@
-import { BackButton, Input, InputProps } from '@/shared';
+import { BackButton, cn, Input, InputProps } from '@/shared';
 import React from 'react';
 
-type SearchAppBarProps = {
+interface SearchAppBarProps extends React.HTMLAttributes<HTMLDivElement> {
   inputProps?: InputProps;
-};
+}
 
-export const SearchAppBar: React.FC<SearchAppBarProps> = ({ inputProps }) => {
+export const SearchAppBar: React.FC<SearchAppBarProps> = ({
+  inputProps,
+  className,
+  ...props
+}) => {
   return (
-    <header className="flex items-center justify-center w-full">
-      <BackButton className="relative top-0 left-0 text-blue-good pl-0" />
+    <header
+      className={cn(
+        `flex items-center justify gap-3 -center w-full ${className}`,
+      )}
+      {...props}
+    >
+      <BackButton className="relative top-0 left-0 text-blue-good" />
       <Input {...inputProps} className="" />
     </header>
   );

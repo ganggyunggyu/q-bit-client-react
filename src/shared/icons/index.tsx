@@ -126,15 +126,25 @@ export const UserIcon = () => {
 export const BackIcon = () => {
   return (
     <svg
-      width="20"
-      height="15"
-      viewBox="0 0 20 15"
+      width="36"
+      height="36"
+      viewBox="0 0 36 36"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M8.12358 2.02157C8.57419 1.55911 8.57419 0.80931 8.12358 0.346847C7.67298 -0.115616 6.9424 -0.115616 6.4918 0.346847L0.337954 6.66264C0.112651 6.89387 0 7.19693 0 7.5C0 7.66057 0.0311371 7.81367 0.0875524 7.9533C0.14386 8.09297 0.227327 8.22382 0.337954 8.33736L6.4918 14.6532C6.9424 15.1156 7.67298 15.1156 8.12358 14.6532C8.57419 14.1907 8.57419 13.4409 8.12358 12.9784L3.93948 8.68421H18.8462C19.4834 8.68421 20 8.15402 20 7.5C20 6.84598 19.4834 6.31579 18.8462 6.31579H3.93948L8.12358 2.02157Z"
-        fill="currentColor"
+        d="M21 8.5L11 18L21 27.5"
+        stroke="#3899E8"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.5 18H27.5"
+        stroke="#3899E8"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

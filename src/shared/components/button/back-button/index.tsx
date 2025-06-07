@@ -16,7 +16,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
   return (
     <Button
       className={cn(
-        'border-none bg-transparent fixed top-12 left-0',
+        'border-none bg-transparent fixed top-12 left-0 p-0',
         className,
       )}
       onClick={() => navigate(-1)}
