@@ -31,7 +31,7 @@ export const CheckBoxInput: React.FC<CheckBoxProps> = ({
       <button
         onClick={toggleCheck}
         className="w-6 h-6 flex items-center justify-center border-1 border-white rounded-full"
-        disabled={ref?.current.value.length === 0}
+        // disabled={ref?.current.value?.length === 0}
       >
         <div
           className={`w-4 h-4 rounded-full transition-colors duration-150 ${
