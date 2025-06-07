@@ -15,8 +15,10 @@ export const CertCard: React.FC<CertCardProps> = ({
   return (
     <div className="flex justify-between items-start p-4 rounded-2xl bg-white shadow-sm border border-divide">
       <div className="flex flex-col space-y-1">
-        <h3 className="text-black">{cert.jmfldnm}</h3>
-        <span className="">{cert.agency}</span>
+        <h3 className="text-black font-headline-sb">{cert.jmfldnm}</h3>
+        <span className="text-black-alternative/80 font-caption-m">
+          {cert.agency}
+        </span>
         <div className="mt-2 inline-flex items-center">
           <span
             className={`px-3 py-1 rounded-full
@@ -41,7 +43,9 @@ export const CertCard: React.FC<CertCardProps> = ({
           />
         </button>
         <div className=" text-blue-good font-semibold">D-{dDay}</div>
-        <div className=" text-shadow-black-alternative">시험까지</div>
+        <div className=" text-black-alternative/80 font-caption-m">
+          접수까지
+        </div>
       </div>
     </div>
   );

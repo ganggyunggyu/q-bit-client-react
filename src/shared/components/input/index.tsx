@@ -9,7 +9,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default:
-          'border border-primary focus:border-primary placeholder-primary/50',
+          'border border-[2px] border-primary focus:border-primary placeholder-primary/50 bg-white',
         underline:
           'border-0 border-b border-black-assist rounded-none focus:border-primary',
         ghost: 'border-transparent bg-transparent focus:border-primary',
@@ -55,7 +55,7 @@ export const Input: React.FC<InputProps> = ({
 
   return (
     <>
-      <div className="relative z-0 py-1 w-full">
+      <div className="relative z-0 py-1 w-full flex items-center justify-center">
         <input
           id={inputId}
           placeholder=" "
