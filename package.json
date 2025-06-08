@@ -20,6 +20,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "commander": "^13.1.0",
+    "es-toolkit": "^1.39.3",
     "esbuild": "^0.25.1",
     "framer-motion": "^12.6.3",
     "fs": "^0.0.1-security",
