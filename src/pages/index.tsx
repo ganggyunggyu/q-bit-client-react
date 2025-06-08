@@ -13,6 +13,7 @@ import { KakaoCallbackPage } from './kakao-callback-page';
 import { Step1Cert } from './onboarding/1-cert';
 import { Step2Style } from './onboarding/2-style';
 import { Search } from './search';
+import CertDetailPage from './cert-detail';
 
 const fadeRoutes = [
   { path: '/', element: <MainPage /> },
@@ -28,6 +29,7 @@ const slideRoutes = [
   { path: '/onboarding-1', element: <Step1Cert /> },
   { path: '/onboarding-2', element: <Step2Style /> },
   { path: '/search', element: <Search /> },
+  { path: '/search/:id', element: <CertDetailPage /> },
 ];
 
 export const Routing = () => {
