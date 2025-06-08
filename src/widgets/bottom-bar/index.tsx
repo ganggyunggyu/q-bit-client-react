@@ -24,7 +24,7 @@ export const BottomBar = () => {
     {
       label: '캘린더',
       icon: <img className="w-6 h-6" src={CALEANDER} alt="" />,
-      route: '/caleander',
+      route: '/calendar',
     },
     {
       label: '학습',

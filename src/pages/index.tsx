@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { fadeVariants, slideVariants } from '@/app/motion';
 
-import { CaleanderPage } from './caleander';
+import { Calendar } from './calendar';
 import { MainPage } from './main';
 import { MorePage } from './more';
 import { MyCertPage } from './my-cert';
@@ -19,7 +19,7 @@ const fadeRoutes = [
   { path: '/', element: <MainPage /> },
   { path: '/more', element: <MorePage /> },
   { path: '/admin-components', element: <AdminComponents /> },
-  { path: '/caleander', element: <CaleanderPage /> },
+  { path: '/calendar', element: <Calendar /> },
   { path: '/my-cert', element: <MyCertPage /> },
   { path: '/my-study', element: <MyStudyPage /> },
   { path: '/auth/kakao-callback', element: <KakaoCallbackPage /> },

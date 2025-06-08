@@ -1,18 +1,10 @@
-import React from 'react';
-import Calendar from 'react-calendar';
-
-export const CaleanderPage = () => {
-  return (
-    <div className="relative top-25 flex">
-      <CalendarBox />
-    </div>
-  );
-};
 import { motion, AnimatePresence } from 'framer-motion';
 
 import 'react-calendar/dist/Calendar.css';
 import './calendar.css';
 import { CaleanderAppBar } from '@/widgets';
+import React from 'react';
+import Calendar from 'react-calendar';
 
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -64,7 +56,7 @@ export const CalendarBox = () => {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-screen overflow-hidden"
+      className="relative h-[calc(100vh-184px)] w-screen overflow-hidden"
     >
       <CaleanderAppBar
         month={String(displayDate.getMonth() + 1).padStart(2, '0')}
