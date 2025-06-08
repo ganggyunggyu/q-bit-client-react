@@ -1,6 +1,6 @@
 import React from 'react';
 import Calendar from 'react-calendar';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 
 import 'react-calendar/dist/Calendar.css';
 import './calendar.css';
@@ -9,6 +9,27 @@ import { useCalendarStore } from '@/app/store';
 
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+const swipeVariants: Variants = {
+  enter: (direction: 'left' | 'right') => ({
+    x: direction === 'left' ? 300 : -300,
+    opacity: 0,
+    rotate: direction === 'left' ? 3 : -3,
+    scale: 0.95,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    rotate: 0,
+    scale: 1,
+  },
+  exit: (direction: 'left' | 'right') => ({
+    x: direction === 'left' ? -300 : 300,
+    opacity: 0,
+    rotate: direction === 'left' ? -3 : 3,
+    scale: 0.95,
+  }),
+};
 
 export const CalendarBox = () => {
   const { selectedDate, displayDate, setSelectedDate, setDisplayDate } =
@@ -67,10 +88,16 @@ export const CalendarBox = () => {
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={getMonthKey(displayDate)}
-          initial={{ x: direction === 'left' ? 300 : -300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: direction === 'left' ? -300 : 300, opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          custom={direction}
+          variants={swipeVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: 'spring', stiffness: 250, damping: 50 },
+            opacity: { duration: 0.2 },
+            rotate: { duration: 0.2 },
+          }}
           className="absolute w-full"
         >
           <Calendar
