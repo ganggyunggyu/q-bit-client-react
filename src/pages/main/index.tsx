@@ -6,12 +6,14 @@ import { certMock } from '@/entities/cert/mock/cert.mock';
 
 import { Button, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
+import React from 'react';
 
 export const MainPage = () => {
   const { navigate } = useRouter();
   const handleSearchClick = () => {
     navigate('/search');
   };
+
   return (
     <main className="flex flex-col gap-8 pb-[100px] pt-[85px]">
       <section
@@ -37,11 +39,11 @@ export const MainPage = () => {
 
       <TopCertList
         title={
-          <p>
-            <span className="text-primary">20대</span>에게 가장 인기 많은 자격증
-          </p>
+          <React.Fragment>
+            <span className="text-primary">20대</span>
+            <span>에게 가장 인기 많은 자격증</span>
+          </React.Fragment>
         }
-        certs={certMock}
       />
       <section className="bg-bg-primary p-3 flex flex-col gap-3 rounded-2xl">
         <p className="text-black-primary font-headline-m pb-1">
@@ -49,7 +51,7 @@ export const MainPage = () => {
         </p>
 
         {certMock.slice(0, 3).map((cert, index) => {
-          return <CertCard cert={cert} dDay={index + 2} />;
+          return <CertCard key={index} cert={cert} dDay={index + 2} />;
         })}
       </section>
     </main>

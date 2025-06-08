@@ -10,7 +10,7 @@ interface TabsProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   tabs: Tab[];
   selected: string;
-  key: string;
+  tabKey: string;
   onSelect: (tabId: string) => void;
 }
 
@@ -33,7 +33,7 @@ export const Tabs: React.FC<TabsProps> = ({
   selected,
   onSelect,
   className,
-  key,
+  tabKey,
   ...props
 }) => {
   const isMounted = React.useRef(false);
@@ -65,7 +65,7 @@ export const Tabs: React.FC<TabsProps> = ({
 
               {isActive && (
                 <motion.div
-                  key={key}
+                  key={tabKey}
                   layoutId={isMounted.current ? 'underline' : ''}
                   className="w-full absolute bottom-0 left-0 right-0 h-[3px] bg-black rounded"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}

@@ -223,7 +223,7 @@ export const AdminComponents = () => {
           tabs={tabs}
           selected={searchPageSelectedTab}
           onSelect={handleTabClick}
-          key="search"
+          tabKey="search"
         />
       </section>
     </main>

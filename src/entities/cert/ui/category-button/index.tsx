@@ -11,6 +11,10 @@ export const CategoryButton: React.FC<CategoryButtonProps> = ({
   className,
   ...props
 }) => {
+  const formatLabel = (name: string) =>
+    name.split('.').slice(0, 2).join('/') +
+    (name.split('.').length > 2 ? '…' : '');
+
   return (
     <button
       type="button"
@@ -18,7 +22,7 @@ export const CategoryButton: React.FC<CategoryButtonProps> = ({
       {...props}
     >
       <img src={image} alt={label} className="w-10 h-10 object-contain" />
-      <p className="font-caption-m">{label}</p>
+      <p className="font-caption-m">{formatLabel(label)}</p>
     </button>
   );
 };
