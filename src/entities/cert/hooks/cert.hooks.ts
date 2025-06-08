@@ -4,6 +4,8 @@ import {
   getCertList,
   getUpcomingCertList,
   getCertListSorted,
+  getSearchCertName,
+  getPopularCerts,
 } from '../api';
 import {
   getCertDto,
@@ -39,3 +41,19 @@ export const useSortedCertList = (params: getCertListSortedParams) =>
     queryFn: () => getCertListSorted(params),
     enabled: !!params.sort && !!params.limit,
   });
+
+export const useSearchCertNameQuery = (keyword: string) => {
+  return useQuery({
+    queryKey: ['cert', 'keyword', keyword],
+    queryFn: () => getSearchCertName(keyword),
+    staleTime: 1000 * 60 * 60 * 24 * 7,
+  });
+};
+
+export const usePopularCerts = () => {
+  return useQuery({
+    queryKey: ['popularCerts'],
+    queryFn: getPopularCerts,
+    staleTime: 1000 * 60 * 10,
+  });
+};

@@ -1,36 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { SearchAppBar } from '@/widgets';
+import React from 'react';
+import { debounce } from 'es-toolkit';
 
-const CERT_LIST = [
-  '이름',
-  '이름이',
-  '이름이 뭐였더라',
-  '이름이아름이',
-  '자격증',
-  '자격이름',
-];
+import { SearchAppBar } from '@/widgets';
+import { useSearchCertNameQuery } from '@/entities';
+import { useRouter } from '@/shared';
 
 export const Search = () => {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [inputValue, setInputValue] = React.useState('');
+  const [query, setQuery] = React.useState('');
+  const [isTyping, setIsTyping] = React.useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const timeout = setTimeout(() => {
-      if (query.trim() === '') {
-        setResults([]);
-        setIsLoading(false);
-        return;
-      }
+  const { navigate } = useRouter();
 
-      const filtered = CERT_LIST.filter((item) => item.includes(query.trim()));
-      setResults(filtered);
-      setIsLoading(false);
-    }, 300);
+  const debouncedSetQuery = React.useMemo(
+    () =>
+      debounce((value: string) => {
+        setQuery(value);
+        setIsTyping(false);
+      }, 300),
+    [],
+  );
 
-    return () => clearTimeout(timeout);
-  }, [query]);
+  const { data: results = [], isLoading } = useSearchCertNameQuery(query);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    setIsTyping(true);
+    debouncedSetQuery(value);
+  };
+
+  const handleNameClick = (id: string) => {
+    navigate(`/search/${id}`);
+  };
 
   return (
     <main className="pt-[85px]">
@@ -38,29 +40,39 @@ export const Search = () => {
         className="px-3"
         inputProps={{
           placeholder: '검색',
-          value: query,
-          onChange: (e) => setQuery(e.target.value),
+          value: inputValue,
+          onChange: handleChange,
         }}
       />
 
       <ul className="mt-3 px-4 space-y-2 min-h-[80px]">
-        {isLoading ? (
+        {(isTyping || isLoading) && (
           <div className="flex justify-center items-center py-6">
             <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : results.length > 0 ? (
-          results.map((result, index) => (
-            <li
-              key={index}
-              className="flex items-center text-gray-500 text-body-s gap-2"
-            >
-              <span className="i-tabler-search text-gray-400" />
-              {result}
-            </li>
-          ))
-        ) : query.trim() !== '' ? (
-          <li className="text-gray-400 text-body-s">검색 결과 없음</li>
-        ) : null}
+        )}
+
+        {!isTyping && !isLoading && results.length > 0 && (
+          <React.Fragment>
+            {results.map((result) => (
+              <li
+                key={result._id}
+                onClick={() => handleNameClick(result._id)}
+                className="flex items-center text-gray-500 text-body-s gap-2"
+              >
+                <span className="i-tabler-search text-gray-400" />
+                {result.jmfldnm}
+              </li>
+            ))}
+          </React.Fragment>
+        )}
+
+        {!isTyping &&
+          !isLoading &&
+          inputValue.trim() !== '' &&
+          results.length === 0 && (
+            <li className="text-gray-400 text-body-s">검색 결과 없음</li>
+          )}
       </ul>
     </main>
   );
