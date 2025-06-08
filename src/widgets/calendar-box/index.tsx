@@ -1,19 +1,20 @@
+import React from 'react';
+import Calendar from 'react-calendar';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import 'react-calendar/dist/Calendar.css';
 import './calendar.css';
 import { CaleanderAppBar } from '@/widgets';
-import React from 'react';
-import Calendar from 'react-calendar';
+import { useCalendarStore } from '@/app/store';
 
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
 export const CalendarBox = () => {
-  const [value, setValue] = React.useState<Date>(new Date(2025, 4, 17));
-  const [displayDate, setDisplayDate] = React.useState<Date>(value);
-  const [direction, setDirection] = React.useState<'left' | 'right'>('left');
+  const { selectedDate, displayDate, setSelectedDate, setDisplayDate } =
+    useCalendarStore();
 
+  const [direction, setDirection] = React.useState<'left' | 'right'>('left');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const isAdmissionDay = (date: Date) =>
@@ -51,12 +52,12 @@ export const CalendarBox = () => {
       el?.removeEventListener('touchstart', handleTouchStart);
       el?.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [displayDate]);
+  }, [displayDate, setDisplayDate]);
 
   return (
     <section
       ref={containerRef}
-      className="relative h-[calc(100vh-184px)] w-screen overflow-hidden"
+      className="relative h-[calc(100vh-184px)] w-[95%] mx-auto overflow-hidden"
     >
       <CaleanderAppBar
         month={String(displayDate.getMonth() + 1).padStart(2, '0')}
@@ -73,17 +74,17 @@ export const CalendarBox = () => {
           className="absolute w-full"
         >
           <Calendar
-            value={value}
+            value={selectedDate}
             onChange={(val) => {
-              if (val instanceof Date) setValue(val);
+              if (val instanceof Date) setSelectedDate(val);
             }}
             showNavigation={false}
             activeStartDate={displayDate}
             tileClassName={({ date }) => {
               const isSelected =
-                value.getFullYear() === date.getFullYear() &&
-                value.getMonth() === date.getMonth() &&
-                value.getDate() === date.getDate();
+                selectedDate.getFullYear() === date.getFullYear() &&
+                selectedDate.getMonth() === date.getMonth() &&
+                selectedDate.getDate() === date.getDate();
 
               const isAdmission = isAdmissionDay(date);
 
