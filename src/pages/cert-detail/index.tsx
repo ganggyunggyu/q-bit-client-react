@@ -18,7 +18,7 @@ export const CertDetailPage = () => {
   if (isLoading) return null;
 
   return (
-    <main className="flex flex-col">
+    <main className="relative h-screen flex flex-col">
       <TitleBackAppBar title={'상세정보'} />
       <section className="">
         <p className=" ">{cert.qualgbnm}</p>
@@ -43,7 +43,7 @@ export const CertDetailPage = () => {
       {selectedTab === 'way' && <section>취득방법 섹션</section>}
       {selectedTab === 'info' && <section>정보 섹션 섹션</section>}
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t flex justify-between items-center">
+      <div className="absolute bottom-15 left-0 right-0 flex px-4 gap-3">
         <Button size="lg">리마인드</Button>
         <button>
           <Heart />

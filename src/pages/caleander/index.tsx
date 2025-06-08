@@ -1,11 +1,110 @@
 import React from 'react';
+import Calendar from 'react-calendar';
 
 export const CaleanderPage = () => {
   return (
-    <React.Fragment>
-      <div className="flex h-screen items-center justify-center">
-        <h1 className="text-xl font-semibold">📆 캘린더 페이지 (caleander)</h1>
-      </div>
-    </React.Fragment>
+    <div className="relative top-25 flex">
+      <CalendarBox />
+    </div>
+  );
+};
+import { motion, AnimatePresence } from 'framer-motion';
+
+import 'react-calendar/dist/Calendar.css';
+import './calendar.css';
+import { CaleanderAppBar } from '@/widgets';
+
+const getMonthKey = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+export const CalendarBox = () => {
+  const [value, setValue] = React.useState<Date>(new Date(2025, 4, 17));
+  const [displayDate, setDisplayDate] = React.useState<Date>(value);
+  const [direction, setDirection] = React.useState<'left' | 'right'>('left');
+
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  const isAdmissionDay = (date: Date) =>
+    date.getFullYear() === 2025 &&
+    date.getMonth() === 4 &&
+    date.getDate() === 18;
+
+  React.useEffect(() => {
+    let startX = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const deltaX = e.changedTouches[0].clientX - startX;
+      if (Math.abs(deltaX) > 100) {
+        const newDate = new Date(displayDate);
+        if (deltaX > 0) {
+          newDate.setMonth(newDate.getMonth() - 1);
+          setDirection('right');
+        } else {
+          newDate.setMonth(newDate.getMonth() + 1);
+          setDirection('left');
+        }
+        setDisplayDate(newDate);
+      }
+    };
+
+    const el = containerRef.current;
+    el?.addEventListener('touchstart', handleTouchStart);
+    el?.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      el?.removeEventListener('touchstart', handleTouchStart);
+      el?.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [displayDate]);
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative h-screen w-screen overflow-hidden"
+    >
+      <CaleanderAppBar
+        month={String(displayDate.getMonth() + 1).padStart(2, '0')}
+        year={String(displayDate.getFullYear())}
+      />
+
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={getMonthKey(displayDate)}
+          initial={{ x: direction === 'left' ? 300 : -300, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: direction === 'left' ? -300 : 300, opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="absolute w-full"
+        >
+          <Calendar
+            value={value}
+            onChange={(val) => {
+              if (val instanceof Date) setValue(val);
+            }}
+            showNavigation={false}
+            activeStartDate={displayDate}
+            tileClassName={({ date }) => {
+              const isSelected =
+                value.getFullYear() === date.getFullYear() &&
+                value.getMonth() === date.getMonth() &&
+                value.getDate() === date.getDate();
+
+              const isAdmission = isAdmissionDay(date);
+
+              if (isSelected) return 'selected-day';
+              if (isAdmission) return 'admission-day';
+              return '';
+            }}
+            locale="ko-KR"
+            formatDay={(_, date) => String(date.getDate())}
+            calendarType="gregory"
+          />
+        </motion.div>
+      </AnimatePresence>
+    </section>
   );
 };
