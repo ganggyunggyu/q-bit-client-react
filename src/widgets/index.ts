@@ -6,3 +6,4 @@ export * from './category-grid';
 export * from './top-cert-list';
 
 export * from './calendar-box';
+export * from './weekly-calendar';
