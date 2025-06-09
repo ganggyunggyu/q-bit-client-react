@@ -52,7 +52,6 @@ export const CaleanderAppBar: React.FC<CaleanderAppBarProps> = ({
 
   return (
     <header className="flex items-center justify-between w-full p-4 overflow-hidden h-12">
-      {/* Year */}
       <div className="relative h-6 w-16 overflow-hidden">
         <AnimatePresence custom={yearDirection} mode="wait">
           <motion.div
@@ -70,7 +69,6 @@ export const CaleanderAppBar: React.FC<CaleanderAppBarProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Month */}
       <div className="relative h-6 w-12 overflow-hidden">
         <AnimatePresence custom={monthDirection} mode="wait">
           <motion.div

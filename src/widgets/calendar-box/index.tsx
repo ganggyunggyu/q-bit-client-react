@@ -5,7 +5,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import 'react-calendar/dist/Calendar.css';
 import './calendar.css';
 import { CaleanderAppBar } from '@/widgets';
-import { useCalendarStore } from '@/app/store';
+import { useCalendarStore, useUiStore } from '@/app/store';
 
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -34,7 +34,7 @@ const swipeVariants: Variants = {
 export const CalendarBox = () => {
   const { selectedDate, displayDate, setSelectedDate, setDisplayDate } =
     useCalendarStore();
-
+  const { setIsCalendarBottomSheetOpen } = useUiStore();
   const [direction, setDirection] = React.useState<'left' | 'right'>('left');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -102,21 +102,21 @@ export const CalendarBox = () => {
         >
           <Calendar
             value={selectedDate}
-            onChange={(val) => {
-              if (val instanceof Date) setSelectedDate(val);
+            onClickDay={(value) => {
+              setSelectedDate(value);
+              setIsCalendarBottomSheetOpen(true);
             }}
+            onChange={() => {}}
             showNavigation={false}
             activeStartDate={displayDate}
             tileClassName={({ date }) => {
               const isSelected =
-                selectedDate.getFullYear() === date.getFullYear() &&
-                selectedDate.getMonth() === date.getMonth() &&
-                selectedDate.getDate() === date.getDate();
-
-              const isAdmission = isAdmissionDay(date);
+                selectedDate?.getFullYear() === date.getFullYear() &&
+                selectedDate?.getMonth() === date.getMonth() &&
+                selectedDate?.getDate() === date.getDate();
 
               if (isSelected) return 'selected-day';
-              if (isAdmission) return 'admission-day';
+
               return '';
             }}
             locale="ko-KR"
