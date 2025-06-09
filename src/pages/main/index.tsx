@@ -7,12 +7,15 @@ import { certMock } from '@/entities/cert/mock/cert.mock';
 import { Button, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 import React from 'react';
+import { useUpcomingCertList } from '@/entities';
 
 export const MainPage = () => {
   const { navigate } = useRouter();
   const handleSearchClick = () => {
     navigate('/search');
   };
+
+  const { data, isLoading } = useUpcomingCertList({ limit: 3 });
 
   return (
     <main className="flex flex-col gap-8 pb-[100px] pt-[85px]">
@@ -50,9 +53,11 @@ export const MainPage = () => {
           접수까지 일주일!
         </p>
 
-        {certMock.slice(0, 3).map((cert, index) => {
-          return <CertCard key={index} cert={cert} dDay={index + 2} />;
-        })}
+        {!isLoading
+          ? data.map((cert, index) => {
+              return <CertCard key={index} cert={cert} dDay={index + 2} />;
+            })
+          : ''}
       </section>
     </main>
   );
