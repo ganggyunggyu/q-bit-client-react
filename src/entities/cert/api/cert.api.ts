@@ -32,7 +32,7 @@ export const getUpcomingCertList = async (
   params: getUpcomingCertListParams,
 ): Promise<Cert[]> => {
   try {
-    const res = await axios.get('/certs/upcoming', {
+    const res = await axios.get('/cert/upcoming', {
       params: { limit: params.limit },
     });
     return res.data;

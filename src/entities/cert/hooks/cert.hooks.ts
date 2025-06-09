@@ -32,7 +32,7 @@ export const useUpcomingCertList = (params: getUpcomingCertListParams) =>
   useQuery({
     queryKey: ['certUpcoming', params],
     queryFn: () => getUpcomingCertList(params),
-    enabled: !!params.limit,
+    staleTime: 1000 * 60 * 10,
   });
 
 export const useSortedCertList = (params: getCertListSortedParams) =>

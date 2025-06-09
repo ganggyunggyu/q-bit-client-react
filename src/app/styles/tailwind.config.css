@@ -22,13 +22,13 @@
   --color-bg-primary: #f0f8fe;
 
   /* Font Size */
-  --text-display-1: 36px;
-  --text-display-2: 27px;
-  --text-title-sb: 22px;
-  --text-title-m: 21px;
-  --text-headline: 18px;
-  --text-body: 16px;
-  --text-caption: 12px;
+  --font-display-1: 36px;
+  --font-display-2: 27px;
+  --font-title-sb: 22px;
+  --font-title-m: 21px;
+  --font-headline: 18px;
+  --font-body: 16px;
+  --font-caption: 12px;
 
   /* Line Height (Percentage 기반) */
   --leading-display: 135%;
@@ -49,70 +49,70 @@
 
 @layer utilities {
   .font-display-1 {
-    font-size: var(--text-display-1);
+    font-size: var(--font-display-1);
     line-height: var(--leading-display);
     font-weight: var(--font-weight-r);
     font-family: var(--font-default);
   }
 
   .font-display-2 {
-    font-size: var(--text-display-2);
+    font-size: var(--font-display-2);
     line-height: var(--leading-display);
     font-weight: var(--font-weight-r);
     font-family: var(--font-default);
   }
 
   .font-title-sb {
-    font-size: var(--text-title-sb);
+    font-size: var(--font-title-sb);
     line-height: var(--leading-title);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
   .font-title-m {
-    font-size: var(--text-title-m);
+    font-size: var(--font-title-m);
     line-height: var(--leading-title);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
   }
 
   .font-headline-sb {
-    font-size: var(--text-headline);
+    font-size: var(--font-headline);
     line-height: var(--leading-headline);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
   .font-headline-m {
-    font-size: var(--text-headline);
+    font-size: var(--font-headline);
     line-height: var(--leading-headline);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
   }
 
   .font-body-sb {
-    font-size: var(--text-body);
+    font-size: var(--font-body);
     line-height: var(--leading-body-sb);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
   .font-body-m {
-    font-size: var(--text-body);
+    font-size: var(--font-body);
     line-height: var(--leading-body-m);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
   }
 
   .font-caption-sb {
-    font-size: var(--text-caption);
+    font-size: var(--font-caption);
     line-height: var(--leading-caption);
     font-weight: var(--font-weight-sb);
     font-family: var(--font-default);
   }
 
   .font-caption-m {
-    font-size: var(--text-caption);
+    font-size: var(--font-caption);
     line-height: var(--leading-caption);
     font-weight: var(--font-weight-m);
     font-family: var(--font-default);
