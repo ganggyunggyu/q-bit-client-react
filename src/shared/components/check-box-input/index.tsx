@@ -10,7 +10,7 @@ interface CheckBoxProps {
 
 export const CheckBoxInput: React.FC<CheckBoxProps> = ({
   label,
-  checked,
+  checked = false,
   onChange,
   inputProps,
 }) => {
@@ -27,10 +27,10 @@ export const CheckBoxInput: React.FC<CheckBoxProps> = ({
   };
 
   return (
-    <figure className="relative flex items-center space-x-3 cursor-pointer select-none">
+    <figure className="relative flex items-center space-x-3 cursor-pointer select-none py-3 px-2">
       <button
         onClick={toggleCheck}
-        className="w-6 h-6 flex items-center justify-center border-1 border-white rounded-full"
+        className="w-6 h-6 flex items-center justify-center border-1 border-divide rounded-full"
         disabled={inputValue.length === 0}
       >
         <div
@@ -54,15 +54,15 @@ export const CheckBoxInput: React.FC<CheckBoxProps> = ({
       />
 
       <AnimatePresence>
-        {isFocused && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 1 }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="absolute w-full bg-blue-good -bottom-1.5"
-          />
-        )}
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 1 }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.2 }}
+          className={`absolute w-11/12 left-1/2 -translate-x-1/2 bottom-0 transition-colors
+              ${isFocused ? 'bg-blue-good' : 'bg-divide'}
+              `}
+        />
       </AnimatePresence>
     </figure>
   );

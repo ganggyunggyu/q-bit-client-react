@@ -30,7 +30,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         <main className="fixed inset-0 z-50 flex items-end justify-center">
           {/* 바텀시트의 배경입니다 */}
           <motion.div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-black/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -40,17 +40,18 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
           {/* 바텀시트 본체입니다 */}
           <motion.div
-            className="relative w-full max-w-md bg-white rounded-t-2xl p-6 shadow-xl"
+            className="relative w-full max-w-md bg-alternative rounded-t-2xl p-6 shadow-xl"
             initial={{ y: '100%', opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '100%', opacity: 0 }}
             transition={{ type: 'tween', duration: 0.3 }}
           >
-            <header className="flex justify-between items-center mb-4">
-              <p className="text-lg font-semibold">{title}</p>
-              <button className="" onClick={() => setIsBottomSheet(false)}>
-                닫기
-              </button>
+            <header className="flex justify-center items-center mb-4">
+              {/* <p className="text-lg font-semibold">{title}</p> */}
+              <button
+                className="h-2 w-1/2 bg-black-alternative rounded-full"
+                onClick={() => setIsBottomSheet(false)}
+              ></button>
             </header>
 
             {children}

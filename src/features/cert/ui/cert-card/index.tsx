@@ -1,6 +1,7 @@
 import { Heart } from 'lucide-react';
 import { Cert } from '@/entities';
 import React from 'react';
+import { useRouter } from '@/shared';
 
 interface CertCardProps {
   cert: Cert;
@@ -11,11 +12,22 @@ interface CertCardProps {
 export const CertCard: React.FC<CertCardProps> = ({ cert, dDay, isLiked }) => {
   const [isLike, setIsLike] = React.useState(isLiked);
 
-  const toggleLike = () => {
+  const { navigate } = useRouter();
+
+  const toggleLike = (e) => {
+    e.stopPropagation();
+
     setIsLike(!isLike);
   };
+
+  const handleCertClick = () => {
+    navigate(`/search/${cert._id}`);
+  };
   return (
-    <div className="flex justify-between items-start p-4 rounded-2xl bg-white shadow-sm border border-divide">
+    <div
+      onClick={handleCertClick}
+      className="flex justify-between items-start p-4 rounded-2xl bg-white shadow-sm border border-divide"
+    >
       <div className="flex flex-col space-y-1">
         <h3 className="text-black font-headline-sb">{cert.jmfldnm}</h3>
         <span className="text-black-alternative/80 font-caption-m">
@@ -37,7 +49,7 @@ export const CertCard: React.FC<CertCardProps> = ({ cert, dDay, isLiked }) => {
         <button
           className="w-8 h-8 rounded-full border border-divide flex items-center justify-center"
           aria-label="찜하기"
-          onClick={toggleLike}
+          onClick={(e) => toggleLike(e)}
         >
           <Heart
             className={`w-5 h-5 transition-colors ${
