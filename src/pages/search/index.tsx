@@ -21,14 +21,13 @@ export const Search = () => {
     [],
   );
 
-  const { data: results = [], isLoading } = useSearchCertNameQuery(query);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
     setIsTyping(true);
     debouncedSetQuery(value);
   };
+  const { data: results = [], isLoading } = useSearchCertNameQuery(query);
 
   const handleNameClick = (id: string) => {
     navigate(`/search/${id}`);
