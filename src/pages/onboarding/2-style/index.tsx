@@ -1,6 +1,8 @@
 import React from 'react';
 import { cn } from '@/shared/lib/cn';
-import { Button } from '@/shared';
+import { Button, useRouter } from '@/shared';
+import { useSearchParams } from 'react-router';
+import { postJoin } from '@/entities';
 
 interface NotificationOptionProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -60,15 +62,47 @@ export const NotificationOption: React.FC<NotificationOptionProps> = ({
 };
 
 export const Step2Style = () => {
-  const [selectedKey, setSelectedKey] = React.useState<string>('default');
+  const [remindType, setRemindType] = React.useState<string>('default');
+
+  const [searchParams] = useSearchParams();
+
+  const { navigate } = useRouter();
+
+  const kakaoId = searchParams.get('kakaoId') ?? '';
+  const email = searchParams.get('email') ?? '';
+  const displayName = searchParams.get('displayName') ?? '';
+  const interestedCertsRaw = searchParams.get('interestedCerts') ?? '[]';
+
+  const interestedCerts = React.useMemo(() => {
+    try {
+      return JSON.parse(interestedCertsRaw);
+    } catch {
+      return [];
+    }
+  }, [interestedCertsRaw]);
 
   const handleSelect = (key: string) => {
-    setSelectedKey(key);
+    setRemindType(key);
   };
 
-  const handleSubmit = () => {
-    console.log('선택된 스타일:', selectedKey);
-    alert(`'${selectedKey}' 스타일이 선택되었습니다!`);
+  const handleSubmit = async () => {
+    try {
+      const params = {
+        user: {
+          kakaoId,
+          email,
+          displayName,
+          interestedCerts,
+          remindType,
+        },
+      };
+      console.log(params);
+      await postJoin(params);
+
+      // navigate('/onboarding/final');
+    } catch (err) {
+      console.error('회원가입 실패', err);
+    }
   };
 
   return (
@@ -90,7 +124,7 @@ export const Step2Style = () => {
               key={key}
               title={title}
               description={description}
-              selected={selectedKey === key}
+              selected={remindType === key}
               onClick={() => handleSelect(key)}
             />
           ))}

@@ -1,11 +1,27 @@
 import { useRouter } from '@/shared';
 import React from 'react';
+import { useSearchParams } from 'react-router';
 
 export const Step1Cert = () => {
   const { navigate } = useRouter();
 
+  const [searchParams] = useSearchParams();
+
+  const [interestedCerts, setInterestedCerts] = React.useState([]);
+
+  const kakaoId = searchParams.get('kakaoId');
+  const email = searchParams.get('email');
+  const displayName = searchParams.get('displayName');
+
   const handleNextClick = () => {
-    navigate('/onboarding-2');
+    const params = new URLSearchParams({
+      kakaoId: kakaoId || '',
+      email: email || '',
+      displayName: displayName || '',
+      interestedCerts: JSON.stringify(interestedCerts), // ← 배열 → 문자열
+    });
+
+    navigate(`/onboarding-2?${params.toString()}`);
   };
 
   return (
