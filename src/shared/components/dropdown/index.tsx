@@ -25,7 +25,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white">
       <div
         className={`flex items-center justify-between px-4 py-3 cursor-pointer border border-divide
           ${isOpen ? 'rounded-t-xl' : 'rounded-xl'}
@@ -34,7 +34,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       >
         <span className="">{selected}</span>
         <ChevronUp
-          className={`transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          className={`transition-transform ${isOpen ? 'rotate-0' : 'rotate-180'}`}
           size={20}
         />
       </div>

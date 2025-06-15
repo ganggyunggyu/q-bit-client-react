@@ -4,7 +4,7 @@ import React from 'react';
 export interface TitleBackAppBarProps
   extends React.HTMLAttributes<HTMLHeadElement> {
   title: string;
-  className: string;
+  className?: string;
 }
 
 export const TitleBackAppBar: React.FC<TitleBackAppBarProps> = ({

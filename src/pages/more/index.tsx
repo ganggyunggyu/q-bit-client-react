@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, SelectBox, useRouter } from '@/shared';
+import { Button, Dropdown, SelectBox, useRouter } from '@/shared';
 import { TitleAppBar } from '@/widgets';
 
 export const MorePage = () => {
@@ -16,8 +16,16 @@ export const MorePage = () => {
         <Button onClick={handleLoginClick} variant="outline" size="lg">
           로그인해주세요
         </Button>
-        <SelectBox className="flex justify-start">기본정보</SelectBox>
-        <SelectBox className="flex justify-start">고객지원</SelectBox>
+        <Dropdown
+          options={['정보 수정', '푸시 알림', '로그아웃']}
+          defaultLabel="기본정보"
+          onChange={(val) => console.log('Selected:', val)}
+        />
+        <Dropdown
+          options={['문의 & 피드백 보내기', '회원 탈퇴']}
+          defaultLabel="고객지원"
+          onChange={(val) => console.log('Selected:', val)}
+        />
       </section>
 
       <section className="flex flex-col  px-3 bg-alternative">
