@@ -1,3 +1,4 @@
+import React, { JSX } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -14,6 +15,12 @@ import { Step1Cert } from './onboarding/1-cert';
 import { Step2Style } from './onboarding/2-style';
 import { Search } from './search';
 import CertDetailPage from './cert-detail';
+import { Login } from './login';
+
+type RouteElement = {
+  path: string;
+  element: JSX.Element;
+};
 
 const fadeRoutes = [
   { path: '/', element: <MainPage /> },
@@ -23,14 +30,15 @@ const fadeRoutes = [
   { path: '/my-cert', element: <MyCertPage /> },
   { path: '/my-study', element: <MyStudyPage /> },
   { path: '/auth/kakao-callback', element: <KakaoCallbackPage /> },
-];
+] as RouteElement[];
 
 const slideRoutes = [
   { path: '/onboarding-1', element: <Step1Cert /> },
   { path: '/onboarding-2', element: <Step2Style /> },
   { path: '/search', element: <Search /> },
   { path: '/search/:id', element: <CertDetailPage /> },
-];
+  { path: '/auth/login', element: <Login /> },
+] as RouteElement[];
 
 export const Routing = () => {
   const location = useLocation();
