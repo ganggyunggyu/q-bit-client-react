@@ -8,8 +8,18 @@ import { Button, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 import React from 'react';
 import { useUpcomingCertList } from '@/entities';
+import { axios } from '@/app/config';
 
 export const MainPage = () => {
+  const getAuthMe = async () => {
+    const result = await axios.get('/auth/me');
+
+    console.log(result);
+  };
+
+  React.useEffect(() => {
+    getAuthMe();
+  }, []);
   const { navigate } = useRouter();
   const handleSearchClick = () => {
     navigate('/search');

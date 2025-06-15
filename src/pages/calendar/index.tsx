@@ -1,8 +1,15 @@
+import { axios } from '@/app/config';
 import { useCalendarStore, useUiStore } from '@/app/store';
 import { ReminingDateLabel } from '@/entities';
 import { BottomSheet, Button, CheckBoxInput, cn } from '@/shared';
 import { formatDate } from '@/shared/util';
 import { CalendarBox } from '@/widgets';
+
+export const getTodo = async () => {
+  const result = await axios.get('/todo');
+
+  console.log(result);
+};
 
 export const Calendar = () => {
   const { isCalendarBottomSheetOpen, setIsCalendarBottomSheetOpen } =
@@ -10,6 +17,8 @@ export const Calendar = () => {
   const { selectedDate } = useCalendarStore();
 
   const { weekday, day } = formatDate(selectedDate);
+
+  getTodo();
 
   return (
     <main className="relative top-25 flex">

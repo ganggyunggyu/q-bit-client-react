@@ -58,8 +58,6 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
 
   const days = Array.from({ length: 7 }).map((_, i) => startDate.add(i, 'day'));
 
-  console.log(days);
-
   const newCurrentMonth = days[0].month();
 
   React.useEffect(() => {

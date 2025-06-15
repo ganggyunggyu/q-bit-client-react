@@ -99,7 +99,7 @@ export const Step2Style = () => {
       console.log(params);
       await postJoin(params);
 
-      // navigate('/onboarding/final');
+      navigate('/?isAuth=true');
     } catch (err) {
       console.error('회원가입 실패', err);
     }
