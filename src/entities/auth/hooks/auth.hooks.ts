@@ -5,5 +5,6 @@ export const useAuthMe = () => {
   return useQuery({
     queryKey: ['authMe'],
     queryFn: getAuthMe,
+    retry: 0,
   });
 };

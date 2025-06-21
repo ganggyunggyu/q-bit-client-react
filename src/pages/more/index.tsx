@@ -10,12 +10,14 @@ export const MorePage = () => {
     navigate('/auth/login');
   };
 
+  if (isLoading) return 'loading';
+
   return (
     <main className="flex flex-col h-[calc(100vh-52px)] pb-[100px] gap-4 bg-alternative">
       <TitleAppBar title={'더보기'} />
 
       <section className="flex flex-col gap-3 px-3 ">
-        {!user && !isLoading ? (
+        {!user ? (
           <Button onClick={handleLoginClick} variant="outline" size="lg">
             <p className="w-full text-left pl-4">로그인 해주세요</p>
           </Button>
