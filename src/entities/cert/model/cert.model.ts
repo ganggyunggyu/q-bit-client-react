@@ -1,4 +1,5 @@
 export type Cert = {
+  _id: string;
   jmcd?: string;
   agency?: string;
   jmfldnm?: string;
