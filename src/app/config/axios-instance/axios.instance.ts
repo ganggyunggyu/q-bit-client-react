@@ -1,3 +1,4 @@
+import { logout } from '@/entities';
 import axios from 'axios';
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -12,10 +13,13 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await axiosInstance.post('/auth/refresh');
+        await axiosInstance.post('/auth/refresh-token');
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error('Refresh 실패');
+
+        await logout();
+
         return Promise.reject(refreshError);
       }
     }

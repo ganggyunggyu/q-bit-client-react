@@ -1,5 +1,4 @@
 export type Cert = {
-  _id?: string;
   jmcd?: string;
   agency?: string;
   jmfldnm?: string;
@@ -12,8 +11,24 @@ export type Cert = {
   qualgbnm?: string;
   seriescd?: string;
   seriesnm?: string;
+  schedule?: ExamSchedule[];
+  scheduleDate?: Date;
 };
 
+export type ExamSchedule = {
+  description?: string;
+  docexamdt?: string;
+  docpassdt?: string;
+  docregstartdt?: string | null;
+  docregenddt?: string | null;
+  docsubmitstartdt?: string | null;
+  docsubmitentdt?: string | null;
+  pracregstartdt?: string | null;
+  pracregenddt?: string | null;
+  pracexamstartdt?: string | null;
+  pracexamenddt?: string | null;
+  pracpassdt?: string | null;
+};
 // 상세 조회용
 export type getCertDto = {
   certId: string;
