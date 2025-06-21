@@ -9,7 +9,7 @@ export const MyStudyPage = () => {
   const [selectedTab, setSelectedTab] = React.useState('planner');
 
   return (
-    <main className="relative h-[calc(100vh - 184px)] top-25 py-2 bg-alternative">
+    <main className="h-[calc(100vh - 184px)] py-2 bg-alternative">
       <TitleAppBar title={'내 스터디'} />
       <Tabs
         tabKey="study-tab"

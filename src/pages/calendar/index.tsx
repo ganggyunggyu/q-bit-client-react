@@ -21,7 +21,7 @@ export const Calendar = () => {
   getTodo();
 
   return (
-    <main className="relative top-25 flex">
+    <main className="flex">
       <CalendarBox />
 
       <BottomSheet

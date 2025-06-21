@@ -34,7 +34,7 @@ export const Search = () => {
   };
 
   return (
-    <main className="pt-[85px]">
+    <main className="">
       <SearchAppBar
         className="px-3"
         inputProps={{
