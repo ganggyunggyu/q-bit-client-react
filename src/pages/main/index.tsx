@@ -11,32 +11,40 @@ import { getAuthMe, useUpcomingCertList } from '@/entities';
 import { axios } from '@/app/config';
 
 export const MainPage = () => {
+  const [isFocus, setIsFocus] = React.useState(false);
+  const [keyword, setKeyword] = React.useState('');
+
   React.useEffect(() => {
     getAuthMe();
   }, []);
   const { navigate } = useRouter();
-  const handleSearchClick = () => {
-    navigate('/search');
+
+  const handleInputFocus = () => {
+    setIsFocus(true);
   };
 
+  const handleInputBlur = () => {
+    setIsFocus(false);
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
   const { data, isLoading } = useUpcomingCertList({ limit: 3 });
 
   return (
     <main className="flex flex-col gap-8 pb-[100px] bg-alternative">
-      <section
-        className="relative flex flex-col justify-center w-full gap-3 "
-        // style={{
-        //   background: `linear-gradient(to bottom, transparent, var(--color-bg-primary), transparent)`,
-        // }}
-      >
+      <section className="relative flex flex-col justify-center w-full gap-3 ">
         <TitleBellAppBar title={PROJECT_NAME_EN} />
 
         <Input
           className="w-11/12 mx-auto text-start border-[2px]"
           variant="shadow"
           isSearch={true}
-          // onClick={handleSearchClick}
-          placeholder={'찾고있는 자격증을 검색해보세요.'}
+          placeholder="찾고있는 자격증을 검색해보세요."
+          value={keyword}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
         />
       </section>
 
