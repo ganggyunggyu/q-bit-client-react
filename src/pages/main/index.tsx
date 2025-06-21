@@ -4,19 +4,13 @@ import { CertCard } from '@/features';
 
 import { certMock } from '@/entities/cert/mock/cert.mock';
 
-import { Button, useRouter } from '@/shared';
+import { Button, Input, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 import React from 'react';
-import { useUpcomingCertList } from '@/entities';
+import { getAuthMe, useUpcomingCertList } from '@/entities';
 import { axios } from '@/app/config';
 
 export const MainPage = () => {
-  const getAuthMe = async () => {
-    const result = await axios.get('/auth/me');
-
-    console.log(result);
-  };
-
   React.useEffect(() => {
     getAuthMe();
   }, []);
@@ -28,26 +22,22 @@ export const MainPage = () => {
   const { data, isLoading } = useUpcomingCertList({ limit: 3 });
 
   return (
-    <main className="flex flex-col gap-8 pb-[100px] pt-[85px]">
+    <main className="flex flex-col gap-8 pb-[100px] bg-alternative">
       <section
-        className="relative flex flex-col justify-center w-full gap-3"
-        style={{
-          background: `linear-gradient(to bottom, transparent, var(--color-bg-primary), transparent)`,
-        }}
+        className="relative flex flex-col justify-center w-full gap-3 "
+        // style={{
+        //   background: `linear-gradient(to bottom, transparent, var(--color-bg-primary), transparent)`,
+        // }}
       >
         <TitleBellAppBar title={PROJECT_NAME_EN} />
 
-        <Button
+        <Input
           className="w-11/12 mx-auto text-start border-[2px]"
-          variant="outline"
-          size="lg"
-          onClick={handleSearchClick}
-        >
-          <p className="w-full  pl-4 text-left text-primary/50">
-            찾고있는 자격증을 검색해보세요.
-          </p>
-        </Button>
-        <CategoryGrid />
+          variant="shadow"
+          isSearch={true}
+          // onClick={handleSearchClick}
+          placeholder={'찾고있는 자격증을 검색해보세요.'}
+        />
       </section>
 
       <TopCertList
@@ -63,11 +53,19 @@ export const MainPage = () => {
           접수까지 일주일!
         </p>
 
-        {!isLoading
-          ? data.map((cert, index) => {
-              return <CertCard key={index} cert={cert} dDay={index + 2} />;
-            })
-          : ''}
+        {!isLoading &&
+          data.map((cert, index) => {
+            // ✅ scheduleDate는 Date 타입이므로 그대로 new Date 필요 없음
+            const scheduleDate = new Date(cert.scheduleDate);
+
+            const now = new Date();
+            const diffTime = scheduleDate.getTime() - now.getTime();
+            const dDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            console.log(cert.jmfldnm, `D-${dDay}`);
+
+            return <CertCard key={index} cert={cert} dDay={dDay} />;
+          })}
       </section>
     </main>
   );
