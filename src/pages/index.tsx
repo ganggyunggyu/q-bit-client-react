@@ -41,9 +41,15 @@ const slideRoutes = [
 
 export const Routing = () => {
   const location = useLocation();
+  const [curPath, setCurPath] = React.useState('');
 
+  React.useEffect(() => {
+    setCurPath(location.pathname);
+
+    console.log(curPath);
+  }, [location.pathname]);
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         {[...fadeRoutes, ...slideRoutes].map(({ path, element }) => {
           const variants = slideRoutes.some((route) => route.path === path)
@@ -55,14 +61,27 @@ export const Routing = () => {
               key={path}
               path={path}
               element={
-                <Suspense fallback={<div className="p-8">Loading...</div>}>
+                <Suspense
+                  key={location.key} // ✅ 이걸 Suspense에 직접!
+                  fallback={
+                    <motion.div
+                      key="fallback"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="h-full flex items-center justify-center"
+                    >
+                      Loading...
+                    </motion.div>
+                  }
+                >
                   <motion.div
+                    key={location.key} // ✅ 이게 핵심: motion.div에도 key!
                     variants={variants}
                     initial="initial"
                     animate="animate"
                     exit="exit"
                     className="h-full"
-                    custom={1}
                   >
                     {element}
                   </motion.div>

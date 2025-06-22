@@ -2,29 +2,31 @@ import { Button, Dropdown, SelectBox, useRouter } from '@/shared';
 import { TitleAppBar } from '@/widgets';
 import { useAuthMe } from '@/entities';
 
-export const MorePage = () => {
+const MorePage = () => {
   const { navigate } = useRouter();
   const { data: user, isLoading } = useAuthMe();
 
-  const handleLoginClick = () => {
-    navigate('/auth/login');
-  };
-
-  if (isLoading) return 'loading';
+  const handleLoginClick = () => navigate('/auth/login');
 
   return (
     <main className="flex flex-col h-[calc(100vh-52px)] pb-[100px] gap-4 bg-alternative">
-      <TitleAppBar title={'더보기'} />
+      <TitleAppBar title="더보기" />
 
-      <section className="flex flex-col gap-3 px-3 ">
-        {!user ? (
+      <section className="flex flex-col gap-3 px-3">
+        {isLoading ? (
+          <Button variant="outline" size="lg" disabled>
+            <p className="w-full text-left pl-4 animate-pulse text-gray-400">
+              로딩중...
+            </p>
+          </Button>
+        ) : !user ? (
           <Button onClick={handleLoginClick} variant="outline" size="lg">
             <p className="w-full text-left pl-4">로그인 해주세요</p>
           </Button>
         ) : (
           <Button variant="outline" size="lg">
             <p className="w-full text-left pl-4">
-              {user?.displayName}님 오늘도 파이팅!
+              {user.displayName}님 오늘도 파이팅!
             </p>
           </Button>
         )}
