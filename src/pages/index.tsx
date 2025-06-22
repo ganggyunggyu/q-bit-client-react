@@ -1,22 +1,21 @@
-import React, { JSX } from 'react';
+import React, { lazy, Suspense, JSX } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { fadeVariants, slideVariants } from '@/app/motion';
 
-import { Calendar } from './calendar';
-import { MainPage } from './main';
-import { MorePage } from './more';
-import { MyCertPage } from './my-cert';
-import { MyStudyPage } from './my-study';
-import { AdminComponents } from './admin-components';
-import { KakaoCallbackPage } from './kakao-callback-page';
-import { Step1Cert } from './onboarding/1-cert';
-import { Step2Style } from './onboarding/2-style';
-import { Search } from './search';
-import CertDetailPage from './cert-detail';
-import { Login } from './login';
-
+const MainPage = lazy(() => import('./main'));
+const MorePage = lazy(() => import('./more'));
+const AdminComponents = lazy(() => import('./admin-components'));
+const Calendar = lazy(() => import('./calendar'));
+const MyCertPage = lazy(() => import('./my-cert'));
+const MyStudyPage = lazy(() => import('./my-study'));
+const KakaoCallbackPage = lazy(() => import('./kakao-callback-page'));
+const Step1Cert = lazy(() => import('./onboarding/1-cert'));
+const Step2Style = lazy(() => import('./onboarding/2-style'));
+const Search = lazy(() => import('./search'));
+const CertDetailPage = lazy(() => import('./cert-detail'));
+const Login = lazy(() => import('./login'));
 type RouteElement = {
   path: string;
   element: JSX.Element;
@@ -56,16 +55,18 @@ export const Routing = () => {
               key={path}
               path={path}
               element={
-                <motion.div
-                  variants={variants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="h-full"
-                  custom={1}
-                >
-                  {element}
-                </motion.div>
+                <Suspense fallback={<div className="p-8">Loading...</div>}>
+                  <motion.div
+                    variants={variants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="h-full"
+                    custom={1}
+                  >
+                    {element}
+                  </motion.div>
+                </Suspense>
               }
             />
           );

@@ -5,7 +5,7 @@ import { SearchAppBar } from '@/widgets';
 import { useSearchCertNameQuery } from '@/entities';
 import { useRouter } from '@/shared';
 
-export const Search = () => {
+const Search = () => {
   const [inputValue, setInputValue] = React.useState('');
   const [query, setQuery] = React.useState('');
   const [isTyping, setIsTyping] = React.useState(false);
@@ -76,3 +76,5 @@ export const Search = () => {
     </main>
   );
 };
+
+export default Search;

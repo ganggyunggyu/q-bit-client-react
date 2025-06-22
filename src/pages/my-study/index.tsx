@@ -4,7 +4,7 @@ import { TitleAppBar, WeeklyCalendar } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 
-export const MyStudyPage = () => {
+const MyStudyPage = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTab, setSelectedTab] = React.useState('planner');
 
@@ -83,3 +83,4 @@ export const MyStudyPage = () => {
     </main>
   );
 };
+export default MyStudyPage;

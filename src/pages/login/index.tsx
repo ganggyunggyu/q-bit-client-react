@@ -1,7 +1,7 @@
 import { KakaoLoginButton } from '@/shared';
 import { TitleBackAppBar } from '@/widgets';
 
-export const Login = () => {
+const Login = () => {
   return (
     <main className="relative flex flex-col items-center justify-center  h-[calc(100vh-56px)]  gap-4 bg-alternative px-3 overflow-hidden">
       <TitleBackAppBar title={'로그인'} className=" absolute top-0 left-3" />
@@ -21,3 +21,5 @@ export const Login = () => {
     </main>
   );
 };
+
+export default Login;

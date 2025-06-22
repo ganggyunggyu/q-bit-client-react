@@ -29,7 +29,7 @@ const OPTIONS = [
   },
 ];
 
-export const NotificationOption: React.FC<NotificationOptionProps> = ({
+const NotificationOption: React.FC<NotificationOptionProps> = ({
   title,
   description,
   selected,
@@ -143,3 +143,5 @@ export const Step2Style = () => {
     </main>
   );
 };
+
+export default Step2Style;

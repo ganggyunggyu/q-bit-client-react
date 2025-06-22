@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-export const KakaoCallbackPage = () => {
+const KakaoCallbackPage = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
   const hasFetched = useRef(false);
@@ -15,3 +15,5 @@ export const KakaoCallbackPage = () => {
 
   return <main>로그인 처리 중...</main>;
 };
+
+export default KakaoCallbackPage;

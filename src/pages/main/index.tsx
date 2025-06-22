@@ -12,7 +12,7 @@ import {
 import { BackIcon, Button, Input, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 
-export const MainPage = () => {
+const MainPage = () => {
   const [isFocus, setIsFocus] = React.useState(false);
   const [isSearch, setIsSearch] = React.useState(false);
 
@@ -198,3 +198,5 @@ export const MainPage = () => {
     </main>
   );
 };
+
+export default MainPage;

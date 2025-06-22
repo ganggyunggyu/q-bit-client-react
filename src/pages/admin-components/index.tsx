@@ -24,7 +24,7 @@ import { Cert, RemainingDateCard } from '@/entities';
 import { certMock } from '@/entities/cert/mock/cert.mock';
 import { CertCard } from '@/features';
 
-export const AdminComponents = () => {
+const AdminComponents = () => {
   const tabs = [
     { id: 'a', label: 'A' },
     { id: 'b', label: 'B' },
@@ -229,3 +229,5 @@ export const AdminComponents = () => {
     </main>
   );
 };
+
+export default AdminComponents;

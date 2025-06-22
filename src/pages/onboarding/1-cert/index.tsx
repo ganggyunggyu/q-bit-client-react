@@ -2,7 +2,7 @@ import { useRouter } from '@/shared';
 import React from 'react';
 import { useSearchParams } from 'react-router';
 
-export const Step1Cert = () => {
+const Step1Cert = () => {
   const { navigate } = useRouter();
 
   const [searchParams] = useSearchParams();
@@ -59,3 +59,5 @@ export const Step1Cert = () => {
     </main>
   );
 };
+
+export default Step1Cert;

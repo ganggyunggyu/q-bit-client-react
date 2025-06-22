@@ -11,7 +11,7 @@ export const getTodo = async () => {
   console.log(result);
 };
 
-export const Calendar = () => {
+const Calendar = () => {
   const { isCalendarBottomSheetOpen, setIsCalendarBottomSheetOpen } =
     useUiStore();
   const { selectedDate } = useCalendarStore();
@@ -56,3 +56,5 @@ export const Calendar = () => {
     </main>
   );
 };
+
+export default Calendar;
