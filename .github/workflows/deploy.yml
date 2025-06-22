@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-    VITE_KAKAO_CLIENT_ID: ${{ secrets.VITE_KAKAO_CLIENT_ID }}
-    VITE_KAKAO_REDIRECT_URI: ${{ secrets.VITE_KAKAO_REDIRECT_URI }}
-    VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      VITE_KAKAO_CLIENT_ID: ${{ secrets.VITE_KAKAO_CLIENT_ID }}
+      VITE_KAKAO_REDIRECT_URI: ${{ secrets.VITE_KAKAO_REDIRECT_URI }}
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
     steps:
       - name: ✅ Checkout Repo
