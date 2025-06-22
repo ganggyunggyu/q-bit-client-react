@@ -78,7 +78,7 @@ export const CalendarBox = () => {
   return (
     <section
       ref={containerRef}
-      className="relative h-[calc(100vh-184px)] w-[95%] mx-auto overflow-hidden touch-pan-x"
+      className="relative h-[calc(100vh-54px)] w-[95%] mx-auto overflow-hidden touch-pan-x"
     >
       <CaleanderAppBar
         month={String(displayDate.getMonth() + 1).padStart(2, '0')}
@@ -127,7 +127,7 @@ export const CalendarBox = () => {
                 Math.floor(Math.random() * 91) + 10;
 
               if (view === 'month') {
-                const myPercent = getRandomPercent();
+                const myPercent = getRandomPercent() + 1;
                 if (myPercent > 0) {
                   return (
                     <div className="absolute top-1/2 -translate-y-1/2">
@@ -156,7 +156,7 @@ export const CalendarProgress: React.FC<CalendarProgressProps> = ({
 }) => {
   const radius = 12;
   const circumference = 2 * Math.PI * radius;
-  const strokeWidth = 6;
+  const strokeWidth = 7;
 
   const percentSpring = useSpring(0, {
     stiffness: 120,
@@ -173,8 +173,8 @@ export const CalendarProgress: React.FC<CalendarProgressProps> = ({
   );
 
   const hue = useTransform(percentSpring, (p) => p);
-  const strokeColor = useTransform(hue, (h) => `hsl(${h}, 100%, 50%)`);
-  const bgColor = useTransform(hue, (h) => `hsl(${h}, 100%, 50%, 0.2)`);
+  const strokeColor = useTransform(hue, (h) => `hsl(${h}, 92%, 68%)`);
+  const bgColor = useTransform(hue, (h) => `hsl(${h}, 92%, 68%, 0.1)`);
 
   return (
     <svg width={32} height={32} viewBox="0 0 32 32">
@@ -195,12 +195,14 @@ export const CalendarProgress: React.FC<CalendarProgressProps> = ({
         strokeWidth={strokeWidth}
         fill="none"
         strokeDasharray={circumference}
+        strokeLinecap="round"
         style={{
           strokeDashoffset: dashOffset,
           rotate: -90,
           scaleX: -1,
           transformOrigin: '50% 50%',
         }}
+        className="rounded-full"
       />
     </svg>
   );
