@@ -4,7 +4,7 @@ import React from 'react';
 
 export function App() {
   return (
-    <main className="">
+    <main className="pt-10 bg-alternative">
       <Routing />
       <BottomBar />
     </main>
