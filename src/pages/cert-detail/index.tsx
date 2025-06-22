@@ -45,7 +45,7 @@ export const CertDetailPage = () => {
       {selectedTab === 'info' && <section>정보 섹션 섹션</section>}
       <footer
         className="
-  fixed bottom-0 left-0 w-full z-10
+  absolute bottom-0 left-0 w-full z-10
   flex px-4 gap-3
   bg-alternative
   pb-[50px] pt-[10px]
