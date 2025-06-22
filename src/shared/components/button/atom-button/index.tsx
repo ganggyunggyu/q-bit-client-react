@@ -1,9 +1,10 @@
+import React from 'react';
 import { cn } from '@/shared/lib/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Search } from 'lucide-react';
 
 const buttonVariants = cva(
-  'flex items-center justify-center rounded-full transition-colors cursor-pointer box-border transition-all min-w-fit disabled:pointer-events-none',
-
+  'relative flex items-center justify-center rounded-full transition-colors cursor-pointer box-border transition-all min-w-fit disabled:pointer-events-none',
   {
     variants: {
       variant: {
@@ -15,6 +16,8 @@ const buttonVariants = cva(
         normal:
           'bg-alt text-[#2E2F33]/88 border border-divide active:bg-divide',
         kakao: 'bg-[#FFE812]',
+        shadow:
+          'border border-white shadow-2xl bg-white focus:border-primary transition',
       },
       size: {
         xs: 'px-7 py-1 text-xs w-fit min-w-fit max-w-fit',
@@ -33,13 +36,16 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  isSearch?: boolean; // ✅ 추가
+}
 
 export const Button = ({
   className,
   variant,
   size,
   children,
+  isSearch,
   ...props
 }: ButtonProps) => {
   return (
@@ -48,6 +54,11 @@ export const Button = ({
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
+      {isSearch && (
+        <figure className="absolute left-3 top-1/2 -translate-y-1/2 text-white bg-primary p-1 rounded-full">
+          <Search size={16} />
+        </figure>
+      )}
       {children}
     </button>
   );
