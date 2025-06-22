@@ -12,6 +12,7 @@
 }
 
 .react-calendar__tile {
+  position: relative;
   height: 104px;
   border-radius: 8px;
   display: flex;

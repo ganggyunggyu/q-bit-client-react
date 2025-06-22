@@ -122,9 +122,86 @@ export const CalendarBox = () => {
             locale="ko-KR"
             formatDay={(_, date) => String(date.getDate())}
             calendarType="gregory"
+            tileContent={({ date, view }) => {
+              const getRandomPercent = () =>
+                Math.floor(Math.random() * 91) + 10;
+
+              if (view === 'month') {
+                const myPercent = getRandomPercent();
+                if (myPercent > 0) {
+                  return (
+                    <div className="absolute top-1/2 -translate-y-1/2">
+                      <CalendarProgress percent={myPercent} />
+                    </div>
+                  );
+                }
+              }
+              return null;
+            }}
           />
         </motion.div>
       </AnimatePresence>
     </section>
+  );
+};
+
+import { useSpring, useTransform } from 'framer-motion';
+
+type CalendarProgressProps = {
+  percent: number;
+};
+
+export const CalendarProgress: React.FC<CalendarProgressProps> = ({
+  percent,
+}) => {
+  const radius = 12;
+  const circumference = 2 * Math.PI * radius;
+  const strokeWidth = 6;
+
+  const percentSpring = useSpring(0, {
+    stiffness: 120,
+    damping: 50,
+  });
+
+  React.useEffect(() => {
+    percentSpring.set(percent);
+  }, [percent]);
+
+  const dashOffset = useTransform(
+    percentSpring,
+    (p) => circumference * (1 - p / 100),
+  );
+
+  const hue = useTransform(percentSpring, (p) => p);
+  const strokeColor = useTransform(hue, (h) => `hsl(${h}, 100%, 50%)`);
+  const bgColor = useTransform(hue, (h) => `hsl(${h}, 100%, 50%, 0.2)`);
+
+  return (
+    <svg width={32} height={32} viewBox="0 0 32 32">
+      <motion.circle
+        cx="16"
+        cy="16"
+        r={radius}
+        stroke={bgColor}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+
+      <motion.circle
+        cx="16"
+        cy="16"
+        r={radius}
+        stroke={strokeColor}
+        strokeWidth={strokeWidth}
+        fill="none"
+        strokeDasharray={circumference}
+        style={{
+          strokeDashoffset: dashOffset,
+          rotate: -90,
+          scaleX: -1,
+          transformOrigin: '50% 50%',
+        }}
+      />
+    </svg>
   );
 };
