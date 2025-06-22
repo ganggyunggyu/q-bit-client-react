@@ -43,15 +43,7 @@ export const CertDetailPage = () => {
       )}
       {selectedTab === 'way' && <section>취득방법 섹션</section>}
       {selectedTab === 'info' && <section>정보 섹션 섹션</section>}
-      <footer
-        className="
-  absolute bottom-0 left-0 w-full z-10
-  flex px-4 gap-3
-  bg-alternative
-  pb-[50px] pt-[10px]
-  [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]
-"
-      >
+      <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative pb-[50px] pt-[10px] [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
         <Button size="lg">리마인드</Button>
         <button>
           <Heart />

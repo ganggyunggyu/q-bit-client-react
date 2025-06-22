@@ -58,7 +58,7 @@ export const BottomBar = () => {
           animate="animate"
           exit="exit"
           variants={slideDownVariants}
-          className="fixed bottom-0 left-0 w-screen z-10"
+          className="fixed bottom-0 left-0 w-screen z-10 [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]"
         >
           <footer className="w-screen h-[84px] flex justify-around items-end px-2 pb-7 bg-white">
             {bottomTabItems.map((item) => (
