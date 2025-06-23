@@ -190,9 +190,7 @@ const MainPage = () => {
               !searchLoading &&
               inputValue.trim() !== '' &&
               results.length === 0 && (
-                <li className="text-gray-400 text-body-s asd">
-                  검색 결과 없음
-                </li>
+                <li className="text-gray-400 text-body-s">검색 결과 없음</li>
               )}
           </motion.ul>
         )}
