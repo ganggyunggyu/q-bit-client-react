@@ -37,7 +37,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: ✅ Deploy to S3
-        run: aws s3 sync ./dist s3://q-bit-client --delete
+        run: aws s3 sync ./dist s3://q-bit-client --delete --acl public-read
 
       - name: ✅ Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation --distribution-id E3U2AF1IMUHVCH --paths "/*"
