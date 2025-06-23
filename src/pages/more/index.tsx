@@ -47,7 +47,9 @@ const MorePage = () => {
         <SelectBox className="flex justify-start">공지사항</SelectBox>
         <SelectBox className="flex justify-start">이용약관</SelectBox>
         <SelectBox className="flex justify-start">개인정보처리방침</SelectBox>
-        <SelectBox className="flex justify-start">오픈소스라이선스</SelectBox>
+        <SelectBox className="flex justify-start asd">
+          오픈소스라이선스
+        </SelectBox>
       </section>
     </main>
   );
