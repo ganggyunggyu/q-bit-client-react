@@ -44,10 +44,10 @@ export const Tabs: React.FC<TabsProps> = ({
 
   return (
     <nav
-      className={`relative top-0 z-10 border-b border-gray-200 pt-[15px] ${className ?? ''}`}
+      className={`relative top-0 z-10 pt-[15px] bg-normal ${className ?? ''}`}
       {...props}
     >
-      <div className="flex px-4 py-2 overflow-x-auto ">
+      <div className="flex px-4 pt-2 overflow-x-auto ">
         {tabs.map((tab) => {
           const isActive = selected === tab.id;
 
@@ -57,7 +57,9 @@ export const Tabs: React.FC<TabsProps> = ({
               onClick={() => onSelect(tab.id)}
               className="relative py-2 font-semibold font-title-md-bold w-full"
             >
-              <span className={isActive ? 'text-black' : 'text-black-alt'}>
+              <span
+                className={isActive ? 'text-black' : 'text-black-assistive/60'}
+              >
                 {tab.label}
               </span>
 
@@ -67,7 +69,7 @@ export const Tabs: React.FC<TabsProps> = ({
                 <motion.div
                   key={tabKey}
                   layoutId={isMounted.current ? 'underline' : ''}
-                  className="w-full absolute bottom-0 left-0 right-0 h-[3px] bg-black rounded"
+                  className="w-full absolute bottom-0 left-0 right-0 h-[1.5px] bg-black rounded"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
