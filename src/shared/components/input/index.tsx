@@ -44,57 +44,65 @@ export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
     isSearch?: boolean;
   };
 
-export const Input: React.FC<InputProps> = ({
-  label,
-  alertMessage,
-  helperMessage,
-  className,
-  id,
-  variant,
-  inputSize,
-  isArrow,
-  isSearch,
-  ...props
-}) => {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      label,
+      alertMessage,
+      helperMessage,
+      className,
+      id,
+      variant,
+      inputSize,
+      isArrow,
+      isSearch,
+      ...props
+    },
+    ref,
+  ) => {
+    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
-  return (
-    <>
-      <div className="relative z-0 w-full flex items-center">
-        {isSearch && (
-          <figure className="absolute left-7 top-1/2 -translate-y-1/2 text-white bg-primary p-1 rounded-full">
-            <Search size={16} />
-          </figure>
-        )}
-        <input
-          id={inputId}
-          placeholder=" "
-          autoComplete="off"
-          className={cn(
-            inputVariants({ variant, inputSize }),
-            isSearch && 'pl-12', // 아이콘 있으면 왼쪽 패딩 추가
-            'peer',
-            className,
+    return (
+      <>
+        <div className="relative z-0 w-full flex items-center">
+          {isSearch && (
+            <figure className="absolute left-7 top-1/2 -translate-y-1/2 text-white bg-primary p-1 rounded-full">
+              <Search size={16} />
+            </figure>
           )}
-          {...props}
-        />
-        {label && (
-          <label className={cn(inputLabelVariants())} htmlFor={inputId}>
-            {label}
-          </label>
-        )}
-        {isArrow && (
-          <figure className="absolute right-4 top-1/2 -translate-y-1/2">
-            <RightArrow />
-          </figure>
-        )}
-      </div>
+          <input
+            ref={ref}
+            id={inputId}
+            placeholder=" "
+            autoComplete="off"
+            className={cn(
+              inputVariants({ variant, inputSize }),
+              isSearch && 'pl-12',
+              'peer',
+              className,
+            )}
+            {...props}
+          />
+          {label && (
+            <label className={cn(inputLabelVariants())} htmlFor={inputId}>
+              {label}
+            </label>
+          )}
+          {isArrow && (
+            <figure className="absolute right-4 top-1/2 -translate-y-1/2">
+              <RightArrow />
+            </figure>
+          )}
+        </div>
 
-      {alertMessage ? (
-        <p className="text-red-400 text-xs mt-1">{alertMessage}</p>
-      ) : helperMessage ? (
-        <p className="text-gray-400 text-xs mt-1">{helperMessage}</p>
-      ) : null}
-    </>
-  );
-};
+        {alertMessage ? (
+          <p className="text-red-400 text-xs mt-1">{alertMessage}</p>
+        ) : helperMessage ? (
+          <p className="text-gray-400 text-xs mt-1">{helperMessage}</p>
+        ) : null}
+      </>
+    );
+  },
+);
+
+Input.displayName = 'Input';

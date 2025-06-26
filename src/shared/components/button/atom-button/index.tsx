@@ -11,6 +11,8 @@ const buttonVariants = cva(
         primary: 'bg-blue-good text-white active:bg-black-primary ',
         outline:
           'bg-normal text-primary border-[1.5px] border-primary active:bg-divide',
+        trans:
+          'bg-bg-primary text-primary border-[1.5px] border-primary active:bg-divide',
         disabled: 'bg-alternative text-disable border border-divide',
         warning: 'bg-urgent/10 text-urgent active:bg-urgent/20',
         normal:

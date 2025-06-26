@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { HtmlHTMLAttributes, InputHTMLAttributes } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { debounce } from 'es-toolkit';
+import { debounce, delay } from 'es-toolkit';
 
 import { TitleBellAppBar, TopCertList } from '@/widgets';
 import { CertCard } from '@/features';
@@ -15,7 +15,7 @@ import { PROJECT_NAME_EN } from '@/shared/constants/core';
 const MainPage = () => {
   const [isFocus, setIsFocus] = React.useState(false);
   const [isSearch, setIsSearch] = React.useState(false);
-
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = React.useState('');
   const [query, setQuery] = React.useState('');
   const [isTyping, setIsTyping] = React.useState(false);
@@ -40,7 +40,10 @@ const MainPage = () => {
     [],
   );
 
-  const handleInputFocus = () => setIsFocus(true);
+  const handleInputFocus = () => {
+    searchInputRef.current.focus();
+    setIsFocus(true);
+  };
   const handleInputBlur = () => setIsFocus(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -49,7 +52,11 @@ const MainPage = () => {
     debouncedSetQuery(value);
   };
 
-  const handleSearchPage = () => setIsSearch(true);
+  const handleSearchPage = async () => {
+    setIsSearch(true);
+    await delay(500);
+    handleInputFocus();
+  };
   const handleBackClick = () => {
     setIsSearch(false);
     setInputValue('');
@@ -61,64 +68,54 @@ const MainPage = () => {
   };
 
   return (
-    <main className="flex flex-col pb-[80px] bg-alternative overflow-hidden text-black-normal">
-      <section className="relative flex gap-4 flex-col justify-center w-full pb-6 ">
+    <main className="pb-[80px] bg-alternative overflow-hidden text-black-normal">
+      <section className="flex gap-4 flex-col justify-center w-full pt-10">
         {!isSearch && <TitleBellAppBar title={PROJECT_NAME_EN} />}
 
-        <motion.div
-          layout
-          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          className="w-11/12 mx-auto"
-        >
-          {isSearch ? (
-            <div className="flex items-center w-full">
-              <AnimatePresence initial={false} mode="wait">
-                {isFocus && (
-                  <motion.button
-                    key="back-icon"
-                    onClick={handleBackClick}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    className="mr-2 shrink-0"
-                  >
-                    <BackIcon />
-                  </motion.button>
-                )}
-              </AnimatePresence>
+        <motion.div layout className="mx-4 ">
+          <div
+            className={`relative w-full h-[44px] flex transition-all
+            ${isSearch ? 'opacity-100' : 'opacity-0 hidden'}
+            `}
+          >
+            <button
+              onClick={handleBackClick}
+              className={`w-full h-full absolute top-0  ${isFocus ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'} transition-all`}
+            >
+              <BackIcon />
+            </button>
+            <input
+              ref={searchInputRef}
+              className={`absolute top-0 px-4 right-0 text-start h-full border-[1.5px] rounded-full border-primary focus:border-primary bg-white transition-all ${isFocus ? 'w-[88%]' : 'w-full'}`}
+              value={inputValue}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              onChange={handleInputChange}
+            />
+          </div>
 
-              <motion.div
-                key="input-field"
-                layout
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                className="flex-1"
-              >
-                <Input
-                  className="w-full text-start border-[2px]"
-                  variant="default"
-                  value={inputValue}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                  onChange={handleInputChange}
-                />
-              </motion.div>
-            </div>
-          ) : (
-            <article className="pb-2">
-              <Button
-                className="w-full h-[44px] text-start border-[2px]"
-                variant="shadow"
-                size="lg"
-                isSearch
-                onClick={handleSearchPage}
-              >
-                <p className="w-full text-left pl-10 text-primary/50 font-body-m mb">
-                  찾고있는 자격증을 검색해보세요.
-                </p>
-              </Button>
-            </article>
-          )}
+          <motion.div
+            layout
+            animate={{
+              opacity: isSearch ? 0 : 1,
+              y: isSearch ? -50 : 0,
+              pointerEvents: isSearch ? 'none' : 'auto',
+            }}
+            transition={{ duration: 0.1 }}
+            className={`w-full pb-6 ${isSearch && 'hidden'}`}
+          >
+            <Button
+              className="w-full h-[44px] text-start border-[2px]"
+              variant="shadow"
+              size="lg"
+              isSearch
+              onClick={handleSearchPage}
+            >
+              <p className="w-full text-left pl-10 text-primary/50 font-body-m mb">
+                찾고있는 자격증을 검색해보세요.
+              </p>
+            </Button>
+          </motion.div>
         </motion.div>
       </section>
 
@@ -159,44 +156,66 @@ const MainPage = () => {
             </section>
           </motion.div>
         ) : (
-          <motion.ul
-            key="search-results"
+          <motion.section
+            key="search-results-section"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="mt-3 px-4 space-y-2 min-h-[80px]"
           >
-            {(isTyping || searchLoading) && (
-              <div className="flex justify-center items-center py-6">
-                <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
+            <ul className="mt-3 px-4 space-y-2 min-h-[80px]">
+              <article className="flex gap-2">
+                <Button size="sm" variant="trans">
+                  전체
+                </Button>
+                <Button size="sm" variant="normal">
+                  접수중
+                </Button>
+                <Button size="sm" variant="normal">
+                  접수 예정
+                </Button>
+              </article>
 
-            {!isTyping && !searchLoading && results.length > 0 && (
-              <React.Fragment>
-                {results.map((result) => (
-                  <li
-                    key={result._id}
-                    onClick={() => handleNameClick(result._id)}
-                    className="flex items-center text-gray-500 text-body-s gap-2 cursor-pointer"
-                  >
-                    <span className="i-tabler-search text-gray-400" />
-                    {result.jmfldnm}
-                  </li>
-                ))}
-              </React.Fragment>
-            )}
-
-            {!isTyping &&
-              !searchLoading &&
-              inputValue.trim() !== '' &&
-              results.length === 0 && (
-                <li className="text-gray-400 text-body-s asd">
-                  검색 결과 없음
-                </li>
+              {(isTyping || searchLoading) && (
+                <div className="flex justify-center items-center py-6">
+                  <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                </div>
               )}
-          </motion.ul>
+
+              {!isTyping && !searchLoading && results.length > 0 && (
+                <React.Fragment>
+                  <AnimatePresence mode="wait">
+                    {results.map((cert, index) => (
+                      <motion.div
+                        key={cert._id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2, delay: index * 0.03 }}
+                      >
+                        <CertCard cert={cert} dDay={3} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </React.Fragment>
+              )}
+
+              {!isTyping &&
+                !searchLoading &&
+                inputValue.trim() !== '' &&
+                results.length === 0 && (
+                  <motion.li
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-gray-400 text-body-s"
+                  >
+                    검색 결과 없음
+                  </motion.li>
+                )}
+            </ul>
+          </motion.section>
         )}
       </AnimatePresence>
     </main>

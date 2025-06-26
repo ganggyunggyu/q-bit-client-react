@@ -21,7 +21,7 @@ const Bell = () => {
 
 export const TitleBellAppBar = ({ title }) => {
   return (
-    <header className="flex items-center justify-between w-full px-4 bg-transparent pt-10">
+    <header className="flex items-center justify-between w-full px-4 bg-transparent ">
       <p className="font-title-sb text-primary">{title}</p>
       <button className="text-primary">
         <Bell />
