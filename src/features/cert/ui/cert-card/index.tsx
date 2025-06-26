@@ -26,16 +26,16 @@ export const CertCard: React.FC<CertCardProps> = ({ cert, dDay, isLiked }) => {
   return (
     <div
       onClick={handleCertClick}
-      className="flex justify-between items-start p-4 rounded-2xl bg-white shadow-sm border border-divide"
+      className="max-h-[122px] flex justify-between items-start p-4 rounded-2xl bg-white shadow-sm border border-divide"
     >
-      <div className="flex flex-col space-y-1">
-        <h3 className="text-black font-headline-sb">{cert.jmfldnm}</h3>
-        <span className="text-black-alternative/80 font-caption-m">
+      <div className="flex flex-col">
+        <p className="text-black font-headline-sb mb-1">{cert.jmfldnm}</p>
+        <span className="text-black-alternative/80 font-caption-m mb-5">
           {cert.agency}
         </span>
-        <div className="mt-2 inline-flex items-center">
+        <div className="inline-flex items-center">
           <span
-            className={`px-3 py-1 rounded-full
+            className={`rounded-full py-1 px-3 font-caption-m
             ${cert.qualgbnm === '국가기술자격' && 'bg-green/10 text-green'}
             ${cert.qualgbnm === '국가전문자격' && 'bg-blue-good/10 text-blue-good'}
             `}
@@ -45,19 +45,19 @@ export const CertCard: React.FC<CertCardProps> = ({ cert, dDay, isLiked }) => {
         </div>
       </div>
 
-      <div className="flex flex-col items-end space-y-1">
+      <div className="flex flex-col items-end">
         <button
-          className="w-8 h-8 rounded-full border border-divide flex items-center justify-center"
+          className="w-8 h-8 rounded-full border border-divide flex items-center justify-center mb-2"
           aria-label="찜하기"
           onClick={(e) => toggleLike(e)}
         >
           <Heart
             className={`w-5 h-5 transition-colors ${
-              isLike ? 'fill-urgent text-urgent' : 'fill-divide text-divide'
+              isLike ? 'fill-primary text-primary' : 'fill-divide text-divide'
             }`}
           />
         </button>
-        <div className=" text-blue-good font-semibold">D-{dDay}</div>
+        <div className=" text-blue-good font-title-sb mb-1">D-{dDay}</div>
         <div className=" text-black-alternative/80 font-caption-m">
           접수까지
         </div>

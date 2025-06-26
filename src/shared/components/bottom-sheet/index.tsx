@@ -49,7 +49,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             <header className="flex justify-center items-center mb-4">
               {/* <p className="text-lg font-semibold">{title}</p> */}
               <button
-                className="h-2 w-1/2 bg-black-alternative rounded-full"
+                className="h-[5px] w-1/2 bg-black-alternative rounded-full"
                 onClick={() => setIsBottomSheet(false)}
               ></button>
             </header>

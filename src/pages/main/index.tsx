@@ -61,9 +61,8 @@ const MainPage = () => {
   };
 
   return (
-    <main className="flex flex-col gap-8 pb-[100px] bg-alternative overflow-hidden text-black-normal">
-      {/* 상단 검색 영역 */}
-      <section className="relative flex flex-col justify-center w-full gap-3">
+    <main className="flex flex-col pb-[80px] bg-alternative overflow-hidden text-black-normal">
+      <section className="relative flex gap-4 flex-col justify-center w-full pb-6 ">
         {!isSearch && <TitleBellAppBar title={PROJECT_NAME_EN} />}
 
         <motion.div
@@ -106,22 +105,23 @@ const MainPage = () => {
               </motion.div>
             </div>
           ) : (
-            <Button
-              className="w-full text-start border-[2px]"
-              variant="shadow"
-              size="lg"
-              isSearch
-              onClick={handleSearchPage}
-            >
-              <p className="w-full text-left pl-11 text-primary/50">
-                찾고있는 자격증을 검색해보세요.
-              </p>
-            </Button>
+            <article className="pb-2">
+              <Button
+                className="w-full h-[44px] text-start border-[2px]"
+                variant="shadow"
+                size="lg"
+                isSearch
+                onClick={handleSearchPage}
+              >
+                <p className="w-full text-left pl-10 text-primary/50 font-body-m mb">
+                  찾고있는 자격증을 검색해보세요.
+                </p>
+              </Button>
+            </article>
           )}
         </motion.div>
       </section>
 
-      {/* 메인 or 검색 결과 */}
       <AnimatePresence mode="wait">
         {!isSearch ? (
           <motion.div
@@ -130,18 +130,20 @@ const MainPage = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="flex flex-col gap-8"
+            className="flex flex-col"
           >
-            <TopCertList
-              title={
-                <React.Fragment>
-                  <span className="text-primary">20대</span>
-                  <span>에게 가장 인기 많은 자격증</span>
-                </React.Fragment>
-              }
-            />
-            <section className="bg-bg-primary p-3 flex flex-col gap-3 rounded-2xl">
-              <p className="text-black-primary font-headline-m pb-1">
+            <section className="flex flex-col gap-2 pt-6 pb-8 px-4 bg-normal">
+              <TopCertList
+                title={
+                  <p className="pb-2">
+                    <span className="text-primary">20대</span>
+                    <span>에게 가장 인기 많은 자격증</span>
+                  </p>
+                }
+              />
+            </section>
+            <section className="bg-bg-primary flex flex-col gap-2 rounded-t-2xl pt-4 pb-8 px-4">
+              <p className="text-black-primary font-headline-m pb-2">
                 접수까지 일주일!
               </p>
 

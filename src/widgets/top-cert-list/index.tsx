@@ -32,7 +32,7 @@ export const TopCertList: React.FC<TopCertListProps> = ({
 
   if (isLoading) return <div>로딩 중이야... 이딴 거 보여줘야 하냐</div>;
   return (
-    <section className="flex flex-col gap-3 px-3 bg-white pt-5 rounded-t-2xl">
+    <section className="flex flex-col gap-3 rounded-t-2xl">
       <p className="font-headline-m">{title}</p>
 
       {certs.map((cert, index) => (
