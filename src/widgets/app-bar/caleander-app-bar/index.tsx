@@ -51,7 +51,7 @@ export const CaleanderAppBar: React.FC<CaleanderAppBarProps> = ({
   };
 
   return (
-    <header className="flex items-center justify-between w-full p-4 overflow-hidden h-12">
+    <header className="flex items-center justify-between w-full p-4 overflow-hidden h-12 bg-normal pt-10">
       <div className="relative h-6 w-16 overflow-hidden">
         <AnimatePresence custom={yearDirection} mode="wait">
           <motion.div

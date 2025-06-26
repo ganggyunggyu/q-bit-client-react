@@ -13,7 +13,7 @@ export const SearchAppBar: React.FC<SearchAppBarProps> = ({
   return (
     <header
       className={cn(
-        `flex items-center justify gap-3 -center w-full ${className}`,
+        `flex items-center justify gap-3 -center w-full bg-normal pt-10 ${className}`,
       )}
       {...props}
     >

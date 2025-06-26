@@ -17,7 +17,7 @@ export const TitleBackAppBar: React.FC<TitleBackAppBarProps> = ({
       className={cn('flex items-center justify-center w-full gap-1', className)}
       {...props}
     >
-      <BackButton className="relative top-0 left-0 text-blue-good pl-0" />
+      <BackButton className="relative top-0 left-0 text-blue-good pl-0 bg-normal pt-10" />
       <p className="flex-1 font-title-sb h-full pt-1">{title}</p>
     </header>
   );

@@ -79,7 +79,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: direction === 'left' ? -200 : 200, opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="absolute w-11/12 flex justify-between bg-white pt-2 rounded-2xl"
+          className="absolute w-11/12 flex justify-between bg-white rounded-2xl py-1"
         >
           {days.map((day) => {
             const isSelected = day.isSame(selectedDate, 'day');
@@ -90,7 +90,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
               <div
                 key={day.format('YYYY-MM-DD')}
                 onClick={() => onSelect(day.toDate())}
-                className={`flex flex-col gap-1 items-center justify-center w-10 h-16 mx-1 rounded-lg 
+                className={`flex flex-col gap-1.5 items-center justify-center w-10 h-16 mx-1 rounded-lg 
                 `}
               >
                 <span
@@ -104,7 +104,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
                               isSelected
                                 ? 'bg-bg-primary text-primary border border-blue-good'
                                 : isWeekend
-                                  ? 'bg-urgent text-white'
+                                  ? 'text-urgent'
                                   : 'text-black'
                             }`}
                 >
