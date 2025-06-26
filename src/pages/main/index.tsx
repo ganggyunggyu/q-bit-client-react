@@ -61,7 +61,7 @@ const MainPage = () => {
   };
 
   return (
-    <main className="flex flex-col gap-8 pb-[100px] bg-alternative overflow-hidden">
+    <main className="flex flex-col gap-8 pb-[100px] bg-alternative overflow-hidden text-black-normal">
       {/* 상단 검색 영역 */}
       <section className="relative flex flex-col justify-center w-full gap-3">
         {!isSearch && <TitleBellAppBar title={PROJECT_NAME_EN} />}
@@ -190,7 +190,9 @@ const MainPage = () => {
               !searchLoading &&
               inputValue.trim() !== '' &&
               results.length === 0 && (
-                <li className="text-gray-400 text-body-s">검색 결과 없음</li>
+                <li className="text-gray-400 text-body-s asd">
+                  검색 결과 없음
+                </li>
               )}
           </motion.ul>
         )}
