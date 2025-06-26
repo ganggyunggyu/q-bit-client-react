@@ -44,7 +44,7 @@
   --font-weight-r: 400;
 
   /* Font Family */
-  --font-default: 'Inter', sans-serif;
+  --font-default: 'Pretendard-Regular', sans-serif;
 }
 
 @layer utilities {
