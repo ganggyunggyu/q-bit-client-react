@@ -8,8 +8,8 @@ interface CalendarState {
 }
 
 export const useCalendarStore = create<CalendarState>((set) => ({
-  selectedDate: new Date(2025, 4, 17),
-  displayDate: new Date(2025, 4, 17),
+  selectedDate: new Date(),
+  displayDate: new Date(),
   setSelectedDate: (date) => set({ selectedDate: date }),
   setDisplayDate: (date) => set({ displayDate: date }),
 }));
