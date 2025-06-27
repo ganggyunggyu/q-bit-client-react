@@ -1,16 +1,10 @@
 import { axios } from '@/app/config';
 import { useCalendarStore, useUiStore } from '@/app/store';
-import { ReminingDateLabel } from '@/entities';
+import { ReminingDateLabel, useGetTodoList } from '@/entities';
 import { BottomSheet, Button, CheckBoxInput, cn } from '@/shared';
 import { formatDate } from '@/shared/util';
 import { CalendarBox } from '@/widgets';
 import React from 'react';
-
-export const getTodo = async () => {
-  const result = await axios.get('/todo');
-
-  console.log(result);
-};
 
 const Calendar = () => {
   const { isCalendarBottomSheetOpen, setIsCalendarBottomSheetOpen } =
@@ -19,9 +13,13 @@ const Calendar = () => {
 
   const { weekday, day, month } = formatDate(selectedDate);
 
-  getTodo();
-
   const [memo, setMemo] = React.useState('');
+
+  const { data: todoList, isLoading } = useGetTodoList();
+
+  if (!isLoading) {
+    console.log('가져온 Todo:', todoList);
+  }
 
   return (
     <main className="flex">
@@ -43,8 +41,6 @@ const Calendar = () => {
         <section className="flex flex-col gap-4 pb-6">
           <p className="font-headline-m ">체크리스트</p>
           <div className="border border-divide rounded-3xl">
-            <CheckBoxInput label="할일을 입력하세요." />
-            <CheckBoxInput label="할일을 입력하세요." />
             <CheckBoxInput label="할일을 입력하세요." />
           </div>
         </section>
