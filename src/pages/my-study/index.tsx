@@ -1,95 +1,92 @@
 import { slideVariants } from '@/app/motion';
+import { useGetTodoByDate, usePostTodo } from '@/entities';
 import { Button, CheckBoxInput, Tabs } from '@/shared';
 import { TitleAppBar, WeeklyCalendar } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import React from 'react';
 
-export const prevTodos = [
-  {
-    _id: '666f1234567890abcdef001',
-    userId: '666f1234567890abcdef123',
-    createDate: '2025-06-25T10:00:00.000Z',
-    scheduledDate: '2025-06-27T00:00:00.000Z',
-    isComplete: false,
-    content: '스터디 계획 세우기',
-  },
-  {
-    _id: '666f1234567890abcdef002',
-    userId: '666f1234567890abcdef123',
-    createDate: '2025-06-25T10:05:00.000Z',
-    scheduledDate: '2025-06-28T00:00:00.000Z',
-    isComplete: true,
-    content: '기출문제 풀기',
-  },
-  {
-    _id: '666f1234567890abcdef003',
-    userId: '666f1234567890abcdef123',
-    createDate: '2025-06-25T10:10:00.000Z',
-    scheduledDate: '2025-06-29T00:00:00.000Z',
-    isComplete: false,
-    content: '시험장 위치 확인',
-  },
-];
+type Todo = {
+  content: string;
+  isComplete: boolean;
+};
+
+const createEmptyTodo = (): Todo => ({ content: '', isComplete: false });
+
+const getLocalDateString = (date: Date) =>
+  new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split('T')[0];
+
+const useTodoState = (selectedDate: Date) => {
+  const dateKey = getLocalDateString(selectedDate);
+  const { data: todoData, isLoading } = useGetTodoByDate(dateKey);
+  const [todos, setTodos] = React.useState<Todo[]>([]);
+  const [memo, setMemo] = React.useState('');
+
+  React.useEffect(() => {
+    if (!todoData || isLoading) return;
+
+    const parsedTodos = (
+      todoData.todos.length > 0 ? todoData.todos : [createEmptyTodo()]
+    ).map((t) => ({
+      content: t.content ?? '',
+      isComplete: !!t.isComplete,
+    }));
+
+    setTodos(parsedTodos);
+    setMemo(todoData.memo?.content ?? '');
+  }, [todoData, isLoading]);
+
+  console.log(todos);
+  return { todos, setTodos, memo, setMemo, isLoading };
+};
 
 const MyStudyPage = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTab, setSelectedTab] = React.useState('planner');
-
-  type Todo = {
-    content: string;
-    isComplete: boolean;
-  };
-
-  const inputTemplate = {
-    _id: '',
-    userId: '666f1234567890abcdef123',
-    createDate: '2025-06-25T10:10:00.000Z',
-    scheduledDate: '2025-06-29T00:00:00.000Z',
-    isComplete: false,
-    content: '',
-  };
-
-  const [todos, setTodos] = React.useState<Todo[]>([]);
-
-  const [memo, setMemo] = React.useState('');
-
-  React.useEffect(() => {
-    const initTodo = [...todos, inputTemplate];
-
-    setTodos([...initTodo]);
-  }, []);
+  const { todos, setTodos, memo, setMemo, isLoading } =
+    useTodoState(selectedDate);
+  const { mutate: createTodo } = usePostTodo();
 
   const handleSubmitClick = () => {
-    console.log(selectedDate);
-    console.log(todos);
-    console.log(memo);
+    const scheduledDate = getLocalDateString(selectedDate);
+    const validTodos = todos.filter((t) => t.content.trim() !== '');
+
+    if (validTodos.length === 0) {
+      alert('최소 하나 이상의 할 일이 필요합니다.');
+      return;
+    }
+
+    createTodo({
+      scheduledDate,
+      todos: validTodos,
+      memo: { content: memo.trim() },
+    });
   };
+
+  const handleAddTodo = () => {
+    if (todos[todos.length - 1]?.content.trim() === '') return;
+    setTodos([...todos, createEmptyTodo()]);
+  };
+
   return (
     <main className="h-[calc(100vh - 184px)] bg-alternative pb-[100px]">
-      <TitleAppBar title={'내 스터디'} />
+      <TitleAppBar title="내 스터디" />
       <Tabs
         tabKey="study-tab"
         selected={selectedTab}
-        onSelect={(id) => {
-          setSelectedTab(id);
-        }}
+        onSelect={setSelectedTab}
         tabs={[
-          {
-            id: 'planner',
-            label: '플래너',
-          },
-          {
-            id: 'stats',
-            label: '통계',
-          },
+          { id: 'planner', label: '플래너' },
+          { id: 'stats', label: '통계' },
         ]}
       />
       <div className="relative min-h-full overflow-hidden">
         <AnimatePresence mode="wait" initial={false}>
           {selectedTab === 'planner' && (
             <motion.div
-              key={selectedTab}
+              key="planner"
               variants={slideVariants}
               className="h-full"
               initial="initial"
@@ -100,7 +97,7 @@ const MyStudyPage = () => {
               <section className="pb-6">
                 <WeeklyCalendar
                   selectedDate={selectedDate}
-                  onSelect={(date) => setSelectedDate(date)}
+                  onSelect={setSelectedDate}
                 />
               </section>
 
@@ -109,31 +106,36 @@ const MyStudyPage = () => {
                 <div className="border border-divide rounded-3xl bg-white">
                   {todos.map((todo, idx) => (
                     <CheckBoxInput
-                      key={idx}
+                      key={`${idx}-${todo.isComplete}`}
                       label="할일을 입력하세요."
-                      checked={todo.isComplete}
+                      checked={Boolean(todo.isComplete)}
                       onChange={() => {
-                        console.log(todo.isComplete);
+                        const updated = [...todos];
+                        updated[idx] = {
+                          ...todo,
+                          isComplete: !todo.isComplete,
+                        };
+                        setTodos(updated);
                       }}
                       inputProps={{
                         value: todo.content,
                         onChange: (e) => {
                           const updated = [...todos];
-                          updated[idx].content = e.target.value;
+                          updated[idx] = {
+                            ...todo,
+                            content: e.target.value,
+                          };
                           setTodos(updated);
                         },
                       }}
                     />
                   ))}
+
                   <Button
                     className="rounded-3xl rounded-t-none gap-2 bg-white py-3 h-[48px] active:bg-alternative active:border-0"
                     size="lg"
-                    disabled={todos[todos.length - 1]?.content?.trim() === ''}
-                    onClick={() => {
-                      if (todos[todos.length - 1]?.content?.trim() === '')
-                        return;
-                      setTodos([...todos, inputTemplate]);
-                    }}
+                    disabled={todos[todos.length - 1]?.content.trim() === ''}
+                    onClick={handleAddTodo}
                   >
                     <div className="bg-divide text-normal rounded-full">
                       <Plus size={20} />
@@ -149,9 +151,7 @@ const MyStudyPage = () => {
                   placeholder="메모"
                   className="w-full h-32 px-4 py-3 rounded-3xl border border-divide bg-white text-body-m text-gray-900 placeholder:text-black-assistive/27 resize-none outline-none"
                   value={memo}
-                  onChange={(e) => {
-                    setMemo(e.target.value);
-                  }}
+                  onChange={(e) => setMemo(e.target.value)}
                 />
               </section>
 
@@ -165,7 +165,7 @@ const MyStudyPage = () => {
 
           {selectedTab === 'stats' && (
             <motion.div
-              key={selectedTab}
+              key="stats"
               variants={slideVariants}
               className="h-full"
               initial="initial"
@@ -181,4 +181,5 @@ const MyStudyPage = () => {
     </main>
   );
 };
+
 export default MyStudyPage;
