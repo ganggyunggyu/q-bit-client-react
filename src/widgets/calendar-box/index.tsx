@@ -38,10 +38,7 @@ export const CalendarBox = () => {
   const [direction, setDirection] = React.useState<'left' | 'right'>('left');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const isAdmissionDay = (date: Date) =>
-    date.getFullYear() === 2025 &&
-    date.getMonth() === 4 &&
-    date.getDate() === 18;
+  const { data: todoList, isLoading: isTodoListLoading } = useGetTodoList();
 
   React.useEffect(() => {
     let startX = 0;
@@ -123,15 +120,19 @@ export const CalendarBox = () => {
             formatDay={(_, date) => String(date.getDate())}
             calendarType="gregory"
             tileContent={({ date, view }) => {
-              const getRandomPercent = () =>
-                Math.floor(Math.random() * 91) + 10;
-
-              if (view === 'month') {
-                const myPercent = getRandomPercent() + 1;
-                if (myPercent > 0) {
+              if (todoList && !isTodoListLoading) {
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                const dateStr = `${yyyy}-${mm}-${dd}`; // ← 비교용 문자열
+                console.log(dateStr);
+                const matched = todoList.find(
+                  (d) => d.scheduledDateStr === dateStr,
+                );
+                if (matched) {
                   return (
                     <div className="absolute top-1/2 -translate-y-1/2">
-                      <CalendarProgress percent={myPercent} />
+                      <CalendarProgress percent={100} />
                     </div>
                   );
                 }
@@ -146,6 +147,7 @@ export const CalendarBox = () => {
 };
 
 import { useSpring, useTransform } from 'framer-motion';
+import { useGetTodoList } from '@/entities';
 
 type CalendarProgressProps = {
   percent: number;
