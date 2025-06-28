@@ -132,10 +132,10 @@ const MainPage = () => {
             <section className="flex flex-col gap-2 pt-6 pb-8 px-4 bg-normal">
               <TopCertList
                 title={
-                  <p className="pb-2">
+                  <div className="pb-2">
                     <span className="text-primary">20대</span>
                     <span>에게 가장 인기 많은 자격증</span>
-                  </p>
+                  </div>
                 }
               />
             </section>
