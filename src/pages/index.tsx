@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { fadeVariants, slideVariants } from '@/app/motion';
+import { MainLoading } from '@/shared';
 
 const MainPage = lazy(() => import('./main'));
 const MorePage = lazy(() => import('./more'));
@@ -62,21 +63,21 @@ export const Routing = () => {
               path={path}
               element={
                 <Suspense
-                  key={location.key} // ✅ 이걸 Suspense에 직접!
+                  key={location.key}
                   fallback={
                     <motion.div
                       key="fallback"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="h-full flex items-center justify-center"
+                      className="h-screen flex items-center justify-center"
                     >
-                      Loading...
+                      <MainLoading />
                     </motion.div>
                   }
                 >
                   <motion.div
-                    key={location.key} // ✅ 이게 핵심: motion.div에도 key!
+                    key={location.key}
                     variants={variants}
                     initial="initial"
                     animate="animate"
