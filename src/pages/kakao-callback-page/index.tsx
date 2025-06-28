@@ -1,3 +1,4 @@
+import { MainLoading } from '@/shared';
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -13,7 +14,11 @@ const KakaoCallbackPage = () => {
     }
   }, [code]);
 
-  return <main>로그인 처리 중...</main>;
+  return (
+    <main className="h-screen flex items-center justify-center">
+      <MainLoading />
+    </main>
+  );
 };
 
 export default KakaoCallbackPage;
