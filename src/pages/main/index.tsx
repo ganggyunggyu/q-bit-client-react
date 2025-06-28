@@ -61,6 +61,7 @@ const MainPage = () => {
     setIsSearch(false);
     setInputValue('');
     setQuery('');
+    handleInputBlur();
   };
 
   const handleNameClick = (id: string) => {
@@ -89,7 +90,7 @@ const MainPage = () => {
               className={`absolute top-0 px-4 right-0 text-start h-full border-[1.5px] rounded-full border-primary focus:border-primary bg-white transition-all ${isFocus ? 'w-[88%]' : 'w-full'}`}
               value={inputValue}
               onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
+              // onBlur={handleInputBlur}
               onChange={handleInputChange}
             />
           </div>
