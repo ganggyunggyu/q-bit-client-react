@@ -9,7 +9,7 @@ import {
   useUpcomingCertList,
   useSearchCertNameQuery,
 } from '@/entities';
-import { BackIcon, Button, Input, useRouter } from '@/shared';
+import { BackIcon, Button, Input, MainLoading, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 
 const MainPage = () => {
@@ -178,8 +178,8 @@ const MainPage = () => {
               </article>
 
               {(isTyping || searchLoading) && (
-                <div className="flex justify-center items-center py-6">
-                  <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-full flex items-center justify-center h-[50vh]">
+                  <MainLoading />
                 </div>
               )}
 
