@@ -14,9 +14,13 @@ export const postJoin = async (params: {
 };
 
 export const getAuthMe = async () => {
-  const result = await axios.get('/auth/me');
+  try {
+    const result = await axios.get('/auth/me');
 
-  return result.data;
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const logout = async () => {
