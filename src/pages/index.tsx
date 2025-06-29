@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { fadeVariants, slideVariants } from '@/app/motion';
 import { MainLoading } from '@/shared';
+import { ProtectedRoute } from '@/app/provider/protected-route';
+import LoginRequest from './login-request';
 
 const MainPage = lazy(() => import('./main'));
 const MorePage = lazy(() => import('./more'));
@@ -26,10 +28,32 @@ const fadeRoutes = [
   { path: '/', element: <MainPage /> },
   { path: '/more', element: <MorePage /> },
   { path: '/admin-components', element: <AdminComponents /> },
-  { path: '/calendar', element: <Calendar /> },
-  { path: '/my-cert', element: <MyCertPage /> },
-  { path: '/my-study', element: <MyStudyPage /> },
+  {
+    path: '/calendar',
+    element: (
+      <ProtectedRoute>
+        <Calendar />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/my-cert',
+    element: (
+      <ProtectedRoute>
+        <MyCertPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/my-study',
+    element: (
+      <ProtectedRoute>
+        <MyStudyPage />
+      </ProtectedRoute>
+    ),
+  },
   { path: '/auth/kakao-callback', element: <KakaoCallbackPage /> },
+  { path: '/auth/login/request', element: <LoginRequest /> },
 ] as RouteElement[];
 
 const slideRoutes = [
