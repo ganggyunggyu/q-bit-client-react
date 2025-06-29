@@ -42,12 +42,16 @@ export const BottomBar = () => {
       route: '/more',
     },
   ];
+  const bottomBarVisibleRoutes = [
+    '/',
+    '/calendar',
+    '/my-study',
+    '/my-cert',
+    '/more',
+    '/auth/login/request',
+  ];
 
-  const visibleRoutes = bottomTabItems.map((item) => {
-    if (item.route === '/my') return;
-    return item.route;
-  });
-  const isVisible = visibleRoutes.includes(location.pathname);
+  const isVisible = bottomBarVisibleRoutes.includes(location.pathname);
 
   return (
     <AnimatePresence>
