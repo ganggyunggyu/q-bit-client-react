@@ -1,4 +1,4 @@
-import { BackButton, BackIcon, cn } from '@/shared';
+import { BackButton, BackIcon, cn, useRouter } from '@/shared';
 import React from 'react';
 
 export interface TitleBackAppBarProps
@@ -12,6 +12,7 @@ export const TitleBackAppBar: React.FC<TitleBackAppBarProps> = ({
   className,
   ...props
 }) => {
+  const { back } = useRouter();
   return (
     <header
       className={cn(
@@ -20,7 +21,7 @@ export const TitleBackAppBar: React.FC<TitleBackAppBarProps> = ({
       )}
       {...props}
     >
-      <button className=" text-blue-good pl-0">
+      <button onClick={back} className=" text-blue-good pl-0">
         <BackIcon />
       </button>
 
