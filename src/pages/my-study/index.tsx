@@ -92,7 +92,7 @@ const MyStudyPage = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              custom={-1}
+              custom={1}
             >
               <section className="pb-6">
                 <WeeklyCalendar
@@ -171,7 +171,7 @@ const MyStudyPage = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              custom={1}
+              custom={-1}
             >
               <Button size="lg">전체 분석</Button>
             </motion.div>
