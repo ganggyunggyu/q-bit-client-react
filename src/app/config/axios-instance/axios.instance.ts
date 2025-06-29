@@ -5,6 +5,18 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+function onRefreshed(token: string) {
+  refreshSubscribers.forEach((callback) => callback(token));
+  refreshSubscribers = [];
+}
+
+function addSubscriber(callback: (token: string) => void) {
+  refreshSubscribers.push(callback);
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -15,13 +27,29 @@ axiosInstance.interceptors.response.use(
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          addSubscriber((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            resolve(axiosInstance(originalRequest));
+          });
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        await axiosInstance.post('/auth/refresh-token');
+        const { data } = await axiosInstance.post('/auth/refresh-token');
+        const newAccessToken = data.accessToken;
+
+        onRefreshed(newAccessToken);
+        isRefreshing = false;
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error('Refresh 실패');
+        isRefreshing = false;
         await logout();
         return Promise.reject(refreshError);
       }
