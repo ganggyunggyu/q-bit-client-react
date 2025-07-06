@@ -1,5 +1,4 @@
 import {
-  BottomBar,
   CaleanderAppBar,
   ColorVariants,
   SearchAppBar,
@@ -13,14 +12,13 @@ import {
   CheckBoxInput,
   CheckToggle,
   Chip,
-  cn,
   Dropdown,
   Modal,
   SelectBox,
   Tabs,
 } from '@/shared';
 import React from 'react';
-import { Cert, RemainingDateCard } from '@/entities';
+import { RemainingDateCard } from '@/entities';
 import { certMock } from '@/entities/cert/mock/cert.mock';
 import { CertCard } from '@/features';
 

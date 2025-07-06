@@ -38,7 +38,7 @@ export const CalendarBox = () => {
   const [direction, setDirection] = React.useState<'left' | 'right'>('left');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const { data: todoList, isLoading: isTodoListLoading } = useGetTodoList();
+  const { data: todoList, isLoading: isTodoListLoading } = useGetMonthTodos(displayDate.getFullYear(), displayDate.getMonth() + 1);
 
   React.useEffect(() => {
     let startX = 0;
@@ -119,7 +119,7 @@ export const CalendarBox = () => {
             locale="ko-KR"
             formatDay={(_, date) => String(date.getDate())}
             calendarType="gregory"
-            tileContent={({ date, view }) => {
+            tileContent={({ date }) => {
               if (todoList && !isTodoListLoading) {
                 const yyyy = date.getFullYear();
                 const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -127,7 +127,7 @@ export const CalendarBox = () => {
                 const dateStr = `${yyyy}-${mm}-${dd}`; // ← 비교용 문자열
                 console.log(dateStr);
                 const matched = todoList.find(
-                  (d) => d.scheduledDateStr === dateStr,
+                  (d) => d.date === dateStr,
                 );
                 if (matched) {
                   return (
@@ -147,7 +147,7 @@ export const CalendarBox = () => {
 };
 
 import { useSpring, useTransform } from 'framer-motion';
-import { useGetTodoList } from '@/entities';
+import { useGetMonthTodos } from '@/entities/todo/hooks/todo.hooks';
 
 type CalendarProgressProps = {
   percent: number;
@@ -167,14 +167,14 @@ export const CalendarProgress: React.FC<CalendarProgressProps> = ({
 
   React.useEffect(() => {
     percentSpring.set(percent);
-  }, [percent]);
+  }, [percent, percentSpring]);
 
   const dashOffset = useTransform(
     percentSpring,
     (p) => circumference * (1 - p / 100),
   );
 
-  const hue = useTransform(percentSpring, (p) => p);
+  const hue = useTransform(percentSpring, (h) => h);
   const strokeColor = useTransform(hue, (h) => `hsl(${h}, 92%, 68%)`);
   const bgColor = useTransform(hue, (h) => `hsl(${h}, 92%, 68%, 0.1)`);
 

@@ -1,4 +1,4 @@
-import { BackButton, BackIcon, cn, useRouter } from '@/shared';
+import { BackIcon, cn, useRouter } from '@/shared';
 import React from 'react';
 
 export interface TitleBackAppBarProps

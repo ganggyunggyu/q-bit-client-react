@@ -1,17 +1,23 @@
+// src/pages/my-study/index.tsx
+
 import { slideVariants } from '@/app/motion';
-import { useGetTodoByDate, usePostTodo } from '@/entities';
+import {
+  useFindByDate, // 변경
+  useCreateTodo, // 변경
+} from '@/entities/todo/hooks/todo.hooks'; // 경로 변경
+import {
+  CreateTodoDto, // 추가
+  CreateTodoItemDto, // 추가
+} from '@/entities/todo/model/todo.model'; // 경로 변경
 import { Button, CheckBoxInput, Tabs } from '@/shared';
 import { TitleAppBar, WeeklyCalendar } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import React from 'react';
 
-type Todo = {
-  content: string;
-  isComplete: boolean;
-};
+// 로컬 Todo 타입 정의 제거
 
-const createEmptyTodo = (): Todo => ({ content: '', isComplete: false });
+const createEmptyTodo = (): CreateTodoItemDto => ({ title: '', isCompleted: false }); // 변경
 
 const getLocalDateString = (date: Date) =>
   new Date(date.getTime() - date.getTimezoneOffset() * 60000)
@@ -20,9 +26,9 @@ const getLocalDateString = (date: Date) =>
 
 const useTodoState = (selectedDate: Date) => {
   const dateKey = getLocalDateString(selectedDate);
-  const { data: todoData, isLoading } = useGetTodoByDate(dateKey);
-  const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [memo, setMemo] = React.useState('');
+  const { data: todoData, isLoading } = useFindByDate(dateKey); // 변경
+  const [todos, setTodos] = React.useState<CreateTodoItemDto[]>([]); // 타입 변경
+  // const [memo, setMemo] = React.useState(''); // memo 관련 상태 제거
 
   React.useEffect(() => {
     if (!todoData || isLoading) return;
@@ -30,43 +36,46 @@ const useTodoState = (selectedDate: Date) => {
     const parsedTodos = (
       todoData.todos.length > 0 ? todoData.todos : [createEmptyTodo()]
     ).map((t) => ({
-      content: t.content ?? '',
-      isComplete: !!t.isComplete,
+      title: t.title ?? '', // 변경
+      isCompleted: !!t.isCompleted, // 변경
     }));
 
     setTodos(parsedTodos);
-    setMemo(todoData.memo?.content ?? '');
+    // setMemo(todoData.memo?.content ?? ''); // memo 관련 상태 제거
   }, [todoData, isLoading]);
 
   console.log(todos);
-  return { todos, setTodos, memo, setMemo, isLoading };
+  return { todos, setTodos }; // 반환값 변경
 };
 
 const MyStudyPage = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTab, setSelectedTab] = React.useState('planner');
-  const { todos, setTodos, memo, setMemo, isLoading } =
+  const { todos, setTodos } = // 반환값 변경
     useTodoState(selectedDate);
-  const { mutate: createTodo } = usePostTodo();
+  // const [memo, setMemo] = React.useState(''); // memo 관련 상태 제거
+
+  const { mutate: createTodo } = useCreateTodo(); // 변경
 
   const handleSubmitClick = () => {
     const scheduledDate = getLocalDateString(selectedDate);
-    const validTodos = todos.filter((t) => t.content.trim() !== '');
+    const validTodos = todos.filter((t) => t.title.trim() !== ''); // 변경
 
     if (validTodos.length === 0) {
       alert('최소 하나 이상의 할 일이 필요합니다.');
       return;
     }
 
-    createTodo({
-      scheduledDate,
+    const todoDto: CreateTodoDto = { // CreateTodoDto 타입 명시
+      date: scheduledDate,
       todos: validTodos,
-      memo: { content: memo.trim() },
-    });
+    };
+
+    createTodo(todoDto); // memo 관련 인자 제거
   };
 
   const handleAddTodo = () => {
-    if (todos[todos.length - 1]?.content.trim() === '') return;
+    if (todos[todos.length - 1]?.title.trim() === '') return; // 변경
     setTodos([...todos, createEmptyTodo()]);
   };
 
@@ -106,24 +115,24 @@ const MyStudyPage = () => {
                 <div className="border border-divide rounded-3xl bg-white">
                   {todos.map((todo, idx) => (
                     <CheckBoxInput
-                      key={`${idx}-${todo.isComplete}`}
+                      key={`${idx}-${todo.isCompleted}`} // 변경
                       label="할일을 입력하세요."
-                      checked={Boolean(todo.isComplete)}
+                      checked={Boolean(todo.isCompleted)} // 변경
                       onChange={() => {
                         const updated = [...todos];
                         updated[idx] = {
                           ...todo,
-                          isComplete: !todo.isComplete,
+                          isCompleted: !todo.isCompleted, // 변경
                         };
                         setTodos(updated);
                       }}
                       inputProps={{
-                        value: todo.content,
+                        value: todo.title, // 변경
                         onChange: (e) => {
                           const updated = [...todos];
                           updated[idx] = {
                             ...todo,
-                            content: e.target.value,
+                            title: e.target.value, // 변경
                           };
                           setTodos(updated);
                         },
@@ -134,7 +143,7 @@ const MyStudyPage = () => {
                   <Button
                     className="rounded-3xl rounded-t-none gap-2 bg-white py-3 h-[48px] active:bg-alternative active:border-0"
                     size="lg"
-                    disabled={todos[todos.length - 1]?.content.trim() === ''}
+                    disabled={todos[todos.length - 1]?.title.trim() === ''} // 변경
                     onClick={handleAddTodo}
                   >
                     <div className="bg-divide text-normal rounded-full">
@@ -145,7 +154,8 @@ const MyStudyPage = () => {
                 </div>
               </section>
 
-              <section className="px-4 flex flex-col gap-4 pb-6">
+              {/* memo 관련 섹션 제거 */}
+              {/* <section className="px-4 flex flex-col gap-4 pb-6">
                 <p className="font-headline-m">메모</p>
                 <textarea
                   placeholder="메모"
@@ -153,7 +163,7 @@ const MyStudyPage = () => {
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                 />
-              </section>
+              </section> */}
 
               <section className="px-4">
                 <Button onClick={handleSubmitClick} size="lg">

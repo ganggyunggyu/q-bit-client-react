@@ -2,7 +2,7 @@ import React from 'react';
 import { debounce } from 'es-toolkit';
 
 import { SearchAppBar } from '@/widgets';
-import { useSearchCertNameQuery } from '@/entities';
+import { useGetSearchCertByJmnm } from '@/entities/cert/hooks/cert.hooks';
 import { useRouter } from '@/shared';
 
 const Search = () => {
@@ -27,7 +27,7 @@ const Search = () => {
     setIsTyping(true);
     debouncedSetQuery(value);
   };
-  const { data: results = [], isLoading } = useSearchCertNameQuery(query);
+  const { data: results = [], isLoading } = useGetSearchCertByJmnm(query);
 
   const handleNameClick = (id: string) => {
     navigate(`/search/${id}`);

@@ -23,7 +23,6 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [currentMonth, setCurrentMonth] = React.useState(startDate.month() + 1);
-  const [currentDay, setCurrentDay] = React.useState(startDate.date() + 1);
 
   const handleSwipe = (deltaX: number) => {
     const threshold = 50;
@@ -65,10 +64,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
 
   React.useEffect(() => {
     setCurrentMonth(newCurrentMonth + 1);
-    setCurrentDay(newCurrentDay);
-
-    console.log(currentMonth, currentDay);
-  }, [days]);
+  }, [newCurrentMonth, newCurrentDay]);
 
   return (
     <div ref={containerRef} className="relative h-[150px] overflow-hidden px-4">

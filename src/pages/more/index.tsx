@@ -1,10 +1,10 @@
 import { Button, Dropdown, SelectBox, useRouter } from '@/shared';
 import { TitleAppBar } from '@/widgets';
-import { useAuthMe } from '@/entities';
+import { useGetMe } from '@/entities/auth/hooks/auth.hooks';
 
 const MorePage = () => {
   const { navigate } = useRouter();
-  const { data: user, isLoading } = useAuthMe();
+  const { data: user, isLoading } = useGetMe();
 
   const handleLoginClick = () => navigate('/auth/login');
 

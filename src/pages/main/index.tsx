@@ -1,15 +1,16 @@
-import React, { HtmlHTMLAttributes, InputHTMLAttributes } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { debounce, delay } from 'es-toolkit';
 
 import { TitleBellAppBar, TopCertList } from '@/widgets';
 import { CertCard } from '@/features';
+
+import { useGetMe } from '@/entities/auth/hooks/auth.hooks';
 import {
-  getAuthMe,
-  useUpcomingCertList,
-  useSearchCertNameQuery,
-} from '@/entities';
-import { BackIcon, Button, Input, MainLoading, useRouter } from '@/shared';
+  useGetSearchCertByJmnm,
+  useGetUpcomingCerts,
+} from '@/entities/cert/hooks/cert.hooks';
+import { BackIcon, Button, MainLoading, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
 
 const MainPage = () => {
@@ -20,16 +21,16 @@ const MainPage = () => {
   const [query, setQuery] = React.useState('');
   const [isTyping, setIsTyping] = React.useState(false);
 
-  const { navigate } = useRouter();
-  const { data: certList, isLoading: certLoading } = useUpcomingCertList({
-    limit: 3,
-  });
+  useRouter();
+  const { data: certList, isLoading: certLoading } = useGetUpcomingCerts(3);
   const { data: results = [], isLoading: searchLoading } =
-    useSearchCertNameQuery(query);
+    useGetSearchCertByJmnm(query);
+
+  const { data: user } = useGetMe();
 
   React.useEffect(() => {
-    getAuthMe();
-  }, []);
+    console.log(user);
+  }, [user]);
 
   const debouncedSetQuery = React.useMemo(
     () =>
@@ -62,10 +63,6 @@ const MainPage = () => {
     setInputValue('');
     setQuery('');
     handleInputBlur();
-  };
-
-  const handleNameClick = (id: string) => {
-    navigate(`/search/${id}`);
   };
 
   return (
@@ -195,7 +192,7 @@ const MainPage = () => {
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.2, delay: index * 0.03 }}
                       >
-                        <CertCard cert={cert} dDay={3} />
+                        <CertCard cert={cert} dDay={dDay} />
                       </motion.div>
                     ))}
                   </AnimatePresence>

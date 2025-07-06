@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCert } from '@/entities';
+import { useGetCertById } from '@/entities/cert/hooks/cert.hooks';
 import { Button, Tabs, useRouter } from '@/shared';
 import { TitleBackAppBar } from '@/widgets';
 import { Heart } from 'lucide-react';
@@ -7,7 +7,7 @@ import { Heart } from 'lucide-react';
 export const CertDetailPage = () => {
   const { params } = useRouter();
 
-  const { data: cert, isLoading } = useCert({ certId: params?.id });
+  const { data: cert, isLoading } = useGetCertById(params?.id as string);
 
   const [selectedTab, setSelectedTab] = React.useState('schedule');
 
@@ -78,7 +78,7 @@ export const CertScheduleSection: React.FC<CertScheduleSectionProps> = ({
   schedule,
 }) => {
   // ✅ 회차별로 묶기
-  const groupByExam = (schedules: any[]) => {
+  const groupByExam = (schedules: Schedule[]) => {
     const map = new Map();
     schedules.forEach((sch) => {
       const key = `${sch.description}_${sch.docexamdt}`;

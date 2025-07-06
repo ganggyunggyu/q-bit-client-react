@@ -1,4 +1,4 @@
-import { usePopularCerts } from '@/entities';
+import { useGetPopularCerts } from '@/entities';
 import { cn, useRouter } from '@/shared';
 import React from 'react';
 
@@ -15,7 +15,7 @@ export const TopCertList: React.FC<TopCertListProps> = ({
   const [highlightIndex, setHighlightIndex] = React.useState(0);
 
   const count = 5;
-  const { data: certs = [], isLoading } = usePopularCerts();
+  const { data: certs = [], isLoading } = useGetPopularCerts();
 
   const { navigate } = useRouter();
 

@@ -66,12 +66,8 @@ const slideRoutes = [
 
 export const Routing = () => {
   const location = useLocation();
-  const [curPath, setCurPath] = React.useState('');
 
   React.useEffect(() => {
-    setCurPath(location.pathname);
-
-    console.log(curPath);
   }, [location.pathname]);
   return (
     <AnimatePresence mode="wait" initial={false}>

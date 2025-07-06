@@ -1,8 +1,9 @@
 import React from 'react';
 import { cn } from '@/shared/lib/cn';
-import { Button, useRouter } from '@/shared';
+import { useRouter } from '@/shared';
 import { useSearchParams } from 'react-router';
-import { postJoin } from '@/entities';
+import { useJoin } from '@/entities/auth/hooks/auth.hooks';
+import { JoinUserRequest, RemindType } from '@/entities/auth/model/user.model';
 
 interface NotificationOptionProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,17 +14,17 @@ interface NotificationOptionProps
 
 const OPTIONS = [
   {
-    key: 'often',
+    key: RemindType.OFTEN,
     title: '자주 알려줘야 까먹지 않아요.',
     description: '까먹지 않도록 아침 저녁으로 알려드릴게요.',
   },
   {
-    key: 'default',
+    key: RemindType.DEFAULT,
     title: '기본적인 알림이면 충분해요.',
     description: '일정이 가까워지면 미리 알려드릴게요.',
   },
   {
-    key: 'minimal',
+    key: RemindType.MINIMAL,
     title: '너무 많은 알림은 싫어요.',
     description: '당일과 마감일 전에 중점적으로 알려드릴게요.',
   },
@@ -62,7 +63,7 @@ const NotificationOption: React.FC<NotificationOptionProps> = ({
 };
 
 export const Step2Style = () => {
-  const [remindType, setRemindType] = React.useState<string>('default');
+  const [remindType, setRemindType] = React.useState<RemindType>(RemindType.DEFAULT);
 
   const [searchParams] = useSearchParams();
 
@@ -82,22 +83,26 @@ export const Step2Style = () => {
   }, [interestedCertsRaw]);
 
   const handleSelect = (key: string) => {
-    setRemindType(key);
+    if (Object.values(RemindType).includes(key as RemindType)) {
+      setRemindType(key as RemindType);
+    } else {
+      setRemindType(RemindType.DEFAULT);
+    }
   };
 
-  const handleSubmit = async () => {
+  const { mutate: joinUser } = useJoin();
+
+  const handleSubmit = () => {
     try {
-      const params = {
-        user: {
-          kakaoId,
-          email,
-          displayName,
-          interestedCerts,
-          remindType,
-        },
+      const params: JoinUserRequest = {
+        kakaoId,
+        email,
+        displayName,
+        interestedCerts,
+        remindType,
       };
       console.log(params);
-      await postJoin(params);
+      joinUser(params);
 
       navigate('/?isAuth=true');
     } catch (err) {

@@ -1,5 +1,6 @@
 import { useCalendarStore, useUiStore } from '@/app/store';
-import { ReminingDateLabel, useGetTodoList } from '@/entities';
+import { ReminingDateLabel } from '@/entities';
+import { useFindByDate } from '@/entities/todo/hooks/todo.hooks';
 import { BottomSheet, Button, CheckBoxInput, MainLoading } from '@/shared';
 import { formatDate } from '@/shared/util';
 import { CalendarBox } from '@/widgets';
@@ -13,7 +14,9 @@ const Calendar = () => {
   const { weekday, day, month } = formatDate(selectedDate);
   const [memo, setMemo] = React.useState('');
 
-  const { data: todoList, isLoading: isTodoLoading } = useGetTodoList();
+  const { data: todoList, isLoading: isTodoLoading } = useFindByDate(
+    selectedDate.toString(),
+  );
 
   if (isTodoLoading) {
     return (
@@ -22,6 +25,8 @@ const Calendar = () => {
       </main>
     );
   }
+
+  console.log(todoList);
 
   return (
     <main className="flex flex-col pb-20">
