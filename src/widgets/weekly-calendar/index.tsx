@@ -18,10 +18,12 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   const [startDate, setStartDate] = React.useState(() =>
     dayjs(selectedDate).startOf('week').day(0),
   );
+
   const [direction, setDirection] = React.useState<'left' | 'right'>('left');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [currentMonth, setCurrentMonth] = React.useState(startDate.month() + 1);
+  const [currentDay, setCurrentDay] = React.useState(startDate.date() + 1);
 
   const handleSwipe = (deltaX: number) => {
     const threshold = 50;
@@ -59,9 +61,13 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   const days = Array.from({ length: 7 }).map((_, i) => startDate.add(i, 'day'));
 
   const newCurrentMonth = days[0].month();
+  const newCurrentDay = days[0].date();
 
   React.useEffect(() => {
     setCurrentMonth(newCurrentMonth + 1);
+    setCurrentDay(newCurrentDay);
+
+    console.log(currentMonth, currentDay);
   }, [days]);
 
   return (
@@ -78,7 +84,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
           initial={{ x: direction === 'left' ? 200 : -200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: direction === 'left' ? -200 : 200, opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.5 }}
           className="absolute w-11/12 flex justify-between bg-white rounded-2xl p-1.5"
         >
           {days.map((day) => {

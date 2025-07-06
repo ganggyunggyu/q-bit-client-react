@@ -24,7 +24,7 @@ const Calendar = () => {
   }
 
   return (
-    <main className="flex">
+    <main className="flex flex-col pb-20">
       <CalendarBox />
 
       <BottomSheet

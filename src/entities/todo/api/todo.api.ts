@@ -23,3 +23,17 @@ export const getTodoExists = async (date: string) => {
   });
   return data as { exists: boolean };
 };
+
+export const getTodoWeek = async (sunday: string) => {
+  const { data } = await axios.get('/todo/week', {
+    params: { sunday },
+  });
+  return data;
+};
+
+export const getTodoMonth = async (year: number, month: number) => {
+  const { data } = await axios.get('/todo/month', {
+    params: { year, month },
+  });
+  return data;
+};
