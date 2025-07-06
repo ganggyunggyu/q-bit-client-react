@@ -1,28 +1,26 @@
+// src/entities/auth/api/auth.api.ts
+
 import { axios } from '@/app/config';
+import { JoinUserRequest } from '../model/user.model';
 
-export const postJoin = async (params: {
-  user: {
-    kakaoId: string;
-    email?: string;
-    displayName: string;
-    interestedCerts: any[];
-    remindType?: string;
-  };
-}) => {
-  const res = await axios.post('/auth/join', params);
-  return res.data;
-};
+export const authApi = {
+  getMe: async () => {
+    const response = await axios.get('/auth/me');
+    return response.data;
+  },
 
-export const getAuthMe = async () => {
-  try {
-    const result = await axios.get('/auth/me');
+  refreshToken: async () => {
+    const response = await axios.post('/auth/refresh-token');
+    return response.data;
+  },
 
-    return result.data;
-  } catch (error) {
-    throw error;
-  }
-};
+  join: async (userData: JoinUserRequest) => { // userData 타입은 백엔드 JoinUserRequest DTO에 맞춰야 함
+    const response = await axios.post('/auth/join', { user: userData });
+    return response.data;
+  },
 
-export const logout = async () => {
-  await axios.delete('/auth/logout');
+  logout: async () => {
+    const response = await axios.delete('/auth/logout');
+    return response.data;
+  },
 };

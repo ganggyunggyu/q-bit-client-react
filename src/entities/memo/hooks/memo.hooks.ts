@@ -1,8 +1,6 @@
-// src/entities/memo/hooks/memo.hooks.ts
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { memoApi } from '../api/memo.api';
-import { CreateMemoDto, UpdateMemoDto, GetMemoFilterDto, Memo } from '../model/memo.model'; // Memo 타입은 model에 정의되어 있다고 가정
+import { CreateMemoDto, UpdateMemoDto, GetMemoFilterDto, Memo } from '../model/memo.model';
 
 // 메모 생성 또는 업데이트 훅
 export const useCreateOrUpdateMemo = () => {

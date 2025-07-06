@@ -1,16 +1,5 @@
 import { axios } from '@/app/config';
-
-interface CreateMemoDto {
-  // ...
-}
-
-interface UpdateMemoDto {
-  // ...
-}
-
-interface GetMemoFilterDto {
-  // ...
-}
+import { CreateMemoDto, UpdateMemoDto, GetMemoFilterDto } from '../model/memo.model';
 
 export const memoApi = {
   createOrUpdateMemo: async (dto: CreateMemoDto) => {
