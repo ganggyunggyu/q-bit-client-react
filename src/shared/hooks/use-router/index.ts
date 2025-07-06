@@ -12,14 +12,14 @@ export const useRouter = () => {
   const go = (n: number) => navigate(n);
 
   const query = Object.fromEntries(new URLSearchParams(search));
-  const getQuery = <T extends Record<string, any>>(
+  const getQuery = <T extends Record<string, string>>(
     search: string,
   ): Partial<T> => {
     const q: Partial<T> = {};
     const params = new URLSearchParams(search);
 
     params.forEach((value, key) => {
-      q[key as keyof T] = value as unknown as T[keyof T];
+      q[key as keyof T] = value as T[keyof T];
     });
 
     return q;

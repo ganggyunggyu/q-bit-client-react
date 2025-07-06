@@ -1,6 +1,5 @@
 export const SkeletonLoader = () => {
-  const bgBase = true ? 'bg-gray-600' : 'bg-gray-100';
-  const bgBlock = true ? 'bg-gray-700' : 'bg-gray-200';
+  const bgBlock = 'bg-gray-700';
 
   return (
     <div

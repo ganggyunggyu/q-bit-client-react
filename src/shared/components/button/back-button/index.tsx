@@ -1,5 +1,5 @@
 import { BackIcon } from '@/shared/icons';
-import { Button, ButtonProps } from '../atom-button';
+import { Button } from '../atom-button';
 import { useRouter } from '@/shared/hooks';
 import React from 'react';
 import { cn } from '@/shared'; // cn 유틸 꼭 임포트해줘!

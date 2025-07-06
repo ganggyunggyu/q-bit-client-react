@@ -4,14 +4,13 @@ import React from 'react';
 export const useLoading = (ms: number) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const handleLoading = async () => {
-    await delay(ms);
-    setIsLoading(false);
-  };
-
   React.useEffect(() => {
+    const handleLoading = async () => {
+      await delay(ms);
+      setIsLoading(false);
+    };
     handleLoading();
-  }, []);
+  }, [ms]);
 
   return {
     isLoading,

@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 type BottomSheetProps = {
   isBottomSheet: boolean;
-  title?: string;
   setIsBottomSheet: (isBottomSheet: boolean) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
@@ -12,14 +11,12 @@ type BottomSheetProps = {
  * 화면 하단에서 슬라이드 형태로 나타나는 바텀시트 컴포넌트입니다.
  *
  * @param isBottomSheet 바텀시트를 표시할지 여부 (`true`면 열림)
- * @param title 상단에 보여질 제목 텍스트 (선택사항)
  * @param setIsBottomSheet 바텀시트 열림/닫힘 상태를 제어하는 setter 함수
  * @param children 바텀시트 내부에 보여줄 콘텐츠
  */
 export const BottomSheet: React.FC<BottomSheetProps> = ({
   isBottomSheet,
   setIsBottomSheet,
-  title,
   children,
 }) => {
   if (typeof window === 'undefined') return null;

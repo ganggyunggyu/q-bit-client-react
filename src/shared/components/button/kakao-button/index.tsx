@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button, ButtonProps } from '../atom-button';
-import { RightArrow } from '@/shared/icons';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { Button } from '../atom-button';
+import { ChevronRight } from 'lucide-react';
 
 const KakaoIcon = () => {
   return (
@@ -50,4 +49,3 @@ export const KakaoLoginButton: React.FC<ButtonProps> = (props) => {
     </Button>
   );
 };
-``;
