@@ -1,10 +1,9 @@
-import React, { createContext, useContext } from 'react';
-import { useAuthMe } from '@/entities';
-
-const AuthContext = createContext(null);
+import { useGetMe } from '@/entities';
+import React from 'react';
+import { AuthContext } from './use-auth';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data: user, isLoading, isError, error } = useAuthMe();
+  const { data: user, isLoading, isError, error } = useGetMe();
 
   return (
     <AuthContext.Provider value={{ user, isLoading, isError, error }}>
@@ -12,5 +11,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

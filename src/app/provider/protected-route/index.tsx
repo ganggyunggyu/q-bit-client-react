@@ -1,10 +1,11 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthMe } from '@/entities';
+
 import { MainLoading } from '@/shared';
+import { useGetMe } from '@/entities';
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { data: user, isLoading, error } = useAuthMe();
+  const { data: user, isLoading, error } = useGetMe();
 
   if (isLoading) return <MainLoading />;
   if (!user || error) return <Navigate to="/auth/login/request" replace />;
