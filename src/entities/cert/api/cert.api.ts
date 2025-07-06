@@ -1,76 +1,53 @@
 import { axios } from '@/app/config';
-import {
-  Cert,
-  getCertDto,
-  getCertListParams,
-  getCertListSortedParams,
-  getUpcomingCertListParams,
-} from '../model';
 
-export const getCert = async (params: getCertDto): Promise<Cert> => {
-  try {
-    const result = await axios.get(`/cert/${params.certId}`);
-    return result.data;
-  } catch (error) {
-    console.error('getCert error:', error);
-    throw error;
-  }
-};
-export const getCertList = async (
-  params: getCertListParams,
-): Promise<Cert[]> => {
-  try {
-    const result = await axios.get('/cert/search', { params });
-    return result.data;
-  } catch (error) {
-    console.error('getCertList error:', error);
-    throw error;
-  }
-};
+export const certApi = {
+  searchCerts: async (params: {
+    keyword?: string;
+    agency?: string;
+    seriesnm?: string;
+    obligfldnm?: string;
+    mdobligfldnm?: string;
+  }) => {
+    const response = await axios.get('/cert/search', { params });
+    return response.data;
+  },
 
-export const getUpcomingCertList = async (
-  params: getUpcomingCertListParams,
-): Promise<Cert[]> => {
-  try {
-    const res = await axios.get('/cert/upcoming', {
-      params: { limit: params.limit },
+  getSearchCertByJmnm: async (keyword: string, limit: number = 10) => {
+    const response = await axios.get('/cert/search/keyword', {
+      params: { q: keyword, limit },
     });
-    return res.data;
-  } catch (error) {
-    console.error('getLatestThreeCertsOpenForApply error:', error);
-    throw error;
-  }
-};
+    return response.data;
+  },
 
-export const getCertListSorted = async (
-  params: getCertListSortedParams,
-): Promise<Cert[]> => {
-  try {
-    const res = await axios.get('/certs', {
-      params: { ...params },
+  getPopularCerts: async () => {
+    const response = await axios.get('/cert/popular');
+    return response.data;
+  },
+
+  getUpcomingCerts: async (limit: number = 3) => {
+    const response = await axios.get('/cert/upcoming', {
+      params: { limit },
     });
-    return res.data;
-  } catch (e) {
-    console.error('getCertListSorted error:', e);
-    throw e;
-  }
-};
+    return response.data;
+  },
 
-export const getSearchCertName = async (
-  q: string,
-): Promise<{ jmfldnm: string; _id: string }[]> => {
-  const response = await axios.get('/cert/search/keyword', {
-    params: { q },
-  });
-  return response.data;
-};
+  getCertById: async (id: string) => {
+    const response = await axios.get(`/cert/${id}`);
+    return response.data;
+  },
 
-export type PopularCert = {
-  _id: string;
-  jmfldnm: string;
-};
+  getMyRemindCerts: async () => {
+    const response = await axios.get('/cert/remind/list');
+    return response.data;
+  },
 
-export const getPopularCerts = async (): Promise<PopularCert[]> => {
-  const res = await axios.get('/cert/popular');
-  return res.data;
+  addRemindCert: async (id: string) => {
+    const response = await axios.post(`/cert/remind/${id}`);
+    return response.data;
+  },
+
+  removeRemindCert: async (id: string) => {
+    const response = await axios.delete(`/cert/remind/${id}`);
+    return response.data;
+  },
 };

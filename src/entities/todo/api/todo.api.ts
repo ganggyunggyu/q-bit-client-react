@@ -1,39 +1,68 @@
 import { axios } from '@/app/config';
+import {
+  CreateTodoDto,
+  GetTodosFilterDto,
+  UpdateTodoDto,
+  UpdateTodoCompletionDto,
+  Todo,
+} from '../model/todo.model';
 
-export const postTodo = async (params) => {
-  const { data } = await axios.post('/todo', params);
-  return data;
-};
+export const todoApi = {
+  create: async (dto: CreateTodoDto): Promise<Todo> => {
+    const response = await axios.post('/todo', dto);
+    return response.data;
+  },
 
-export const getTodoList = async () => {
-  const { data } = await axios.get('/todo/all');
-  return data;
-};
+  findAll: async (filterDto: GetTodosFilterDto): Promise<Todo[]> => {
+    const response = await axios.get('/todo', { params: filterDto });
+    return response.data;
+  },
 
-export const getTodoByDate = async (date: string) => {
-  const { data } = await axios.get('/todo/date', {
-    params: { date },
-  });
-  return data;
-};
+  findOne: async (id: string): Promise<Todo> => {
+    const response = await await axios.get(`/todo/${id}`);
+    return response.data;
+  },
 
-export const getTodoExists = async (date: string) => {
-  const { data } = await axios.get('/todo/exists', {
-    params: { date },
-  });
-  return data as { exists: boolean };
-};
+  update: async (id: string, updateTodoDto: UpdateTodoDto): Promise<Todo> => {
+    const response = await axios.patch(`/todo/${id}`, updateTodoDto);
+    return response.data;
+  },
 
-export const getTodoWeek = async (sunday: string) => {
-  const { data } = await axios.get('/todo/week', {
-    params: { sunday },
-  });
-  return data;
-};
+  toggleComplete: async (
+    id: string,
+    updateTodoCompletionDto: UpdateTodoCompletionDto,
+  ): Promise<Todo> => {
+    const response = await axios.patch(
+      `/todo/${id}/complete`,
+      updateTodoCompletionDto,
+    );
+    return response.data;
+  },
 
-export const getTodoMonth = async (year: number, month: number) => {
-  const { data } = await axios.get('/todo/month', {
-    params: { year, month },
-  });
-  return data;
+  remove: async (id: string): Promise<void> => {
+    const response = await axios.delete(`/todo/${id}`);
+    return response.data;
+  },
+
+  findByDate: async (date: string): Promise<Todo> => {
+    const response = await axios.get('/todo/date', { params: { date } });
+    return response.data;
+  },
+
+  getWeekTodos: async (sunday: string): Promise<Todo[]> => {
+    const response = await axios.get('/todo/week', { params: { sunday } });
+    return response.data;
+  },
+
+  exists: async (date: string): Promise<{ exists: boolean }> => {
+    const response = await axios.get('/todo/exists', { params: { date } });
+    return response.data;
+  },
+
+  getMonthTodos: async (year: number, month: number): Promise<Todo[]> => {
+    const response = await axios.get('/todo/month', {
+      params: { year, month },
+    });
+    return response.data;
+  },
 };

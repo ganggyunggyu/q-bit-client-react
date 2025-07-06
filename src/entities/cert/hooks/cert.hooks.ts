@@ -1,59 +1,93 @@
-import { useQuery } from '@tanstack/react-query';
-import {
-  getCert,
-  getCertList,
-  getUpcomingCertList,
-  getCertListSorted,
-  getSearchCertName,
-  getPopularCerts,
-} from '../api';
-import {
-  getCertDto,
-  getCertListParams,
-  getCertListSortedParams,
-  getUpcomingCertListParams,
-} from '../model';
+// src/entities/cert/hooks/cert.hooks.ts
 
-export const useCert = ({ certId }: getCertDto) =>
-  useQuery({
-    queryKey: ['cert', certId],
-    queryFn: () => getCert({ certId }),
-    enabled: !!certId,
-  });
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { certApi } from '../api/cert.api'; // api 경로 수정
+import { Cert } from '../model/cert.model'; // Cert 타입은 model에 정의되어 있다고 가정
 
-export const useCertList = (params: getCertListParams) =>
-  useQuery({
-    queryKey: ['certList', params],
-    queryFn: () => getCertList(params),
-    enabled: !!params,
-  });
+// Cert 타입 정의 (임시, 실제는 model/cert.model.ts에서 가져와야 함)
+// interface Cert {
+//   _id: string;
+//   jmfldnm: string;
+//   agency: string;
+//   seriesnm: string;
+//   // ... 기타 필드
+// }
 
-export const useUpcomingCertList = (params: getUpcomingCertListParams) =>
-  useQuery({
-    queryKey: ['certUpcoming', params],
-    queryFn: () => getUpcomingCertList(params),
-    staleTime: 1000 * 60 * 10,
-  });
-
-export const useSortedCertList = (params: getCertListSortedParams) =>
-  useQuery({
-    queryKey: ['certSorted', params],
-    queryFn: () => getCertListSorted(params),
-    enabled: !!params.sort && !!params.limit,
-  });
-
-export const useSearchCertNameQuery = (keyword: string) => {
-  return useQuery({
-    queryKey: ['cert', 'keyword', keyword],
-    queryFn: () => getSearchCertName(keyword),
-    staleTime: 1000 * 60 * 60 * 24 * 7,
+// 자격증 검색 훅
+export const useSearchCerts = (params: {
+  keyword?: string;
+  agency?: string;
+  seriesnm?: string;
+  obligfldnm?: string;
+  mdobligfldnm?: string;
+}) => {
+  return useQuery<Cert[]> ({
+    queryKey: ['certs', 'search', params],
+    queryFn: () => certApi.searchCerts(params),
+    enabled: !!(params.keyword || params.agency || params.seriesnm || params.obligfldnm || params.mdobligfldnm), // 검색 조건이 있을 때만 실행
   });
 };
 
-export const usePopularCerts = () => {
-  return useQuery({
-    queryKey: ['popularCerts'],
-    queryFn: getPopularCerts,
-    staleTime: 1000 * 60 * 10,
+// 키워드 자격증 검색 훅
+export const useGetSearchCertByJmnm = (keyword: string, limit?: number) => {
+  return useQuery<Cert[]> ({
+    queryKey: ['certs', 'searchByKeyword', keyword, limit],
+    queryFn: () => certApi.getSearchCertByJmnm(keyword, limit),
+    enabled: !!keyword, // 키워드가 있을 때만 실행
+  });
+};
+
+// 인기 자격증 조회 훅
+export const useGetPopularCerts = () => {
+  return useQuery<Cert[]> ({
+    queryKey: ['certs', 'popular'],
+    queryFn: () => certApi.getPopularCerts(),
+  });
+};
+
+// 예정 자격증 조회 훅
+export const useGetUpcomingCerts = (limit?: number) => {
+  return useQuery<Cert[]> ({
+    queryKey: ['certs', 'upcoming', limit],
+    queryFn: () => certApi.getUpcomingCerts(limit),
+  });
+};
+
+// 자격증 상세 조회 훅
+export const useGetCertById = (id: string) => {
+  return useQuery<Cert> ({
+    queryKey: ['certs', id],
+    queryFn: () => certApi.getCertById(id),
+    enabled: !!id, // ID가 있을 때만 실행
+  });
+};
+
+// 내 리마인드 자격증 리스트 조회 훅
+export const useGetMyRemindCerts = () => {
+  return useQuery<Cert[]> ({
+    queryKey: ['certs', 'myRemind'],
+    queryFn: () => certApi.getMyRemindCerts(),
+  });
+};
+
+// 리마인드 자격증 추가 훅
+export const useAddRemindCert = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => certApi.addRemindCert(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['certs', 'myRemind'] }); // 리마인드 목록 갱신
+    },
+  });
+};
+
+// 리마인드 자격증 제거 훅
+export const useRemoveRemindCert = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => certApi.removeRemindCert(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['certs', 'myRemind'] }); // 리마인드 목록 갱신
+    },
   });
 };
