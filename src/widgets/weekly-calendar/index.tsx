@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'dayjs/locale/ko';
 import { ReminingDateLabel } from '@/entities';
+import { useGetMyRemindCerts } from '@/entities/cert/hooks/cert.hooks';
 
 dayjs.locale('ko');
 
@@ -23,6 +24,8 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [currentMonth, setCurrentMonth] = React.useState(startDate.month() + 1);
+
+  const { data: remindCerts } = useGetMyRemindCerts();
 
   const handleSwipe = (deltaX: number) => {
     const threshold = 50;
@@ -66,6 +69,20 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     setCurrentMonth(newCurrentMonth + 1);
   }, [newCurrentMonth, newCurrentDay]);
 
+  const examDates = React.useMemo(() => {
+    if (!remindCerts) return new Set();
+
+    const dates = new Set();
+    remindCerts.forEach((cert) => {
+      cert.schedule.forEach((s) => {
+        if (s.docexamdt) {
+          dates.add(dayjs(s.docexamdt).format('YYYY-MM-DD'));
+        }
+      });
+    });
+    return dates;
+  }, [remindCerts]);
+
   return (
     <div ref={containerRef} className="relative h-[150px] overflow-hidden px-4">
       <div className="flex justify-between items-center py-4">
@@ -85,6 +102,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
         >
           {days.map((day) => {
             const isSelected = day.isSame(selectedDate, 'day');
+            const isExamDay = examDates.has(day.format('YYYY-MM-DD'));
 
             const isWeekend =
               day.format('dd') === '일' || day.format('dd') === '토';
@@ -112,6 +130,9 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
                 >
                   <p className={`font-body text-center `}>{day.format('D')}</p>
                 </button>
+                {isExamDay && (
+                  <div className="w-1 h-1 bg-blue-500 rounded-full mt-1"></div>
+                )}
               </div>
             );
           })}

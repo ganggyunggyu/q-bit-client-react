@@ -6,6 +6,9 @@ import 'react-calendar/dist/Calendar.css';
 import './calendar.css';
 import { CaleanderAppBar } from '@/widgets';
 import { useCalendarStore, useUiStore } from '@/app/store';
+import { useGetMonthTodos } from '@/entities/todo/hooks/todo.hooks';
+import { Todo } from '@/entities/todo/model/todo.model';
+import dayjs from 'dayjs';
 
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -31,6 +34,12 @@ const swipeVariants: Variants = {
   }),
 };
 
+const calculateCompletionPercentage = (todos: Todo['todos']) => {
+  if (!todos || todos.length === 0) return 0;
+  const completedCount = todos.filter((todo) => todo.isCompleted).length;
+  return (completedCount / todos.length) * 100;
+};
+
 export const CalendarBox = () => {
   const { selectedDate, displayDate, setSelectedDate, setDisplayDate } =
     useCalendarStore();
@@ -38,7 +47,33 @@ export const CalendarBox = () => {
   const [direction, setDirection] = React.useState<'left' | 'right'>('left');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const { data: todoList, isLoading: isTodoListLoading } = useGetMonthTodos(displayDate.getFullYear(), displayDate.getMonth() + 1);
+  const { data: todoList, isLoading: isTodoListLoading } = useGetMonthTodos(
+    displayDate.getFullYear(),
+    displayDate.getMonth() + 1,
+  );
+
+  const { data: remindCerts } = useGetMyRemindCerts();
+
+  console.log(
+    'CalendarBox - todoList:',
+    todoList,
+    'isLoading:',
+    isTodoListLoading,
+  );
+
+  const examDates = React.useMemo(() => {
+    if (!remindCerts) return new Set();
+
+    const dates = new Set();
+    remindCerts.forEach((cert) => {
+      cert.schedule.forEach((s) => {
+        if (s.docexamdt) {
+          dates.add(dayjs(s.docexamdt).format('YYYY-MM-DD'));
+        }
+      });
+    });
+    return dates;
+  }, [remindCerts]);
 
   React.useEffect(() => {
     let startX = 0;
@@ -100,7 +135,13 @@ export const CalendarBox = () => {
           <Calendar
             value={selectedDate}
             onClickDay={(value) => {
-              setSelectedDate(value);
+              // 기존 selectedDate와 같은 날짜인지 확인하여 불필요한 업데이트 방지
+              const newDateStr = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
+              const currentSelectedDateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+
+              if (newDateStr !== currentSelectedDateStr) {
+                setSelectedDate(value);
+              }
               setIsCalendarBottomSheetOpen(true);
             }}
             onChange={() => {}}
@@ -120,24 +161,43 @@ export const CalendarBox = () => {
             formatDay={(_, date) => String(date.getDate())}
             calendarType="gregory"
             tileContent={({ date }) => {
-              if (todoList && !isTodoListLoading) {
-                const yyyy = date.getFullYear();
-                const mm = String(date.getMonth() + 1).padStart(2, '0');
-                const dd = String(date.getDate()).padStart(2, '0');
-                const dateStr = `${yyyy}-${mm}-${dd}`; // ← 비교용 문자열
-                console.log(dateStr);
-                const matched = todoList.find(
-                  (d) => d.date === dateStr,
+              const yyyy = date.getFullYear();
+              const mm = String(date.getMonth() + 1).padStart(2, '0');
+              const dd = String(date.getDate()).padStart(2, '0');
+              const dateStr = `${yyyy}-${mm}-${dd}`;
+
+              const matchedTodo = todoList?.find((d) => {
+                console.log(
+                  `Comparing: ${d?.scheduledDateStr} (from todoList) with ${dateStr} (generated)`,
                 );
-                if (matched) {
-                  return (
-                    <div className="absolute top-1/2 -translate-y-1/2">
-                      <CalendarProgress percent={100} />
-                    </div>
-                  );
-                }
+                return d?.scheduledDateStr === dateStr;
+              });
+              const isExamDay = examDates.has(dateStr);
+
+              const content = [];
+
+              if (matchedTodo && matchedTodo.todos.length > 0) {
+                const percentage = calculateCompletionPercentage(matchedTodo.todos);
+                content.push(
+                  <div
+                    key="progress"
+                    className="absolute top-1/2 -translate-y-1/2"
+                  >
+                    <CalendarProgress percent={percentage} />
+                  </div>,
+                );
               }
-              return null;
+
+              if (isExamDay) {
+                content.push(
+                  <div
+                    key="exam-dot"
+                    className="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"
+                  ></div>,
+                );
+              }
+
+              return content.length > 0 ? <>{content}</> : null;
             }}
           />
         </motion.div>
@@ -147,7 +207,8 @@ export const CalendarBox = () => {
 };
 
 import { useSpring, useTransform } from 'framer-motion';
-import { useGetMonthTodos } from '@/entities/todo/hooks/todo.hooks';
+import { useGetMyRemindCerts } from '@/entities';
+import { todo } from 'node:test';
 
 type CalendarProgressProps = {
   percent: number;
