@@ -11,7 +11,8 @@ export const MyCertPage = () => {
     'remind',
   );
 
-  const { data: remindCerts, isLoading: isRemindCertsLoading } = useGetMyRemindCerts();
+  const { data: remindCerts, isLoading: isRemindCertsLoading } =
+    useGetMyRemindCerts();
 
   const handleTabClick = (tab: 'remind' | 'bookmark') => {
     setSelectedTab(tab);
@@ -36,13 +37,13 @@ export const MyCertPage = () => {
       />
 
       <section className="flex-1 flex flex-col justify-center items-center bg-alternative">
-        {selectedTab === 'remind' && (
-          isRemindCertsLoading ? (
+        {selectedTab === 'remind' &&
+          (isRemindCertsLoading ? (
             <p>로딩 중...</p>
           ) : remindCerts && remindCerts.length > 0 ? (
             <div className="flex flex-col gap-4 w-full px-4 py-4">
               {remindCerts.map((cert: Cert) => (
-                <CertCard key={cert._id} cert={cert} dDay={0} /> // dDay는 임시값
+                <CertCard key={cert._id} cert={cert} dDay={cert.daysLeft} /> // dDay는 임시값
               ))}
             </div>
           ) : (
@@ -55,8 +56,7 @@ export const MyCertPage = () => {
                 둘러보기
               </Button>
             </div>
-          )
-        )}
+          ))}
         {selectedTab === 'bookmark' && (
           <div className="flex flex-col items-center gap-4">
             <p className="text-body-m text-black-primary">

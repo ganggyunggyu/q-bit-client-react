@@ -1,23 +1,25 @@
-// src/pages/my-study/index.tsx
-
 import { slideVariants } from '@/app/motion';
+import { useCreateOrUpdateMemo } from '@/entities/memo/hooks/memo.hooks';
 import {
-  useFindByDate, // 변경
-  useCreateTodo, // 변경
-} from '@/entities/todo/hooks/todo.hooks'; // 경로 변경
+  useFindByDate,
+  useCreateTodo,
+  useFindAllTodos,
+} from '@/entities/todo/hooks/todo.hooks';
 import {
-  CreateTodoDto, // 추가
-  CreateTodoItemDto, // 추가
-} from '@/entities/todo/model/todo.model'; // 경로 변경
+  CreateTodoDto,
+  CreateTodoItemDto,
+  Todo,
+} from '@/entities/todo/model/todo.model';
 import { Button, CheckBoxInput, Tabs } from '@/shared';
 import { TitleAppBar, WeeklyCalendar } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import React from 'react';
 
-// 로컬 Todo 타입 정의 제거
-
-const createEmptyTodo = (): CreateTodoItemDto => ({ title: '', isCompleted: false }); // 변경
+const createEmptyTodo = (): CreateTodoItemDto => ({
+  title: '',
+  isCompleted: false,
+});
 
 const getLocalDateString = (date: Date) =>
   new Date(date.getTime() - date.getTimezoneOffset() * 60000)
@@ -26,9 +28,8 @@ const getLocalDateString = (date: Date) =>
 
 const useTodoState = (selectedDate: Date) => {
   const dateKey = getLocalDateString(selectedDate);
-  const { data: todoData, isLoading } = useFindByDate(dateKey); // 변경
-  const [todos, setTodos] = React.useState<CreateTodoItemDto[]>([]); // 타입 변경
-  // const [memo, setMemo] = React.useState(''); // memo 관련 상태 제거
+  const { data: todoData, isLoading } = useFindByDate(dateKey);
+  const [todos, setTodos] = React.useState<CreateTodoItemDto[]>([]);
 
   React.useEffect(() => {
     if (!todoData || isLoading) return;
@@ -36,46 +37,45 @@ const useTodoState = (selectedDate: Date) => {
     const parsedTodos = (
       todoData.todos.length > 0 ? todoData.todos : [createEmptyTodo()]
     ).map((t) => ({
-      title: t.title ?? '', // 변경
-      isCompleted: !!t.isCompleted, // 변경
+      title: t.title ?? '',
+      isCompleted: !!t.isCompleted,
     }));
 
     setTodos(parsedTodos);
-    // setMemo(todoData.memo?.content ?? ''); // memo 관련 상태 제거
   }, [todoData, isLoading]);
 
   console.log(todos);
-  return { todos, setTodos }; // 반환값 변경
+  return { todos, setTodos };
 };
 
 const MyStudyPage = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTab, setSelectedTab] = React.useState('planner');
-  const { todos, setTodos } = // 반환값 변경
-    useTodoState(selectedDate);
-  // const [memo, setMemo] = React.useState(''); // memo 관련 상태 제거
+  const { todos, setTodos } = useTodoState(selectedDate);
+  const [memo, setMemo] = React.useState('');
 
-  const { mutate: createTodo } = useCreateTodo(); // 변경
+  const { mutate: createTodo } = useCreateTodo();
+  const { mutate: createMemo } = useCreateOrUpdateMemo();
 
   const handleSubmitClick = () => {
     const scheduledDate = getLocalDateString(selectedDate);
-    const validTodos = todos.filter((t) => t.title.trim() !== ''); // 변경
+    const validTodos = todos.filter((t) => t.title.trim() !== '');
 
     if (validTodos.length === 0) {
       alert('최소 하나 이상의 할 일이 필요합니다.');
       return;
     }
 
-    const todoDto: CreateTodoDto = { // CreateTodoDto 타입 명시
+    const todoDto: CreateTodoDto = {
       date: scheduledDate,
       todos: validTodos,
     };
 
-    createTodo(todoDto); // memo 관련 인자 제거
+    createTodo(todoDto);
   };
 
   const handleAddTodo = () => {
-    if (todos[todos.length - 1]?.title.trim() === '') return; // 변경
+    if (todos[todos.length - 1]?.title.trim() === '') return;
     setTodos([...todos, createEmptyTodo()]);
   };
 
@@ -115,24 +115,24 @@ const MyStudyPage = () => {
                 <div className="border border-divide rounded-3xl bg-white">
                   {todos.map((todo, idx) => (
                     <CheckBoxInput
-                      key={`${idx}-${todo.isCompleted}`} // 변경
+                      key={`${idx}-${todo.isCompleted}`}
                       label="할일을 입력하세요."
-                      checked={Boolean(todo.isCompleted)} // 변경
+                      checked={Boolean(todo.isCompleted)}
                       onChange={() => {
                         const updated = [...todos];
                         updated[idx] = {
                           ...todo,
-                          isCompleted: !todo.isCompleted, // 변경
+                          isCompleted: !todo.isCompleted,
                         };
                         setTodos(updated);
                       }}
                       inputProps={{
-                        value: todo.title, // 변경
+                        value: todo.title,
                         onChange: (e) => {
                           const updated = [...todos];
                           updated[idx] = {
                             ...todo,
-                            title: e.target.value, // 변경
+                            title: e.target.value,
                           };
                           setTodos(updated);
                         },
@@ -143,7 +143,7 @@ const MyStudyPage = () => {
                   <Button
                     className="rounded-3xl rounded-t-none gap-2 bg-white py-3 h-[48px] active:bg-alternative active:border-0"
                     size="lg"
-                    disabled={todos[todos.length - 1]?.title.trim() === ''} // 변경
+                    disabled={todos[todos.length - 1]?.title.trim() === ''}
                     onClick={handleAddTodo}
                   >
                     <div className="bg-divide text-normal rounded-full">
@@ -155,7 +155,7 @@ const MyStudyPage = () => {
               </section>
 
               {/* memo 관련 섹션 제거 */}
-              {/* <section className="px-4 flex flex-col gap-4 pb-6">
+              <section className="px-4 flex flex-col gap-4 pb-6">
                 <p className="font-headline-m">메모</p>
                 <textarea
                   placeholder="메모"
@@ -163,7 +163,7 @@ const MyStudyPage = () => {
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                 />
-              </section> */}
+              </section>
 
               <section className="px-4">
                 <Button onClick={handleSubmitClick} size="lg">
@@ -177,13 +177,14 @@ const MyStudyPage = () => {
             <motion.div
               key="stats"
               variants={slideVariants}
-              className="h-full"
+              className="h-full p-4"
               initial="initial"
               animate="animate"
               exit="exit"
               custom={-1}
             >
-              <Button size="lg">전체 분석</Button>
+              <h2 className="font-headline-m mb-4">투두 통계</h2>
+              <TodoCompletionStats />
             </motion.div>
           )}
         </AnimatePresence>
@@ -193,3 +194,57 @@ const MyStudyPage = () => {
 };
 
 export default MyStudyPage;
+
+interface TodoStats {
+  totalTodos: number;
+  completedTodos: number;
+  completionRate: number;
+}
+
+const calculateTodoStats = (todos: Todo[]): TodoStats => {
+  let totalTodos = 0;
+  let completedTodos = 0;
+
+  todos.forEach((todoEntry) => {
+    todoEntry.todos.forEach((todoItem) => {
+      totalTodos++;
+      if (todoItem.isCompleted) {
+        completedTodos++;
+      }
+    });
+  });
+
+  const completionRate =
+    totalTodos === 0 ? 0 : (completedTodos / totalTodos) * 100;
+
+  return {
+    totalTodos,
+    completedTodos,
+    completionRate: parseFloat(completionRate.toFixed(2)),
+  };
+};
+
+const TodoCompletionStats: React.FC = () => {
+  const { data: allTodos, isLoading } = useFindAllTodos({});
+
+  if (isLoading) {
+    return <p>통계 불러오는 중...</p>;
+  }
+
+  if (!allTodos || allTodos.length === 0) {
+    return <p>아직 투두 데이터가 없습니다.</p>;
+  }
+
+  const stats = calculateTodoStats(allTodos);
+
+  return (
+    <div className="bg-white p-4 rounded-2xl shadow-sm">
+      <p className="text-body-m">총 투두 개수: {stats.totalTodos}</p>
+      <p className="text-body-m">완료된 투두: {stats.completedTodos}</p>
+      <p className="font-title-sb text-primary text-lg mt-2">
+        완료율: {stats.completionRate}%
+      </p>
+      {/* 여기에 원형 차트 같은 시각화 추가 가능 */}
+    </div>
+  );
+};

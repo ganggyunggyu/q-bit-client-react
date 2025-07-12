@@ -192,7 +192,7 @@ const MainPage = () => {
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.2, delay: index * 0.03 }}
                       >
-                        <CertCard cert={cert} dDay={dDay} />
+                        <CertCard cert={cert} dDay={cert.daysLeft} />
                       </motion.div>
                     ))}
                   </AnimatePresence>

@@ -1,13 +1,18 @@
 import React from 'react';
-import { useGetCertById } from '@/entities/cert/hooks/cert.hooks';
+import {
+  useAddRemindCert,
+  useGetCertById,
+} from '@/entities/cert/hooks/cert.hooks';
 import { Button, Tabs, useRouter } from '@/shared';
 import { TitleBackAppBar } from '@/widgets';
 import { Heart } from 'lucide-react';
 
 export const CertDetailPage = () => {
   const { params } = useRouter();
+  const certId = params?.id as string;
 
-  const { data: cert, isLoading } = useGetCertById(params?.id as string);
+  const { data: cert, isLoading } = useGetCertById(certId);
+  const { mutate: addRemindCert } = useAddRemindCert();
 
   const [selectedTab, setSelectedTab] = React.useState('schedule');
 
@@ -15,8 +20,20 @@ export const CertDetailPage = () => {
     setSelectedTab(tab);
   };
 
+  const handleRemindClick = () => {
+    addRemindCert(certId, {
+      onSuccess: () => {
+        alert('리마인더에 추가되었습니다.');
+      },
+      onError: (error) => {
+        console.error(error);
+        alert('리마인더 추가에 실패했습니다.');
+      },
+    });
+  };
+
   if (isLoading) return null;
-  console.log(cert);
+
   return (
     <main className="relative w-screen h-screen flex flex-col">
       <TitleBackAppBar title={'상세정보'} />
@@ -43,8 +60,10 @@ export const CertDetailPage = () => {
       )}
       {selectedTab === 'way' && <section>취득방법 섹션</section>}
       {selectedTab === 'info' && <section>정보 섹션 섹션</section>}
-      <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative pb-[50px] pt-[10px] [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
-        <Button size="lg">리마인드</Button>
+      <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative  py-2 [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
+        <Button size="lg" onClick={handleRemindClick}>
+          리마인드
+        </Button>
         <button>
           <Heart />
         </button>
