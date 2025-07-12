@@ -33,6 +33,8 @@ export interface Todo {
   _id: string;
   userId: string;
   date: string;
+  scheduledDateStr: string;
+  scheduledDate: string;
   todos: {
     _id: string;
     title: string;

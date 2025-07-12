@@ -14,6 +14,7 @@ export type Cert = {
   seriesnm?: string;
   schedule?: ExamSchedule[];
   scheduleDate?: Date;
+  daysLeft: number;
 };
 
 export type ExamSchedule = {
