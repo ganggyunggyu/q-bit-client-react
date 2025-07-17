@@ -41,7 +41,7 @@ export const RouteLayout = ({ children }: RouteLayoutProps) => {
   const { header, hasBottomBar } = config;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen touch-manipulation">
       {header}
       <main className="flex-1 overflow-y-auto">{children}</main>
       {hasBottomBar && <BottomBar />}

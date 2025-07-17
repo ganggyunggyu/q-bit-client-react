@@ -135,7 +135,6 @@ export const CalendarBox = () => {
           <Calendar
             value={selectedDate}
             onClickDay={(value) => {
-              // 기존 selectedDate와 같은 날짜인지 확인하여 불필요한 업데이트 방지
               const newDateStr = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
               const currentSelectedDateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
 
@@ -167,9 +166,6 @@ export const CalendarBox = () => {
               const dateStr = `${yyyy}-${mm}-${dd}`;
 
               const matchedTodo = todoList?.find((d) => {
-                console.log(
-                  `Comparing: ${d?.scheduledDateStr} (from todoList) with ${dateStr} (generated)`,
-                );
                 return d?.scheduledDateStr === dateStr;
               });
               const isExamDay = examDates.has(dateStr);
