@@ -1,9 +1,6 @@
 import { useCalendarStore, useUiStore } from '@/app/store';
 import { ReminingDateLabel } from '@/entities';
-import {
-  useCreateTodo,
-  useFindByDate,
-} from '@/entities/todo/hooks/todo.hooks';
+import { useCreateTodo, useFindByDate } from '@/entities/todo/hooks/todo.hooks';
 import {
   CreateTodoDto,
   CreateTodoItemDto,
@@ -50,8 +47,11 @@ const Calendar = () => {
     useUiStore();
   const { selectedDate } = useCalendarStore();
   const { weekday, day, month } = formatDate(selectedDate);
-  const { todos, setTodos, isLoading: isTodoLoading } =
-    useTodoState(selectedDate);
+  const {
+    todos,
+    setTodos,
+    isLoading: isTodoLoading,
+  } = useTodoState(selectedDate);
   const { mutate: createTodo } = useCreateTodo();
 
   const handleSubmitClick = () => {
@@ -89,7 +89,7 @@ const Calendar = () => {
   }
 
   return (
-    <main className="flex flex-col pb-20">
+    <main className="flex flex-col">
       <CalendarBox />
 
       <BottomSheet

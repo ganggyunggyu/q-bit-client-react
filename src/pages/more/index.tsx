@@ -9,7 +9,7 @@ const MorePage = () => {
   const handleLoginClick = () => navigate('/auth/login');
 
   return (
-    <main className="flex flex-col h-[calc(100vh-52px)] pb-[100px] gap-4 bg-alternative">
+    <main className="flex flex-col gap-4 bg-alternative">
       <TitleAppBar title="더보기" />
 
       <section className="flex flex-col gap-3 px-3">

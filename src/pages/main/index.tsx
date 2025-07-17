@@ -66,7 +66,7 @@ const MainPage = () => {
   };
 
   return (
-    <main className="pb-[80px] bg-alternative overflow-hidden text-black-normal">
+    <main className=" bg-alternative overflow-hidden text-black-normal">
       <section className="flex gap-4 flex-col justify-center w-full pt-10">
         {!isSearch && <TitleBellAppBar title={PROJECT_NAME_EN} />}
 

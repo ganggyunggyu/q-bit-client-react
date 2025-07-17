@@ -6,19 +6,20 @@ import { fadeVariants, slideVariants } from '@/app/motion';
 import { MainLoading } from '@/shared';
 import { ProtectedRoute } from '@/app/provider/protected-route';
 import LoginRequest from './login-request';
+import MainPage from './main';
+import MorePage from './more';
+import AdminComponents from './admin-components';
 
-const MainPage = lazy(() => import('./main'));
-const MorePage = lazy(() => import('./more'));
-const AdminComponents = lazy(() => import('./admin-components'));
-const Calendar = lazy(() => import('./calendar'));
-const MyCertPage = lazy(() => import('./my-cert'));
-const MyStudyPage = lazy(() => import('./my-study'));
-const KakaoCallbackPage = lazy(() => import('./kakao-callback-page'));
-const Step1Cert = lazy(() => import('./onboarding/1-cert'));
-const Step2Style = lazy(() => import('./onboarding/2-style'));
-const Search = lazy(() => import('./search'));
-const CertDetailPage = lazy(() => import('./cert-detail'));
-const Login = lazy(() => import('./login'));
+import MyCertPage from './my-cert';
+import MyStudyPage from './my-study';
+import KakaoCallbackPage from './kakao-callback-page';
+import Step1Cert from './onboarding/1-cert';
+import Step2Style from './onboarding/2-style';
+import CertDetailPage from './cert-detail';
+import Login from './login';
+import Calendar from './calendar';
+import Search from './search';
+
 type RouteElement = {
   path: string;
   element: JSX.Element;
@@ -68,6 +69,7 @@ export const Routing = () => {
   const location = useLocation();
 
   React.useEffect(() => {
+    console.log(location.pathname);
   }, [location.pathname]);
   return (
     <AnimatePresence mode="wait" initial={false}>

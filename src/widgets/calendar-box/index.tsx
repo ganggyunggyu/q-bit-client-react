@@ -110,7 +110,7 @@ export const CalendarBox = () => {
   return (
     <section
       ref={containerRef}
-      className="relative h-[calc(100vh-54px)] w-[95%] mx-auto overflow-hidden touch-pan-x"
+      className="relative h-[70vh] w-[95%] mx-auto overflow-hidden touch-pan-x"
     >
       <CaleanderAppBar
         month={String(displayDate.getMonth() + 1).padStart(2, '0')}
@@ -177,7 +177,9 @@ export const CalendarBox = () => {
               const content = [];
 
               if (matchedTodo && matchedTodo.todos.length > 0) {
-                const percentage = calculateCompletionPercentage(matchedTodo.todos);
+                const percentage = calculateCompletionPercentage(
+                  matchedTodo.todos,
+                );
                 content.push(
                   <div
                     key="progress"
@@ -208,7 +210,6 @@ export const CalendarBox = () => {
 
 import { useSpring, useTransform } from 'framer-motion';
 import { useGetMyRemindCerts } from '@/entities';
-import { todo } from 'node:test';
 
 type CalendarProgressProps = {
   percent: number;

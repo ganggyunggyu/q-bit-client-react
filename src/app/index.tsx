@@ -2,14 +2,15 @@ import React from 'react';
 import { Routing } from '@/pages';
 import { BottomBar } from '@/widgets';
 import { AuthProvider } from './provider/auth-provider';
+import { RouteLayout } from './provider/layout-provider';
 
 export function App() {
   return (
-    <AuthProvider>
-      <main className="bg-alternative min-h-screen">
+    <RouteLayout>
+      <AuthProvider>
         <Routing />
-        <BottomBar />
-      </main>
-    </AuthProvider>
+        {/* <BottomBar /> */}
+      </AuthProvider>
+    </RouteLayout>
   );
 }

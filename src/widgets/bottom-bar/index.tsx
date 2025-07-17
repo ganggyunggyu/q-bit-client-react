@@ -62,9 +62,9 @@ export const BottomBar = () => {
           animate="animate"
           exit="exit"
           variants={slideDownVariants}
-          className="relative bottom-0 left-0 w-screen z-10 [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]"
+          className="relative w-full z-10 [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]"
         >
-          <footer className="w-screen py-3 px-4 flex justify-around items-end  bg-white">
+          <footer className="w-full py-3 px-4 flex justify-around items-end  bg-white">
             {bottomTabItems.map((item) => (
               <IconColButton
                 key={item.route}
