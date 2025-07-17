@@ -143,7 +143,8 @@ const MainPage = () => {
               </p>
 
               {!certLoading &&
-                certList.map((cert, index) => {
+                certList &&
+                certList?.map((cert, index) => {
                   const scheduleDate = new Date(cert.scheduleDate);
                   const now = new Date();
                   const diffTime = scheduleDate.getTime() - now.getTime();
