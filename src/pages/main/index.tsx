@@ -157,7 +157,6 @@ const MainPage = () => {
         ) : (
           <motion.section
             key="search-results-section"
-            className="pb-[100px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -183,21 +182,19 @@ const MainPage = () => {
               )}
 
               {!isTyping && !searchLoading && results.length > 0 && (
-                <React.Fragment>
-                  <AnimatePresence mode="wait">
-                    {results.map((cert, index) => (
-                      <motion.div
-                        key={cert._id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.2, delay: index * 0.03 }}
-                      >
-                        <CertCard cert={cert} dDay={cert.daysLeft} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </React.Fragment>
+                <AnimatePresence mode="wait">
+                  {results.map((cert, index) => (
+                    <motion.div
+                      key={cert._id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2, delay: index * 0.03 }}
+                    >
+                      <CertCard cert={cert} dDay={cert.daysLeft} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               )}
 
               {!isTyping &&

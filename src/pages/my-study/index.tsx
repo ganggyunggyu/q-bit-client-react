@@ -80,7 +80,7 @@ const MyStudyPage = () => {
   };
 
   return (
-    <main className="h-[calc(100vh - 184px)] bg-alternative pb-[100px]">
+    <main className="">
       <TitleAppBar title="내 스터디" />
       <Tabs
         tabKey="study-tab"
@@ -154,7 +154,6 @@ const MyStudyPage = () => {
                 </div>
               </section>
 
-              {/* memo 관련 섹션 제거 */}
               <section className="px-4 flex flex-col gap-4 pb-6">
                 <p className="font-headline-m">메모</p>
                 <textarea
@@ -244,7 +243,6 @@ const TodoCompletionStats: React.FC = () => {
       <p className="font-title-sb text-primary text-lg mt-2">
         완료율: {stats.completionRate}%
       </p>
-      {/* 여기에 원형 차트 같은 시각화 추가 가능 */}
     </div>
   );
 };
