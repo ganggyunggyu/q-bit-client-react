@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '../atom-button';
+import { Button, ButtonProps } from '../atom-button';
 import { ChevronRight } from 'lucide-react';
 
 const KakaoIcon = () => {
