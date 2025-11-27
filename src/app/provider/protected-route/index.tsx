@@ -10,5 +10,5 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (isLoading) return <MainLoading />;
   if (!user || error) return <Navigate to="/auth/login/request" replace />;
 
-  return <React.Fragment>{children}</React.Fragment>;
+  return <>{children}</>;
 };
