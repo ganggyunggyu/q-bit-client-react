@@ -10,13 +10,8 @@ const queryClient = new QueryClient();
 const rootElement = document.getElementById('root');
 
 async function enableMocking() {
-  if (process.env.NODE_ENV !== 'development') {
-    return;
-  }
-
-  const { worker } = await import('./mocks/browser');
-
-  return worker.start();
+  // MSW 비활성화
+  return;
 }
 
 enableMocking().then(() => {
