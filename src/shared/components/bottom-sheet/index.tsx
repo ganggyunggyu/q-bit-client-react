@@ -44,7 +44,6 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             transition={{ type: 'tween', duration: 0.3 }}
           >
             <header className="flex justify-center items-center mb-4">
-              {/* <p className="text-lg font-semibold">{title}</p> */}
               <button
                 className="h-[5px] w-1/2 bg-black-alternative rounded-full"
                 onClick={() => setIsBottomSheet(false)}

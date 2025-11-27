@@ -48,9 +48,7 @@ export const Modal: React.FC<ModalProps> = ({
             transition={{ duration: 0.2 }}
           >
             <header className=" flex justify-center items-center py-6">
-              {/* <div className="w-[24px]" /> */}
               <p className=" text-lg font-semibold">{title}</p>
-              {/* <button onClick={() => setIsOpen(false)}>닫기</button> */}
             </header>
             {children}
           </motion.div>
