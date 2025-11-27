@@ -205,7 +205,7 @@ const AdminComponents = () => {
         {certMock.map((cert, index) => {
           return (
             <CertCard
-              key={cert.jmfldnm}
+              key={cert.name}
               cert={cert}
               dDay={7}
               isLiked={index % 2 === 1}
