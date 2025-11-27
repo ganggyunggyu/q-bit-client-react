@@ -29,18 +29,18 @@ export const CertCard: React.FC<CertCardProps> = ({ cert, dDay, isLiked }) => {
       className="max-h-[122px] flex justify-between items-start p-4 rounded-2xl bg-white shadow-sm border border-divide"
     >
       <div className="flex flex-col">
-        <p className="text-black font-headline-sb mb-1">{cert.jmfldnm}</p>
+        <p className="text-black font-headline-sb mb-1">{cert.name}</p>
         <span className="text-black-alternative/80 font-caption-m mb-5">
           {cert.agency}
         </span>
         <div className="inline-flex items-center">
           <span
             className={`rounded-full py-1 px-3 font-caption-m
-            ${cert.qualgbnm === '국가기술자격' && 'bg-green/10 text-green'}
-            ${cert.qualgbnm === '국가전문자격' && 'bg-blue-good/10 text-blue-good'}
+            ${cert.type === '국가기술자격' && 'bg-green/10 text-green'}
+            ${cert.type === '국가전문자격' && 'bg-blue-good/10 text-blue-good'}
             `}
           >
-            {cert.qualgbnm}증
+            {cert.type}
           </span>
         </div>
       </div>

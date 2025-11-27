@@ -3,7 +3,7 @@
 import { useRouter } from '@/shared';
 import React from 'react';
 import { useSearchParams } from 'react-router';
-import { useGetSearchCertByJmnm } from '@/entities/cert/hooks/cert.hooks'; // 추가
+import { useSearchCertsByKeyword } from '@/entities/cert/hooks/cert.hooks';
 import { Cert } from '@/entities/cert/model/cert.model'; // 추가
 import { MainLoading } from '@/shared'; // 로딩 스피너를 위해 추가
 
@@ -14,7 +14,7 @@ const Step1Cert = () => {
   const [searchQuery, setSearchQuery] = React.useState(''); // 검색어 상태
   const [interestedCerts, setInterestedCerts] = React.useState<Cert[]>([]); // 관심 자격증 상태
 
-  const { data: searchResults, isLoading: isSearching } = useGetSearchCertByJmnm(searchQuery); // 검색 훅 사용
+  const { data: searchResults, isLoading: isSearching } = useSearchCertsByKeyword(searchQuery);
 
   const kakaoId = searchParams.get('kakaoId');
   const email = searchParams.get('email');
@@ -77,7 +77,7 @@ const Step1Cert = () => {
                 }`}
                 onClick={() => handleCertSelect(cert)}
               >
-                <span>{cert.jmfldnm}</span>
+                <span>{cert.name}</span>
                 {interestedCerts.some((c) => c._id === cert._id) && (
                   <span className="text-blue-500">✓</span>
                 )}
@@ -100,7 +100,7 @@ const Step1Cert = () => {
                   className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full cursor-pointer"
                   onClick={() => handleCertSelect(cert)} // 클릭 시 제거
                 >
-                  {cert.jmfldnm} ×
+                  {cert.name} ×
                 </span>
               ))}
             </div>

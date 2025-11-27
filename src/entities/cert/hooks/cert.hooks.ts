@@ -1,93 +1,87 @@
-// src/entities/cert/hooks/cert.hooks.ts
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { certApi } from '../api/cert.api'; // api 경로 수정
-import { Cert } from '../model/cert.model'; // Cert 타입은 model에 정의되어 있다고 가정
+import { certApi } from '../api/cert.api';
+import { Cert, SearchCertParams, ScheduleStatus } from '../model/cert.model';
 
-// Cert 타입 정의 (임시, 실제는 model/cert.model.ts에서 가져와야 함)
-// interface Cert {
-//   _id: string;
-//   jmfldnm: string;
-//   agency: string;
-//   seriesnm: string;
-//   // ... 기타 필드
-// }
+export const certKeys = {
+  all: ['certs'] as const,
+  search: (params: SearchCertParams) => [...certKeys.all, 'search', params] as const,
+  searchKeyword: (q: string, limit?: number) => [...certKeys.all, 'searchKeyword', q, limit] as const,
+  popular: () => [...certKeys.all, 'popular'] as const,
+  upcoming: (limit?: number) => [...certKeys.all, 'upcoming', limit] as const,
+  detail: (id: string) => [...certKeys.all, 'detail', id] as const,
+  myRemind: () => [...certKeys.all, 'myRemind'] as const,
+  scheduleStatus: () => [...certKeys.all, 'scheduleStatus'] as const,
+};
 
-// 자격증 검색 훅
-export const useSearchCerts = (params: {
-  keyword?: string;
-  agency?: string;
-  seriesnm?: string;
-  obligfldnm?: string;
-  mdobligfldnm?: string;
-}) => {
-  return useQuery<Cert[]> ({
-    queryKey: ['certs', 'search', params],
+export const useSearchCerts = (params: SearchCertParams) => {
+  const hasParams = !!(params.keyword || params.agency || params.grade || params.category || params.subCategory);
+  return useQuery<Cert[]>({
+    queryKey: certKeys.search(params),
     queryFn: () => certApi.searchCerts(params),
-    enabled: !!(params.keyword || params.agency || params.seriesnm || params.obligfldnm || params.mdobligfldnm), // 검색 조건이 있을 때만 실행
+    enabled: hasParams,
   });
 };
 
-// 키워드 자격증 검색 훅
-export const useGetSearchCertByJmnm = (keyword: string, limit?: number) => {
-  return useQuery<Cert[]> ({
-    queryKey: ['certs', 'searchByKeyword', keyword, limit],
-    queryFn: () => certApi.getSearchCertByJmnm(keyword, limit),
-    enabled: !!keyword, // 키워드가 있을 때만 실행
+export const useSearchCertsByKeyword = (q: string, limit?: number) => {
+  return useQuery<Cert[]>({
+    queryKey: certKeys.searchKeyword(q, limit),
+    queryFn: () => certApi.searchCertsByKeyword(q, limit),
+    enabled: !!q,
   });
 };
 
-// 인기 자격증 조회 훅
 export const useGetPopularCerts = () => {
-  return useQuery<Cert[]> ({
-    queryKey: ['certs', 'popular'],
-    queryFn: () => certApi.getPopularCerts(),
+  return useQuery<Cert[]>({
+    queryKey: certKeys.popular(),
+    queryFn: certApi.getPopularCerts,
   });
 };
 
-// 예정 자격증 조회 훅
 export const useGetUpcomingCerts = (limit?: number) => {
-  return useQuery<Cert[]> ({
-    queryKey: ['certs', 'upcoming', limit],
+  return useQuery<Cert[]>({
+    queryKey: certKeys.upcoming(limit),
     queryFn: () => certApi.getUpcomingCerts(limit),
   });
 };
 
-// 자격증 상세 조회 훅
 export const useGetCertById = (id: string) => {
-  return useQuery<Cert> ({
-    queryKey: ['certs', id],
+  return useQuery<Cert>({
+    queryKey: certKeys.detail(id),
     queryFn: () => certApi.getCertById(id),
-    enabled: !!id, // ID가 있을 때만 실행
+    enabled: !!id,
   });
 };
 
-// 내 리마인드 자격증 리스트 조회 훅
 export const useGetMyRemindCerts = () => {
-  return useQuery<Cert[]> ({
-    queryKey: ['certs', 'myRemind'],
-    queryFn: () => certApi.getMyRemindCerts(),
+  return useQuery<Cert[]>({
+    queryKey: certKeys.myRemind(),
+    queryFn: certApi.getMyRemindCerts,
   });
 };
 
-// 리마인드 자격증 추가 훅
 export const useAddRemindCert = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => certApi.addRemindCert(id),
+    mutationFn: certApi.addRemindCert,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['certs', 'myRemind'] }); // 리마인드 목록 갱신
+      queryClient.invalidateQueries({ queryKey: certKeys.myRemind() });
     },
   });
 };
 
-// 리마인드 자격증 제거 훅
 export const useRemoveRemindCert = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => certApi.removeRemindCert(id),
+    mutationFn: certApi.removeRemindCert,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['certs', 'myRemind'] }); // 리마인드 목록 갱신
+      queryClient.invalidateQueries({ queryKey: certKeys.myRemind() });
     },
+  });
+};
+
+export const useGetScheduleStatus = () => {
+  return useQuery<ScheduleStatus>({
+    queryKey: certKeys.scheduleStatus(),
+    queryFn: certApi.getScheduleStatus,
   });
 };

@@ -14,8 +14,9 @@ export const TopCertList: React.FC<TopCertListProps> = ({
 }) => {
   const [highlightIndex, setHighlightIndex] = React.useState(0);
 
-  const count = 5;
-  const { data: certs = [], isLoading } = useGetPopularCerts();
+  const { data: certsData, isLoading } = useGetPopularCerts();
+  const certs = Array.isArray(certsData) ? certsData : [];
+  const count = certs.length || 5;
 
   const { navigate } = useRouter();
 
@@ -46,7 +47,7 @@ export const TopCertList: React.FC<TopCertListProps> = ({
               : 'scale-100',
           )}
         >
-          {index + 1}. {cert.jmfldnm}
+          {index + 1}. {cert.name}
         </p>
       ))}
     </section>

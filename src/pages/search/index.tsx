@@ -2,7 +2,7 @@ import React from 'react';
 import { debounce } from 'es-toolkit';
 
 import { SearchAppBar } from '@/widgets';
-import { useGetSearchCertByJmnm } from '@/entities/cert/hooks/cert.hooks';
+import { useSearchCertsByKeyword } from '@/entities/cert/hooks/cert.hooks';
 import { useRouter } from '@/shared';
 
 const Search = () => {
@@ -27,7 +27,7 @@ const Search = () => {
     setIsTyping(true);
     debouncedSetQuery(value);
   };
-  const { data: results = [], isLoading } = useGetSearchCertByJmnm(query);
+  const { data: results = [], isLoading } = useSearchCertsByKeyword(query);
 
   const handleNameClick = (id: string) => {
     navigate(`/search/${id}`);
@@ -60,7 +60,7 @@ const Search = () => {
                 className="flex items-center text-gray-500 text-body-s gap-2"
               >
                 <span className="i-tabler-search text-gray-400" />
-                {result.jmfldnm}
+                {result.name}
               </li>
             ))}
           </React.Fragment>
