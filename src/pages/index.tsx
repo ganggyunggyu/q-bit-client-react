@@ -1,24 +1,25 @@
-import React, { lazy, Suspense, JSX } from 'react';
+import { lazy, Suspense, JSX } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { fadeVariants, slideVariants } from '@/app/motion';
 import { MainLoading } from '@/shared';
 import { ProtectedRoute } from '@/app/provider/protected-route';
-import LoginRequest from './login-request';
-import MainPage from './main';
-import MorePage from './more';
-import AdminComponents from './admin-components';
 
-import MyCertPage from './my-cert';
-import MyStudyPage from './my-study';
-import KakaoCallbackPage from './kakao-callback-page';
-import Step1Cert from './onboarding/1-cert';
-import Step2Style from './onboarding/2-style';
-import CertDetailPage from './cert-detail';
-import Login from './login';
-import Calendar from './calendar';
-import Search from './search';
+import MainPage from './main';
+
+const MorePage = lazy(() => import('./more'));
+const AdminComponents = lazy(() => import('./admin-components'));
+const MyCertPage = lazy(() => import('./my-cert'));
+const MyStudyPage = lazy(() => import('./my-study'));
+const Calendar = lazy(() => import('./calendar'));
+const KakaoCallbackPage = lazy(() => import('./kakao-callback-page'));
+const LoginRequest = lazy(() => import('./login-request'));
+const Step1Cert = lazy(() => import('./onboarding/1-cert'));
+const Step2Style = lazy(() => import('./onboarding/2-style'));
+const CertDetailPage = lazy(() => import('./cert-detail'));
+const Login = lazy(() => import('./login'));
+const Search = lazy(() => import('./search'));
 
 type RouteElement = {
   path: string;
@@ -53,7 +54,7 @@ const fadeRoutes = [
       </ProtectedRoute>
     ),
   },
-  { path: '/auth/kakao-callback', element: <KakaoCallbackPage /> },
+  { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
   { path: '/auth/login/request', element: <LoginRequest /> },
 ] as RouteElement[];
 
@@ -68,9 +69,6 @@ const slideRoutes = [
 export const Routing = () => {
   const location = useLocation();
 
-  React.useEffect(() => {
-    console.log(location.pathname);
-  }, [location.pathname]);
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>

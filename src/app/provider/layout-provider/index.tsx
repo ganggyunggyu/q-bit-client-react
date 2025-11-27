@@ -20,7 +20,7 @@ const layoutConfig: Record<
     hasBottomBar: false,
   },
   '/auth/login': { header: null, hasBottomBar: false },
-  '/auth/kakao-callback': { header: null, hasBottomBar: false },
+  '/auth/kakao/callback': { header: null, hasBottomBar: false },
   '/auth/login/request': { header: null, hasBottomBar: false },
   '/onboarding-1': { header: null, hasBottomBar: false },
   '/onboarding-2': { header: null, hasBottomBar: false },

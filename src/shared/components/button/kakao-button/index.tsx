@@ -24,9 +24,6 @@ const KakaoIcon = () => {
 };
 
 export const KakaoLoginButton: React.FC<ButtonProps> = (props) => {
-  console.log('카카오 클라이언트:', import.meta.env.VITE_KAKAO_CLIENT_ID);
-  console.log('리다이렉트 URI:', import.meta.env.VITE_KAKAO_REDIRECT_URI);
-
   const CALLBACK = `https://kauth.kakao.com/oauth/authorize?client_id=${
     import.meta.env.VITE_KAKAO_CLIENT_ID
   }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&response_type=code`;

@@ -10,7 +10,7 @@ const KakaoCallbackPage = () => {
   useEffect(() => {
     if (code && !hasFetched.current) {
       hasFetched.current = true;
-      window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao-callback?code=${code}`;
+      window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao/callback?code=${code}`;
     }
   }, [code]);
 
