@@ -19,7 +19,7 @@ export const todoApi = {
   },
 
   findOne: async (id: string): Promise<Todo> => {
-    const response = await await axios.get(`/todo/${id}`);
+    const response = await axios.get(`/todo/${id}`);
     return response.data;
   },
 

@@ -1,6 +1,6 @@
 // src/entities/todo/hooks/todo.hooks.ts
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, QueryClient } from '@tanstack/react-query';
 import { todoApi } from '../api/todo.api';
 import {
   CreateTodoDto,
@@ -10,18 +10,29 @@ import {
   Todo,
 } from '../model/todo.model';
 
+export const todoKeys = {
+  all: ['todos'] as const,
+  byDate: (date: string) => ['todoByDate', date] as const,
+  week: (sunday: string) => ['weekTodos', sunday] as const,
+  month: (year: number, month: number) => ['monthTodos', year, month] as const,
+  exists: (date: string) => ['todoExists', date] as const,
+  detail: (id: string) => ['todo', id] as const,
+};
+
+const TODO_QUERY_KEYS = ['todos', 'todoByDate', 'weekTodos', 'monthTodos', 'todoExists'] as const;
+
+const invalidateAllTodoQueries = (queryClient: QueryClient) => {
+  TODO_QUERY_KEYS.forEach((key) => {
+    queryClient.invalidateQueries({ queryKey: [key] });
+  });
+};
+
 // Todo 생성 훅
 export const useCreateTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (dto: CreateTodoDto) => todoApi.create(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoByDate'] });
-      queryClient.invalidateQueries({ queryKey: ['weekTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['monthTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoExists'] });
-    },
+    onSuccess: () => invalidateAllTodoQueries(queryClient),
   });
 };
 
@@ -47,13 +58,7 @@ export const useUpdateTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateTodoDto }) => todoApi.update(id, dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoByDate'] });
-      queryClient.invalidateQueries({ queryKey: ['weekTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['monthTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoExists'] });
-    },
+    onSuccess: () => invalidateAllTodoQueries(queryClient),
   });
 };
 
@@ -63,13 +68,7 @@ export const useToggleCompleteTodo = () => {
   return useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateTodoCompletionDto }) =>
       todoApi.toggleComplete(id, dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoByDate'] });
-      queryClient.invalidateQueries({ queryKey: ['weekTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['monthTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoExists'] });
-    },
+    onSuccess: () => invalidateAllTodoQueries(queryClient),
   });
 };
 
@@ -78,13 +77,7 @@ export const useRemoveTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => todoApi.remove(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoByDate'] });
-      queryClient.invalidateQueries({ queryKey: ['weekTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['monthTodos'] });
-      queryClient.invalidateQueries({ queryKey: ['todoExists'] });
-    },
+    onSuccess: () => invalidateAllTodoQueries(queryClient),
   });
 };
 
