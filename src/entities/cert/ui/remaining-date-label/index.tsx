@@ -1,11 +1,11 @@
 import { cn } from '@/shared/lib';
 
-interface ReminingDateLabelProps extends React.HTMLAttributes<HTMLDivElement> {
+interface RemainingDateLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   day: number;
   label?: string;
 }
 
-export const ReminingDateLabel: React.FC<ReminingDateLabelProps> = ({
+export const RemainingDateLabel: React.FC<RemainingDateLabelProps> = ({
   day,
   label = '시험까지',
   ...props

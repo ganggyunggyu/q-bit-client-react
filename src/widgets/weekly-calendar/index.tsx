@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'dayjs/locale/ko';
-import { ReminingDateLabel } from '@/entities';
+import { RemainingDateLabel } from '@/entities';
 import { useGetMyRemindCerts } from '@/entities/cert/hooks/cert.hooks';
 
 dayjs.locale('ko');
@@ -74,9 +74,9 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
 
     const dates = new Set();
     remindCerts.forEach((cert) => {
-      cert.schedule.forEach((s) => {
-        if (s.docexamdt) {
-          dates.add(dayjs(s.docexamdt).format('YYYY-MM-DD'));
+      cert.schedule?.forEach((s) => {
+        if (s.writtenExamStart) {
+          dates.add(dayjs(s.writtenExamStart).format('YYYY-MM-DD'));
         }
       });
     });
@@ -88,7 +88,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
       <div className="flex justify-between items-center py-4">
         <p className="font-title-sb">{currentMonth}월</p>
 
-        <ReminingDateLabel day={4} label="시험" />
+        <RemainingDateLabel day={4} label="시험" />
       </div>
       <AnimatePresence initial={false} custom={direction}>
         <motion.div

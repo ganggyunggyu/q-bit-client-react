@@ -1,5 +1,6 @@
+import toast from 'react-hot-toast';
 import { useCalendarStore, useUiStore } from '@/app/store';
-import { ReminingDateLabel } from '@/entities';
+import { RemainingDateLabel } from '@/entities';
 import { useCreateTodo, useFindByDate } from '@/entities/todo/hooks/todo.hooks';
 import {
   CreateTodoDto,
@@ -59,7 +60,7 @@ const Calendar = () => {
     const validTodos = todos.filter((t) => t.title.trim() !== '');
 
     if (validTodos.length === 0) {
-      alert('최소 하나 이상의 할 일이 필요합니다.');
+      toast.error('최소 하나 이상의 할 일이 필요합니다.');
       return;
     }
 
@@ -102,7 +103,7 @@ const Calendar = () => {
             <p className="font-title-sb text-primary">{day}일</p>
             <p className="font-title-sb text-primary ml-0.5">({weekday})</p>
           </div>
-          <ReminingDateLabel day={10} />
+          <RemainingDateLabel day={10} />
         </section>
 
         <section className="flex flex-col gap-4 pb-6">
