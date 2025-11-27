@@ -7,11 +7,12 @@ import { CertCard } from '@/features';
 
 import { useGetMe } from '@/entities/auth/hooks/auth.hooks';
 import {
-  useGetSearchCertByJmnm,
+  useSearchCertsByKeyword,
   useGetUpcomingCerts,
 } from '@/entities/cert/hooks/cert.hooks';
 import { BackIcon, Button, MainLoading, useRouter } from '@/shared';
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
+import { UI_TIMING } from '@/shared/constants/ui';
 
 const MainPage = () => {
   const [isFocus, setIsFocus] = React.useState(false);
@@ -22,27 +23,26 @@ const MainPage = () => {
   const [isTyping, setIsTyping] = React.useState(false);
 
   useRouter();
-  const { data: certList, isLoading: certLoading } = useGetUpcomingCerts(3);
-  const { data: results = [], isLoading: searchLoading } =
-    useGetSearchCertByJmnm(query);
+  const { data: certListData, isLoading: certLoading } = useGetUpcomingCerts(3);
+  const certList = Array.isArray(certListData) ? certListData : [];
+
+  const { data: resultsData, isLoading: searchLoading } =
+    useSearchCertsByKeyword(query);
+  const results = Array.isArray(resultsData) ? resultsData : [];
 
   const { data: user } = useGetMe();
-
-  React.useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   const debouncedSetQuery = React.useMemo(
     () =>
       debounce((value: string) => {
         setQuery(value);
         setIsTyping(false);
-      }, 300),
+      }, UI_TIMING.DEBOUNCE_DELAY),
     [],
   );
 
   const handleInputFocus = () => {
-    searchInputRef.current.focus();
+    searchInputRef.current?.focus();
     setIsFocus(true);
   };
   const handleInputBlur = () => setIsFocus(false);
@@ -55,7 +55,7 @@ const MainPage = () => {
 
   const handleSearchPage = async () => {
     setIsSearch(true);
-    await delay(500);
+    await delay(UI_TIMING.ANIMATION_DELAY);
     handleInputFocus();
   };
   const handleBackClick = () => {
@@ -87,7 +87,6 @@ const MainPage = () => {
               className={`absolute top-0 px-4 right-0 text-start h-full border-[1.5px] rounded-full border-primary focus:border-primary bg-white transition-all ${isFocus ? 'w-[88%]' : 'w-full'}`}
               value={inputValue}
               onFocus={handleInputFocus}
-              // onBlur={handleInputBlur}
               onChange={handleInputChange}
             />
           </div>
@@ -144,14 +143,9 @@ const MainPage = () => {
 
               {!certLoading &&
                 certList &&
-                certList?.map((cert, index) => {
-                  const scheduleDate = new Date(cert.scheduleDate);
-                  const now = new Date();
-                  const diffTime = scheduleDate.getTime() - now.getTime();
-                  const dDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                  return <CertCard key={index} cert={cert} dDay={dDay} />;
-                })}
+                certList?.map((cert, index) => (
+                  <CertCard key={cert._id || index} cert={cert} dDay={cert.daysLeft ?? 0} />
+                ))}
             </section>
           </motion.div>
         ) : (

@@ -9,6 +9,7 @@ import { useCalendarStore, useUiStore } from '@/app/store';
 import { useGetMonthTodos } from '@/entities/todo/hooks/todo.hooks';
 import { Todo } from '@/entities/todo/model/todo.model';
 import dayjs from 'dayjs';
+import { UI_TIMING } from '@/shared/constants/ui';
 
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -54,21 +55,14 @@ export const CalendarBox = () => {
 
   const { data: remindCerts } = useGetMyRemindCerts();
 
-  console.log(
-    'CalendarBox - todoList:',
-    todoList,
-    'isLoading:',
-    isTodoListLoading,
-  );
-
   const examDates = React.useMemo(() => {
     if (!remindCerts) return new Set();
 
     const dates = new Set();
     remindCerts.forEach((cert) => {
-      cert.schedule.forEach((s) => {
-        if (s.docexamdt) {
-          dates.add(dayjs(s.docexamdt).format('YYYY-MM-DD'));
+      cert.schedule?.forEach((s) => {
+        if (s.writtenExamStart) {
+          dates.add(dayjs(s.writtenExamStart).format('YYYY-MM-DD'));
         }
       });
     });
@@ -84,7 +78,7 @@ export const CalendarBox = () => {
 
     const handleTouchEnd = (e: TouchEvent) => {
       const deltaX = e.changedTouches[0].clientX - startX;
-      if (Math.abs(deltaX) > 100) {
+      if (Math.abs(deltaX) > UI_TIMING.SWIPE_THRESHOLD) {
         const newDate = new Date(displayDate);
         if (deltaX > 0) {
           newDate.setMonth(newDate.getMonth() - 1);

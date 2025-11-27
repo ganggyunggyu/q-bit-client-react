@@ -1,0 +1,5 @@
+export const UI_TIMING = {
+  DEBOUNCE_DELAY: 300,
+  ANIMATION_DELAY: 500,
+  SWIPE_THRESHOLD: 100,
+} as const;
