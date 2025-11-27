@@ -44,7 +44,6 @@ const useTodoState = (selectedDate: Date) => {
     setTodos(parsedTodos);
   }, [todoData, isLoading]);
 
-  console.log(todos);
   return { todos, setTodos };
 };
 

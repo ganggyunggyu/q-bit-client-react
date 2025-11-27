@@ -101,7 +101,6 @@ export const Step2Style = () => {
         interestedCerts,
         remindType,
       };
-      console.log(params);
       joinUser(params);
 
       navigate('/?isAuth=true');
