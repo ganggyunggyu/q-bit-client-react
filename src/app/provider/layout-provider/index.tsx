@@ -1,13 +1,13 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { BottomBar, TitleAppBar } from '@/widgets';
+import { BottomBar, AppBar } from '@/widgets';
 
 const layoutConfig: Record<
   string,
   { header: React.ReactElement | null; hasBottomBar: boolean }
 > = {
   '/': { header: null, hasBottomBar: true },
-  '/more': { header: <TitleAppBar title="더보기" />, hasBottomBar: true },
+  '/more': { header: <AppBar variant="title" title="더보기" />, hasBottomBar: true },
   '/search': { header: null, hasBottomBar: true },
   '/calendar': { header: null, hasBottomBar: true },
   '/my-cert': {
