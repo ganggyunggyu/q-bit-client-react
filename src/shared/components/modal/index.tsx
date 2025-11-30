@@ -41,14 +41,14 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* 모달 본체: scale 애니메이션을 사용해 자연스럽게 팝업 */}
           <motion.div
-            className="relative w-full mx-2 max-w-md bg-white rounded-xl shadow-lg z-10"
+            className="relative w-full mx-2 max-w-md bg-[--color-bg-primary] rounded-[--radius-lg] shadow-[--shadow-lg] z-10"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <header className=" flex justify-center items-center py-6">
-              <p className=" text-lg font-semibold">{title}</p>
+            <header className="flex justify-center items-center py-[--space-6]">
+              <p className="font-title-m text-[--color-text-primary]">{title}</p>
             </header>
             {children}
           </motion.div>

@@ -58,18 +58,18 @@ export const Tabs: React.FC<TabsProps> = ({
               className="relative py-2 font-semibold font-title-md-bold w-full"
             >
               <span
-                className={isActive ? 'text-black' : 'text-black-assistive/60'}
+                className={isActive ? 'text-[--color-navy]' : 'text-[--color-neutral]/60'}
               >
                 {tab.label}
               </span>
 
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary-trans rounded" />
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[--color-bg-primary] rounded" />
 
               {isActive && (
                 <motion.div
                   key={tabKey}
                   layoutId={isMounted.current ? 'underline' : ''}
-                  className="w-full absolute bottom-0 left-0 right-0 h-[1.5px] bg-black rounded"
+                  className="w-full absolute bottom-0 left-0 right-0 h-0.5 bg-[--color-primary] rounded"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}

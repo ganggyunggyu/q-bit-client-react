@@ -25,16 +25,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-[--color-bg-primary]">
       <div
-        className={`flex items-center justify-between px-4 py-3 cursor-pointer border border-divide
-          ${isOpen ? 'rounded-t-xl' : 'rounded-xl'}
+        className={`flex items-center justify-between px-[--space-4] py-[--space-3] cursor-pointer border border-[--color-divide] text-[--color-text-primary]
+          ${isOpen ? 'rounded-t-[--radius-sm]' : 'rounded-[--radius-sm]'}
           `}
         onClick={toggleDropdown}
       >
-        <span className="">{selected}</span>
+        <span>{selected}</span>
         <ChevronUp
-          className={`transition-transform ${isOpen ? 'rotate-0' : 'rotate-180'}`}
+          className={`transition-transform duration-[--transition-fast] ${isOpen ? 'rotate-0' : 'rotate-180'}`}
           size={20}
         />
       </div>
@@ -42,7 +42,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="bg-white rounded-b-xl border border-divide overflow-hidden"
+            className="bg-[--color-bg-primary] rounded-b-[--radius-sm] border border-[--color-divide] overflow-hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -53,7 +53,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 <li
                   key={option}
                   onClick={() => handleSelect(option)}
-                  className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+                  className="px-[--space-4] py-[--space-3] hover:bg-[--color-bg-secondary] cursor-pointer text-[--color-text-primary] transition-colors duration-[--transition-fast]"
                 >
                   {option}
                 </li>

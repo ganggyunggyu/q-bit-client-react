@@ -134,14 +134,14 @@ export const BackIcon = () => {
     >
       <path
         d="M21 8.5L11 18L21 27.5"
-        stroke="#3899E8"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M11.5 18H27.5"
-        stroke="#3899E8"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
