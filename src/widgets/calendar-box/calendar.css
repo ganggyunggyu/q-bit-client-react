@@ -28,7 +28,7 @@
 }
 
 .react-calendar__month-view__days__day--weekend {
-  color: #ff4d4f;
+  color: var(--color-weekend);
 }
 .react-calendar__month-view__weekdays__weekday {
   background: var(--color-alternative);
@@ -55,7 +55,7 @@
   top: 30px;
 
   font-size: 12px;
-  color: #e11d48;
+  color: var(--color-admission);
 }
 
 .react-calendar__tile--now {

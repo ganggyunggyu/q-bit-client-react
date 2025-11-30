@@ -64,7 +64,7 @@ export const BottomBar = () => {
           variants={slideDownVariants}
           className="relative w-full z-10 [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]"
         >
-          <footer className="w-full py-3 px-4 flex justify-around items-end  bg-white">
+          <footer className="w-full py-3 px-4 flex justify-around items-end bg-[--color-bg-primary]">
             {bottomTabItems.map((item) => (
               <IconColButton
                 key={item.route}

@@ -84,60 +84,64 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   }, [remindCerts]);
 
   return (
-    <div ref={containerRef} className="relative h-[150px] overflow-hidden px-4">
+    <div ref={containerRef} className="px-4">
       <div className="flex justify-between items-center py-4">
         <p className="font-title-sb">{currentMonth}월</p>
-
         <RemainingDateLabel day={4} label="시험" />
       </div>
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.div
-          key={startDate.toString()}
-          custom={direction}
-          initial={{ x: direction === 'left' ? 200 : -200, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: direction === 'left' ? -200 : 200, opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="absolute w-11/12 flex justify-between bg-white rounded-2xl p-1.5"
-        >
-          {days.map((day) => {
-            const isSelected = day.isSame(selectedDate, 'day');
-            const isExamDay = examDates.has(day.format('YYYY-MM-DD'));
 
-            const isWeekend =
-              day.format('dd') === '일' || day.format('dd') === '토';
-            return (
-              <div
-                key={day.format('YYYY-MM-DD')}
-                onClick={() => onSelect(day.toDate())}
-                className={`flex flex-col gap-2 items-center justify-center w-9 h-16 rounded-lg 
-                `}
-              >
-                <span
-                  className={`text-xs ${isWeekend ? 'text-urgent' : 'text-black'}`}
-                >
-                  {day.format('dd')}
-                </span>
+      <div className="relative h-24 overflow-hidden">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={startDate.toString()}
+            custom={direction}
+            initial={{ x: direction === 'left' ? '100%' : '-100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction === 'left' ? '-100%' : '100%', opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="absolute inset-0 flex justify-between items-center bg-white rounded-2xl px-2 py-3"
+          >
+            {days.map((day) => {
+              const isSelected = day.isSame(selectedDate, 'day');
+              const isExamDay = examDates.has(day.format('YYYY-MM-DD'));
+              const isWeekend =
+                day.format('dd') === '일' || day.format('dd') === '토';
+
+              return (
                 <button
-                  className={`w-9 h-9 p-3 rounded-full flex items-center justify-center transition-colors
-                            ${
-                              isSelected
-                                ? 'bg-bg-primary text-primary border border-blue-good'
-                                : isWeekend
-                                  ? 'text-urgent'
-                                  : 'text-black'
-                            }`}
+                  key={day.format('YYYY-MM-DD')}
+                  onClick={() => onSelect(day.toDate())}
+                  className="flex flex-col items-center gap-1.5 flex-1"
                 >
-                  <p className={`font-body text-center `}>{day.format('D')}</p>
+                  <span
+                    className={`text-xs font-medium ${
+                      isWeekend ? 'text-status-error' : 'text-text-tertiary'
+                    }`}
+                  >
+                    {day.format('dd')}
+                  </span>
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                      isSelected
+                        ? 'bg-primary text-white font-semibold'
+                        : isWeekend
+                          ? 'text-status-error'
+                          : 'text-text-primary'
+                    }`}
+                  >
+                    <span className="text-sm">{day.format('D')}</span>
+                  </div>
+                  <div className="h-1.5 flex items-center justify-center">
+                    {isExamDay && (
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                    )}
+                  </div>
                 </button>
-                {isExamDay && (
-                  <div className="w-1 h-1 bg-blue-500 rounded-full mt-1"></div>
-                )}
-              </div>
-            );
-          })}
-        </motion.div>
-      </AnimatePresence>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

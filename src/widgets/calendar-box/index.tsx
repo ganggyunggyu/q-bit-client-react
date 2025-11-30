@@ -104,7 +104,7 @@ export const CalendarBox = () => {
   return (
     <section
       ref={containerRef}
-      className="relative h-[70vh] w-[95%] mx-auto overflow-hidden touch-pan-x"
+      className="relative h-[calc(100dvh-80px)] w-[95%] mx-auto overflow-hidden touch-pan-x"
     >
       <CaleanderAppBar
         month={String(displayDate.getMonth() + 1).padStart(2, '0')}
