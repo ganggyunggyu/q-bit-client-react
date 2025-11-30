@@ -1,7 +1,7 @@
 import React from 'react';
 import { debounce } from 'es-toolkit';
 
-import { SearchAppBar } from '@/widgets';
+import { AppBar } from '@/widgets';
 import { useSearchCertsByKeyword } from '@/entities/cert/hooks/cert.hooks';
 import { useRouter } from '@/shared';
 
@@ -35,7 +35,8 @@ const Search = () => {
 
   return (
     <main className="">
-      <SearchAppBar
+      <AppBar
+        variant="search"
         className="px-3"
         inputProps={{
           placeholder: '검색',

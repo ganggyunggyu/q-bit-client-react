@@ -59,7 +59,7 @@ const Step1Cert = () => {
             id="certificateSearch"
             type="text"
             placeholder="원하는 자격증을 검색해보세요."
-            className="w-full px-4 py-3 border border-blue-400 rounded-full text-center text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-3 border border-[--color-primary] rounded-xl text-center text-[--color-navy] placeholder:text-[--color-neutral]/50 focus:outline-none focus:ring-2 focus:ring-[--color-primary]/20 focus:border-[--color-primary] transition-all bg-white"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -72,14 +72,14 @@ const Step1Cert = () => {
             {searchResults.map((cert) => (
               <div
                 key={cert._id}
-                className={`flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded-md ${
-                  interestedCerts.some((c) => c._id === cert._id) ? 'bg-blue-100' : ''
+                className={`flex items-center justify-between p-2 cursor-pointer hover:bg-[--color-bg-primary] rounded-md transition-colors ${
+                  interestedCerts.some((c) => c._id === cert._id) ? 'bg-[--color-bg-primary]' : ''
                 }`}
                 onClick={() => handleCertSelect(cert)}
               >
                 <span>{cert.name}</span>
                 {interestedCerts.some((c) => c._id === cert._id) && (
-                  <span className="text-blue-500">✓</span>
+                  <span className="text-[--color-primary]">✓</span>
                 )}
               </div>
             ))}
@@ -97,7 +97,7 @@ const Step1Cert = () => {
               {interestedCerts.map((cert) => (
                 <span
                   key={cert._id}
-                  className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full cursor-pointer"
+                  className="bg-[--color-primary] text-[--color-navy] text-sm px-3 py-1 rounded-full cursor-pointer active:scale-95 transition-transform"
                   onClick={() => handleCertSelect(cert)} // 클릭 시 제거
                 >
                   {cert.name} ×
@@ -111,7 +111,7 @@ const Step1Cert = () => {
           <button
             type="button"
             onClick={handleNextClick}
-            className="px-6 py-2 border border-blue-400 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition"
+            className="px-6 py-3 border border-[--color-primary] rounded-full text-[--color-primary] font-body-sb hover:bg-[--color-primary]/10 transition-all active:scale-[0.99]"
           >
             {interestedCerts.length > 0 ? '다음' : '건너뛰기'}
           </button>

@@ -4,35 +4,58 @@ import toast from 'react-hot-toast';
 import {
   useAddRemindCert,
   useGetCertById,
+  useGetMyRemindCerts,
+  useRemoveRemindCert,
 } from '@/entities/cert/hooks/cert.hooks';
 import { CertSchedule } from '@/entities/cert/model/cert.model';
 import { Button, Tabs, useRouter } from '@/shared';
-import { TitleBackAppBar } from '@/widgets';
-import { Heart } from 'lucide-react';
+import { AppBar } from '@/widgets';
+import { Heart, Bell, BellOff, Loader2 } from 'lucide-react';
 
 export const CertDetailPage = () => {
   const { params } = useRouter();
   const certId = params?.id;
 
   const { data: cert, isLoading } = useGetCertById(certId ?? '');
-  const { mutate: addRemindCert } = useAddRemindCert();
+  const { data: remindCerts } = useGetMyRemindCerts();
+  const { mutate: addRemindCert, isPending: isAdding } = useAddRemindCert();
+  const { mutate: removeRemindCert, isPending: isRemoving } = useRemoveRemindCert();
 
   const [selectedTab, setSelectedTab] = React.useState('schedule');
+
+  const isReminded = React.useMemo(() => {
+    if (!remindCerts || !certId) return false;
+    return remindCerts.some((cert) => cert._id === certId);
+  }, [remindCerts, certId]);
+
+  const isProcessing = isAdding || isRemoving;
 
   const handleTabClick = (tab: 'schedule' | 'way' | 'info') => {
     setSelectedTab(tab);
   };
 
   const handleRemindClick = () => {
-    if (!certId) return;
-    addRemindCert(certId, {
-      onSuccess: () => {
-        toast.success('리마인더에 추가되었습니다.');
-      },
-      onError: () => {
-        toast.error('리마인더 추가에 실패했습니다.');
-      },
-    });
+    if (!certId || isProcessing) return;
+
+    if (isReminded) {
+      removeRemindCert(certId, {
+        onSuccess: () => {
+          toast.success('리마인드가 해제되었습니다.');
+        },
+        onError: () => {
+          toast.error('리마인드 해제에 실패했습니다.');
+        },
+      });
+    } else {
+      addRemindCert(certId, {
+        onSuccess: () => {
+          toast.success('리마인드에 추가되었습니다!');
+        },
+        onError: () => {
+          toast.error('리마인드 추가에 실패했습니다.');
+        },
+      });
+    }
   };
 
   if (!certId) {
@@ -43,7 +66,7 @@ export const CertDetailPage = () => {
 
   return (
     <main className="relative w-screen h-screen flex flex-col">
-      <TitleBackAppBar title={'상세정보'} />
+      <AppBar variant="titleBack" title="상세정보" />
       <section className="p-4">
         <p className="text-sm text-gray-500">{cert.type}</p>
         <h1 className="text-xl font-bold">{cert.name}</h1>
@@ -73,11 +96,24 @@ export const CertDetailPage = () => {
       )}
       {selectedTab === 'way' && <section className="p-4">취득방법 섹션</section>}
       {selectedTab === 'info' && <section className="p-4">정보 섹션</section>}
-      <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative py-2 [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
-        <Button size="lg" onClick={handleRemindClick}>
-          리마인드
+      <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative py-3 pb-safe [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
+        <Button
+          size="lg"
+          variant={isReminded ? 'secondary' : 'primary'}
+          onClick={handleRemindClick}
+          disabled={isProcessing}
+          className="gap-2"
+        >
+          {isProcessing ? (
+            <Loader2 size={20} className="animate-spin" />
+          ) : isReminded ? (
+            <BellOff size={20} />
+          ) : (
+            <Bell size={20} />
+          )}
+          {isReminded ? '리마인드 해제' : '리마인드'}
         </Button>
-        <button>
+        <button className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[--color-primary] text-[--color-primary] hover:bg-[--color-bg-primary] transition-all active:scale-95">
           <Heart />
         </button>
       </footer>
@@ -117,48 +153,48 @@ export const CertScheduleSection: React.FC<CertScheduleSectionProps> = ({
         schedule.map((sch) => (
           <div
             key={sch.round}
-            className="p-4 rounded-2xl border border-[#E5E7EB] bg-white flex flex-col gap-4"
+            className="p-4 rounded-2xl border border-[--color-border-gray] bg-white flex flex-col gap-4"
           >
-            <p className="font-headline-m text-black-primary">{sch.round}</p>
+            <p className="font-headline-m text-[--color-primary]">{sch.round}</p>
 
             <div className="flex flex-col gap-2">
-              <p className="text-body-m text-black-primary">필기 접수</p>
-              <div className="bg-[#F9FAFB] rounded-xl p-3 text-body-s text-black-secondary">
+              <p className="text-body-m text-[--color-navy]">필기 접수</p>
+              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
                 {formatDate(sch.writtenRegStart)} ~ {formatDate(sch.writtenRegEnd)}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-body-m text-black-primary">필기 시험</p>
-              <div className="bg-[#F9FAFB] rounded-xl p-3 text-body-s text-black-secondary">
+              <p className="text-body-m text-[--color-navy]">필기 시험</p>
+              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
                 {formatDate(sch.writtenExamStart)} ~ {formatDate(sch.writtenExamEnd)}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-body-m text-black-primary">필기 발표</p>
-              <div className="bg-[#F9FAFB] rounded-xl p-3 text-body-s text-black-secondary">
+              <p className="text-body-m text-[--color-navy]">필기 발표</p>
+              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
                 {formatDate(sch.writtenResultDate)}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-body-m text-black-primary">실기 접수</p>
-              <div className="bg-[#F9FAFB] rounded-xl p-3 text-body-s text-black-secondary">
+              <p className="text-body-m text-[--color-navy]">실기 접수</p>
+              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
                 {formatDate(sch.practicalRegStart)} ~ {formatDate(sch.practicalRegEnd)}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-body-m text-black-primary">실기 시험</p>
-              <div className="bg-[#F9FAFB] rounded-xl p-3 text-body-s text-black-secondary">
+              <p className="text-body-m text-[--color-navy]">실기 시험</p>
+              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
                 {formatDate(sch.practicalExamStart)} ~ {formatDate(sch.practicalExamEnd)}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-body-m text-black-primary">실기 발표</p>
-              <div className="bg-[#F9FAFB] rounded-xl p-3 text-body-s text-black-secondary">
+              <p className="text-body-m text-[--color-navy]">실기 발표</p>
+              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
                 {formatDate(sch.practicalResultDate)}
               </div>
             </div>

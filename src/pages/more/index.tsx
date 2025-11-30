@@ -1,56 +1,148 @@
-import { Button, Dropdown, SelectBox, useRouter } from '@/shared';
-import { TitleAppBar } from '@/widgets';
+import {
+  User,
+  Award,
+  BookOpen,
+  Bell,
+  Sun,
+  MessageSquare,
+  Info,
+  FileText,
+  Shield,
+  Code,
+  LogOut,
+  UserX,
+} from 'lucide-react';
+
+import { useRouter } from '@/shared';
 import { useGetMe } from '@/entities/auth/hooks/auth.hooks';
+import { useAccountActions } from '@/features/more';
+import { AppBar, ProfileCard, MenuSection, MenuItem } from '@/widgets';
 
 const MorePage = () => {
   const { navigate } = useRouter();
   const { data: user, isLoading } = useGetMe();
+  const { handleLogout, handleWithdraw } = useAccountActions();
 
-  const handleLoginClick = () => navigate('/auth/login');
+  const menuSections = [
+    {
+      title: '내 정보',
+      items: [
+        {
+          icon: <Award size={20} />,
+          label: '내 자격증',
+          onClick: () => navigate('/my-cert'),
+        },
+        {
+          icon: <BookOpen size={20} />,
+          label: '내 학습',
+          onClick: () => navigate('/my-study'),
+        },
+        {
+          icon: <User size={20} />,
+          label: '정보 수정',
+          onClick: () => console.log('정보 수정'),
+        },
+      ],
+    },
+    {
+      title: '설정',
+      items: [
+        {
+          icon: <Bell size={20} />,
+          label: '푸시 알림',
+          onClick: () => console.log('푸시 알림'),
+        },
+        {
+          icon: <Sun size={20} />,
+          label: '테마 설정',
+          onClick: () => console.log('테마 설정'),
+        },
+      ],
+    },
+    {
+      title: '고객지원',
+      items: [
+        {
+          icon: <MessageSquare size={20} />,
+          label: '문의 & 피드백',
+          onClick: () => console.log('문의 & 피드백'),
+        },
+        {
+          icon: <Info size={20} />,
+          label: '공지사항',
+          onClick: () => console.log('공지사항'),
+        },
+      ],
+    },
+    {
+      title: '앱 정보',
+      items: [
+        {
+          icon: <FileText size={20} />,
+          label: '이용약관',
+          onClick: () => console.log('이용약관'),
+        },
+        {
+          icon: <Shield size={20} />,
+          label: '개인정보처리방침',
+          onClick: () => console.log('개인정보처리방침'),
+        },
+        {
+          icon: <Code size={20} />,
+          label: '오픈소스 라이선스',
+          onClick: () => console.log('오픈소스 라이선스'),
+        },
+      ],
+    },
+  ];
+
+  const accountItems: MenuItem[] = user
+    ? [
+        {
+          icon: <LogOut size={20} />,
+          label: '로그아웃',
+          onClick: handleLogout,
+        },
+        {
+          icon: <UserX size={20} />,
+          label: '회원 탈퇴',
+          onClick: handleWithdraw,
+          variant: 'danger',
+        },
+      ]
+    : [];
 
   return (
-    <main className="flex flex-col gap-4 bg-alternative">
-      <TitleAppBar title="더보기" />
+    <main className="min-h-screen bg-bg-secondary pb-(--layout-bottom-bar-height)">
+      <AppBar variant="title" title="더보기" />
 
-      <section className="flex flex-col gap-3 px-3">
-        {isLoading ? (
-          <Button variant="outline" size="lg" disabled>
-            <p className="w-full text-left pl-4 animate-pulse text-gray-400">
-              로딩중...
-            </p>
-          </Button>
-        ) : !user ? (
-          <Button onClick={handleLoginClick} variant="outline" size="lg">
-            <p className="w-full text-left pl-4">로그인 해주세요</p>
-          </Button>
-        ) : (
-          <Button variant="outline" size="lg">
-            <p className="w-full text-left pl-4">
-              {user.displayName}님 오늘도 파이팅!
-            </p>
-          </Button>
+      <div className="flex flex-col gap-6 px-(--layout-page-px) pt-6">
+        <ProfileCard
+          user={user}
+          isLoading={isLoading}
+          onLoginClick={() => navigate('/auth/login')}
+        />
+
+        {menuSections.map((section, index) => (
+          <MenuSection
+            key={section.title}
+            title={section.title}
+            items={section.items}
+            animationDelay={index * 0.1}
+          />
+        ))}
+
+        {accountItems.length > 0 && (
+          <MenuSection
+            items={accountItems}
+            animationDelay={menuSections.length * 0.1}
+          />
         )}
 
-        <Dropdown
-          options={['정보 수정', '푸시 알림', '로그아웃']}
-          defaultLabel="기본정보"
-          onChange={(val) => console.log('Selected:', val)}
-        />
-        <Dropdown
-          options={['문의 & 피드백 보내기', '회원 탈퇴']}
-          defaultLabel="고객지원"
-          onChange={(val) => console.log('Selected:', val)}
-        />
-      </section>
-
-      <section className="flex flex-col px-3 bg-alternative">
-        <SelectBox className="flex justify-start">공지사항</SelectBox>
-        <SelectBox className="flex justify-start">이용약관</SelectBox>
-        <SelectBox className="flex justify-start">개인정보처리방침</SelectBox>
-        <SelectBox className="flex justify-start asd">
-          오픈소스라이선스
-        </SelectBox>
-      </section>
+        <footer className="text-center py-4">
+          <p className="font-caption-m text-text-tertiary">자박 v1.0.0</p>
+        </footer>
+      </div>
     </main>
   );
 };

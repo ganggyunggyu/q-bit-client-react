@@ -1,95 +1,35 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { debounce, delay } from 'es-toolkit';
 
-import { TitleBellAppBar, TopCertList } from '@/widgets';
-import { CertCard } from '@/features';
-
-import { useGetMe } from '@/entities/auth/hooks/auth.hooks';
 import {
-  useSearchCertsByKeyword,
-  useGetUpcomingCerts,
-} from '@/entities/cert/hooks/cert.hooks';
-import { BackIcon, Button, MainLoading, useRouter } from '@/shared';
+  AppBar,
+  TopCertList,
+  MainActions,
+  UpcomingCertsSection,
+  MyRemindCertsSection,
+} from '@/widgets';
+import { SearchBar, SearchResults, useSearchStore } from '@/features/search';
+
 import { PROJECT_NAME_EN } from '@/shared/constants/core';
-import { UI_TIMING } from '@/shared/constants/ui';
 
 const MainPage = () => {
-  const [isFocus, setIsFocus] = React.useState(false);
-  const [isSearch, setIsSearch] = React.useState(false);
   const searchInputRef = React.useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = React.useState('');
-  const [query, setQuery] = React.useState('');
-  const [isTyping, setIsTyping] = React.useState(false);
+  const { isSearch, handleInputFocus } = useSearchStore();
 
-  useRouter();
-  const { data: certListData, isLoading: certLoading } = useGetUpcomingCerts(3);
-  const certList = Array.isArray(certListData) ? certListData : [];
-
-  const { data: resultsData, isLoading: searchLoading } =
-    useSearchCertsByKeyword(query);
-  const results = Array.isArray(resultsData) ? resultsData : [];
-
-  const { data: user } = useGetMe();
-
-  const debouncedSetQuery = React.useMemo(
-    () =>
-      debounce((value: string) => {
-        setQuery(value);
-        setIsTyping(false);
-      }, UI_TIMING.DEBOUNCE_DELAY),
-    [],
-  );
-
-  const handleInputFocus = () => {
-    searchInputRef.current?.focus();
-    setIsFocus(true);
-  };
-  const handleInputBlur = () => setIsFocus(false);
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    setIsTyping(true);
-    debouncedSetQuery(value);
-  };
-
-  const handleSearchPage = async () => {
-    setIsSearch(true);
-    await delay(UI_TIMING.ANIMATION_DELAY);
-    handleInputFocus();
-  };
-  const handleBackClick = () => {
-    setIsSearch(false);
-    setInputValue('');
-    setQuery('');
-    handleInputBlur();
-  };
+  React.useEffect(() => {
+    if (isSearch) {
+      searchInputRef.current?.focus();
+      handleInputFocus();
+    }
+  }, [isSearch, handleInputFocus]);
 
   return (
-    <main className=" bg-alternative overflow-hidden text-black-normal">
-      <section className="flex gap-4 flex-col justify-center w-full pt-10">
-        {!isSearch && <TitleBellAppBar title={PROJECT_NAME_EN} />}
+    <main className="bg-bg-secondary text-text-primary pt-safe overflow-x-hidden">
+      <section className="flex flex-col gap-(--layout-content-gap)">
+        {!isSearch && <AppBar variant="titleBell" title={PROJECT_NAME_EN} />}
 
-        <motion.div layout className="mx-4 ">
-          <div
-            className={`relative w-full h-[44px] flex transition-all
-            ${isSearch ? 'opacity-100' : 'opacity-0 hidden'}
-            `}
-          >
-            <button
-              onClick={handleBackClick}
-              className={`w-full h-full absolute top-0  ${isFocus ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'} transition-all`}
-            >
-              <BackIcon />
-            </button>
-            <input
-              ref={searchInputRef}
-              className={`absolute top-0 px-4 right-0 text-start h-full border-[1.5px] rounded-full border-primary focus:border-primary bg-white transition-all ${isFocus ? 'w-[88%]' : 'w-full'}`}
-              value={inputValue}
-              onFocus={handleInputFocus}
-              onChange={handleInputChange}
-            />
-          </div>
+        <motion.div layout className="px-(--layout-page-px)">
+          <SearchBar inputRef={searchInputRef} />
 
           <motion.div
             layout
@@ -99,19 +39,9 @@ const MainPage = () => {
               pointerEvents: isSearch ? 'none' : 'auto',
             }}
             transition={{ duration: 0.1 }}
-            className={`w-full pb-6 ${isSearch && 'hidden'}`}
+            className={`w-full pb-(--layout-section-gap) ${isSearch && 'hidden'}`}
           >
-            <Button
-              className="w-full h-[44px] text-start border-[2px]"
-              variant="shadow"
-              size="lg"
-              isSearch
-              onClick={handleSearchPage}
-            >
-              <p className="w-full text-left pl-10 text-primary/50 font-body-m mb">
-                찾고있는 자격증을 검색해보세요.
-              </p>
-            </Button>
+            <MainActions />
           </motion.div>
         </motion.div>
       </section>
@@ -124,9 +54,10 @@ const MainPage = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="flex flex-col"
+            className="flex flex-col gap-(--layout-section-gap)"
           >
-            <section className="flex flex-col gap-2 pt-6 pb-8 px-4 bg-normal">
+            <MyRemindCertsSection />
+            <section className="flex flex-col gap-(--layout-content-gap) pt-(--layout-section-gap) pb-8 px-(--layout-page-px) bg-bg-primary">
               <TopCertList
                 title={
                   <div className="pb-2">
@@ -136,17 +67,7 @@ const MainPage = () => {
                 }
               />
             </section>
-            <section className="bg-bg-primary flex flex-col gap-2 rounded-t-2xl pt-4 pb-8 px-4">
-              <p className="text-black-primary font-headline-m pb-2">
-                접수까지 일주일!
-              </p>
-
-              {!certLoading &&
-                certList &&
-                certList?.map((cert, index) => (
-                  <CertCard key={cert._id || index} cert={cert} dDay={cert.daysLeft ?? 0} />
-                ))}
-            </section>
+            <UpcomingCertsSection />
           </motion.div>
         ) : (
           <motion.section
@@ -155,57 +76,9 @@ const MainPage = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="px-(--layout-page-px)"
           >
-            <ul className="mt-3 px-4 space-y-2 min-h-[80px]">
-              <article className="flex gap-2">
-                <Button size="sm" variant="trans">
-                  전체
-                </Button>
-                <Button size="sm" variant="normal">
-                  접수중
-                </Button>
-                <Button size="sm" variant="normal">
-                  접수 예정
-                </Button>
-              </article>
-
-              {(isTyping || searchLoading) && (
-                <div className="w-full flex items-center justify-center h-[50vh]">
-                  <MainLoading />
-                </div>
-              )}
-
-              {!isTyping && !searchLoading && results.length > 0 && (
-                <AnimatePresence mode="wait">
-                  {results.map((cert, index) => (
-                    <motion.div
-                      key={cert._id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2, delay: index * 0.03 }}
-                    >
-                      <CertCard cert={cert} dDay={cert.daysLeft} />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              )}
-
-              {!isTyping &&
-                !searchLoading &&
-                inputValue.trim() !== '' &&
-                results.length === 0 && (
-                  <motion.li
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-gray-400 text-body-s"
-                  >
-                    검색 결과 없음
-                  </motion.li>
-                )}
-            </ul>
+            <SearchResults />
           </motion.section>
         )}
       </AnimatePresence>

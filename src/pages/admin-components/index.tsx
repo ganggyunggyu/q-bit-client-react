@@ -1,11 +1,9 @@
 import {
+  AppBar,
   CaleanderAppBar,
   ColorVariants,
-  SearchAppBar,
   TextVariants,
-  TitleBackAppBar,
 } from '@/widgets';
-import { TitleAppBar, TitleBellAppBar } from '@/widgets';
 import {
   BottomSheet,
   Button,
@@ -46,23 +44,26 @@ const AdminComponents = () => {
       <section className="flex flex-col gap-3">
         <h1 className="text-display-2">App Bar</h1>
 
-        <TitleAppBar title={'Title'} />
-        <TitleBellAppBar title={'Title'} />
-        <TitleBackAppBar title={'Title'} />
+        <AppBar variant="title" title="Title" />
+        <AppBar variant="titleBell" title="Title" />
+        <AppBar variant="titleBack" title="Title" />
 
         <CaleanderAppBar year="2012" month="05" />
 
-        <SearchAppBar inputProps={{ placeholder: 'Search' }} />
+        <AppBar variant="search" inputProps={{ placeholder: 'Search' }} />
       </section>
 
       <section className="flex flex-col gap-3">
         <h1 className="text-display-2">Button M</h1>
         <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
         <Button variant="outline">Outline</Button>
-        <Button variant="normal">Normal</Button>
-        <Button variant="warning">Warning</Button>
-        <Button variant="disabled">Disabled</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="danger">Danger</Button>
         <Button variant="kakao">Kakao</Button>
+        <Button variant="primary" disabled>
+          Disabled
+        </Button>
       </section>
 
       <section className="flex flex-col gap-3">
@@ -70,17 +71,17 @@ const AdminComponents = () => {
         <Button size="sm" variant="primary">
           Primary
         </Button>
+        <Button size="sm" variant="secondary">
+          Secondary
+        </Button>
         <Button size="sm" variant="outline">
           Outline
         </Button>
-        <Button size="sm" variant="normal">
-          Normal
+        <Button size="sm" variant="ghost">
+          Ghost
         </Button>
-        <Button size="sm" variant="warning">
-          Warning
-        </Button>
-        <Button size="sm" variant="disabled">
-          Disabled
+        <Button size="sm" variant="danger">
+          Danger
         </Button>
       </section>
 

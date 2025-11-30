@@ -1,10 +1,10 @@
 import { KakaoLoginButton } from '@/shared';
-import { TitleBackAppBar } from '@/widgets';
+import { AppBar } from '@/widgets';
 
 const LoginRequest = () => {
   return (
     <main className="relative flex flex-col items-center justify-center  h-[calc(100vh-56px)]  gap-4 bg-alternative px-3 overflow-hidden">
-      <TitleBackAppBar title={'로그인'} className=" absolute top-0 left-3" />
+      <AppBar variant="titleBack" title="로그인" className="absolute top-0 left-3" />
 
       <section className="flex flex-col gap-8">
         <article className="flex flex-col gap-2 items-center justify-center font-headline-sb">

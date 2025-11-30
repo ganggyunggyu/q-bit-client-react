@@ -41,10 +41,10 @@ const NotificationOption: React.FC<NotificationOptionProps> = ({
     <button
       type="button"
       className={cn(
-        'w-full text-left p-4 rounded-xl transition cursor-pointer',
+        'w-full text-left p-4 rounded-xl transition-all cursor-pointer active:scale-[0.99]',
         selected
-          ? 'border-2 border-blue-500 text-blue-600 bg-blue-50'
-          : 'border border-gray-300 text-gray-800',
+          ? 'border border-[--color-primary] text-[--color-navy] bg-[--color-primary]/25 shadow-md'
+          : 'border border-[--color-primary]/30 text-[--color-navy] bg-[--color-bg-gray] hover:border-[--color-primary]/70',
         className,
       )}
       {...props}
@@ -53,7 +53,7 @@ const NotificationOption: React.FC<NotificationOptionProps> = ({
       <p
         className={cn(
           'text-sm mt-1',
-          selected ? 'text-blue-500' : 'text-gray-500',
+          selected ? 'text-[--color-primary]' : 'text-[--color-neutral]',
         )}
       >
         {description}
@@ -138,7 +138,7 @@ export const Step2Style = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="px-6 py-3 border border-blue-500 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition"
+            className="px-6 py-3 border border-[--color-primary] rounded-full text-[--color-primary] font-body-sb hover:bg-[--color-primary]/10 transition-all active:scale-[0.99]"
           >
             선택완료
           </button>

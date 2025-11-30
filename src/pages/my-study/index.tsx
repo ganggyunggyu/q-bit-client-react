@@ -10,8 +10,9 @@ import {
   CreateTodoItemDto,
   Todo,
 } from '@/entities/todo/model/todo.model';
+import { CertSelector } from '@/features/todo';
 import { Button, CheckBoxInput, Tabs } from '@/shared';
-import { TitleAppBar, WeeklyCalendar } from '@/widgets';
+import { AppBar, WeeklyCalendar } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import React from 'react';
@@ -52,13 +53,29 @@ const MyStudyPage = () => {
   const [selectedTab, setSelectedTab] = React.useState('planner');
   const { todos, setTodos } = useTodoState(selectedDate);
   const [memo, setMemo] = React.useState('');
+  const [selectedCert, setSelectedCert] = React.useState<{
+    certId?: string;
+    certName?: string;
+  }>({});
 
   const { mutate: createTodo } = useCreateTodo();
   const { mutate: createMemo } = useCreateOrUpdateMemo();
 
+  const handleCertSelect = (certId?: string, certName?: string) => {
+    setSelectedCert({ certId, certName });
+  };
+
   const handleSubmitClick = () => {
     const scheduledDate = getLocalDateString(selectedDate);
-    const validTodos = todos.filter((t) => t.title.trim() !== '');
+    const validTodos = todos
+      .filter((t) => t.title.trim() !== '')
+      .map((t) => ({
+        ...t,
+        ...(selectedCert.certId && {
+          certId: selectedCert.certId,
+          certName: selectedCert.certName,
+        }),
+      }));
 
     if (validTodos.length === 0) {
       alert('최소 하나 이상의 할 일이 필요합니다.');
@@ -70,7 +87,11 @@ const MyStudyPage = () => {
       todos: validTodos,
     };
 
-    createTodo(todoDto);
+    createTodo(todoDto, {
+      onSuccess: () => {
+        setSelectedCert({});
+      },
+    });
   };
 
   const handleAddTodo = () => {
@@ -80,7 +101,7 @@ const MyStudyPage = () => {
 
   return (
     <main className="">
-      <TitleAppBar title="내 스터디" />
+      <AppBar variant="title" title="내 스터디" />
       <Tabs
         tabKey="study-tab"
         selected={selectedTab}
@@ -110,7 +131,14 @@ const MyStudyPage = () => {
               </section>
 
               <section className="px-4 flex flex-col gap-4 pb-6">
-                <p className="font-headline-m">체크리스트</p>
+                <div className="flex items-center justify-between">
+                  <p className="font-headline-m">체크리스트</p>
+                  <CertSelector
+                    selectedCertId={selectedCert.certId}
+                    selectedCertName={selectedCert.certName}
+                    onSelect={handleCertSelect}
+                  />
+                </div>
                 <div className="border border-divide rounded-3xl bg-white">
                   {todos.map((todo, idx) => (
                     <CheckBoxInput

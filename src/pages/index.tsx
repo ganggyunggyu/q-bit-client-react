@@ -1,8 +1,6 @@
 import { lazy, Suspense, JSX } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Routes, Route } from 'react-router-dom';
 
-import { fadeVariants, slideVariants } from '@/app/motion';
 import { MainLoading } from '@/shared';
 import { ProtectedRoute } from '@/app/provider/protected-route';
 
@@ -20,13 +18,14 @@ const Step2Style = lazy(() => import('./onboarding/2-style'));
 const CertDetailPage = lazy(() => import('./cert-detail'));
 const Login = lazy(() => import('./login'));
 const Search = lazy(() => import('./search'));
+const AiRecommendPage = lazy(() => import('./ai-recommend'));
 
 type RouteElement = {
   path: string;
   element: JSX.Element;
 };
 
-const fadeRoutes = [
+const routes = [
   { path: '/', element: <MainPage /> },
   { path: '/more', element: <MorePage /> },
   { path: '/admin-components', element: <AdminComponents /> },
@@ -56,62 +55,34 @@ const fadeRoutes = [
   },
   { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
   { path: '/auth/login/request', element: <LoginRequest /> },
-] as RouteElement[];
-
-const slideRoutes = [
   { path: '/onboarding-1', element: <Step1Cert /> },
   { path: '/onboarding-2', element: <Step2Style /> },
   { path: '/search', element: <Search /> },
   { path: '/search/:id', element: <CertDetailPage /> },
+  { path: '/ai-recommend', element: <AiRecommendPage /> },
   { path: '/auth/login', element: <Login /> },
 ] as RouteElement[];
 
 export const Routing = () => {
-  const location = useLocation();
-
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        {[...fadeRoutes, ...slideRoutes].map(({ path, element }) => {
-          const variants = slideRoutes.some((route) => route.path === path)
-            ? slideVariants
-            : fadeVariants;
-
-          return (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <Suspense
-                  key={location.key}
-                  fallback={
-                    <motion.div
-                      key="fallback"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="h-screen flex items-center justify-center"
-                    >
-                      <MainLoading />
-                    </motion.div>
-                  }
-                >
-                  <motion.div
-                    key={location.key}
-                    variants={variants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className="h-full"
-                  >
-                    {element}
-                  </motion.div>
-                </Suspense>
+    <Routes>
+      {routes.map(({ path, element }) => (
+        <Route
+          key={path}
+          path={path}
+          element={
+            <Suspense
+              fallback={
+                <div className="h-screen flex items-center justify-center">
+                  <MainLoading />
+                </div>
               }
-            />
-          );
-        })}
-      </Routes>
-    </AnimatePresence>
+            >
+              <div className="h-full">{element}</div>
+            </Suspense>
+          }
+        />
+      ))}
+    </Routes>
   );
 };

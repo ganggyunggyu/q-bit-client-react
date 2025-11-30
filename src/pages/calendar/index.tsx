@@ -6,6 +6,7 @@ import {
   CreateTodoDto,
   CreateTodoItemDto,
 } from '@/entities/todo/model/todo.model';
+import { CertSelector } from '@/features/todo';
 import { BottomSheet, Button, CheckBoxInput, MainLoading } from '@/shared';
 import { formatDate } from '@/shared/util';
 import { CalendarBox } from '@/widgets';
@@ -54,10 +55,26 @@ const Calendar = () => {
     isLoading: isTodoLoading,
   } = useTodoState(selectedDate);
   const { mutate: createTodo } = useCreateTodo();
+  const [selectedCert, setSelectedCert] = React.useState<{
+    certId?: string;
+    certName?: string;
+  }>({});
+
+  const handleCertSelect = (certId?: string, certName?: string) => {
+    setSelectedCert({ certId, certName });
+  };
 
   const handleSubmitClick = () => {
     const scheduledDate = getLocalDateString(selectedDate);
-    const validTodos = todos.filter((t) => t.title.trim() !== '');
+    const validTodos = todos
+      .filter((t) => t.title.trim() !== '')
+      .map((t) => ({
+        ...t,
+        ...(selectedCert.certId && {
+          certId: selectedCert.certId,
+          certName: selectedCert.certName,
+        }),
+      }));
 
     if (validTodos.length === 0) {
       toast.error('최소 하나 이상의 할 일이 필요합니다.');
@@ -72,6 +89,7 @@ const Calendar = () => {
     createTodo(todoDto, {
       onSuccess: () => {
         setIsCalendarBottomSheetOpen(false);
+        setSelectedCert({});
       },
     });
   };
@@ -107,7 +125,14 @@ const Calendar = () => {
         </section>
 
         <section className="flex flex-col gap-4 pb-6">
-          <p className="font-headline-m">체크리스트</p>
+          <div className="flex items-center justify-between">
+            <p className="font-headline-m">체크리스트</p>
+            <CertSelector
+              selectedCertId={selectedCert.certId}
+              selectedCertName={selectedCert.certName}
+              onSelect={handleCertSelect}
+            />
+          </div>
           <div className="border border-divide rounded-3xl bg-white">
             {todos.map((todo, idx) => (
               <CheckBoxInput
