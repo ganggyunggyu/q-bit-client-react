@@ -4,6 +4,8 @@ export interface CreateTodoItemDto {
   title: string;
   description?: string;
   isCompleted?: boolean;
+  certId?: string;
+  certName?: string;
 }
 
 export interface CreateTodoDto {
@@ -40,6 +42,8 @@ export interface Todo {
     title: string;
     description?: string;
     isCompleted: boolean;
+    certId?: string;
+    certName?: string;
   }[];
   createdAt: string;
   updatedAt: string;

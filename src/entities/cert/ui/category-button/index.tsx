@@ -18,7 +18,7 @@ export const CategoryButton: React.FC<CategoryButtonProps> = ({
   return (
     <button
       type="button"
-      className={`flex flex-col items-center justify-center gap-1 w-[84px] h-[84px] rounded-xl bg-white shadow-sm hover:shadow-md transition ${className}`}
+      className={`flex flex-col items-center justify-center gap-1 w-[84px] h-[84px] rounded-[--radius-sm] bg-[--color-bg-primary] shadow-[--shadow-xs] hover:shadow-[--shadow-sm] transition-all duration-[--transition-fast] ${className}`}
       {...props}
     >
       <img src={image} alt={label} className="w-10 h-10 object-contain" />
