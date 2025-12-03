@@ -7,6 +7,7 @@ export * from './top-cert-list';
 
 export * from './calendar-box';
 export * from './weekly-calendar';
+export * from './vertical-calendar';
 
 export * from './main-actions';
 export * from './upcoming-certs-section';
