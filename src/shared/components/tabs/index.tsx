@@ -44,10 +44,10 @@ export const Tabs: React.FC<TabsProps> = ({
 
   return (
     <nav
-      className={`relative top-0 z-10 pt-[15px] bg-normal ${className ?? ''}`}
+      className={`relative top-0 z-10 bg-normal ${className ?? ''}`}
       {...props}
     >
-      <div className="flex px-4 pt-2 overflow-x-auto ">
+      <div className="flex px-4 overflow-x-auto">
         {tabs.map((tab) => {
           const isActive = selected === tab.id;
 
@@ -55,27 +55,30 @@ export const Tabs: React.FC<TabsProps> = ({
             <button
               key={tab.id}
               onClick={() => onSelect(tab.id)}
-              className="relative py-2 font-semibold font-title-md-bold w-full"
+              className="relative py-3 font-semibold font-title-md-bold w-full"
             >
               <span
-                className={isActive ? 'text-[--color-navy]' : 'text-[--color-neutral]/60'}
+                className={`transition-colors ${
+                  isActive ? 'text-text-primary' : 'text-text-tertiary'
+                }`}
               >
                 {tab.label}
               </span>
-
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[--color-bg-primary] rounded" />
-
-              {isActive && (
-                <motion.div
-                  key={tabKey}
-                  layoutId={isMounted.current ? 'underline' : ''}
-                  className="w-full absolute bottom-0 left-0 right-0 h-0.5 bg-[--color-primary] rounded"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
-              )}
             </button>
           );
         })}
+      </div>
+
+      <div className="relative h-[3px] bg-border-gray mx-4 rounded-full overflow-hidden">
+        <motion.div
+          layoutId={isMounted.current ? `tab-indicator-${tabKey}` : undefined}
+          className="absolute top-0 h-full bg-primary rounded-full"
+          style={{ width: `${100 / tabs.length}%` }}
+          animate={{
+            left: `${(tabs.findIndex((t) => t.id === selected) / tabs.length) * 100}%`,
+          }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        />
       </div>
     </nav>
   );
