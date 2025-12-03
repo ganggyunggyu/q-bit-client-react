@@ -1,6 +1,7 @@
 @theme {
   /* ========== Brand Colors ========== */
   --color-primary: #62C2B0;
+  --color-primary-dark: #4AA897;
   --color-accent: #F3C969;
   --color-navy: #191F28;
 
@@ -113,6 +114,35 @@
   --layout-max-width: 480px;
   --layout-safe-top: env(safe-area-inset-top, 0px);
   --layout-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ========== Dark Mode Override ========== */
+:root.dark {
+  --color-text-primary: #F2F4F6;
+  --color-text-secondary: #B0B8C1;
+  --color-text-tertiary: #8B95A1;
+  --color-text-disabled: #6B7684;
+  --color-neutral: #8B95A1;
+
+  --color-bg-primary: #1A1D21;
+  --color-bg-secondary: #121417;
+  --color-bg-tertiary: #252A2E;
+  --color-bg-gray: #252A2E;
+  --color-bg-mint: #1E3A35;
+  --color-normal: #1A1D21;
+  --color-alternative: #121417;
+
+  --color-border-gray: #333D4B;
+  --color-divide: #252A2E;
+
+  --color-navy: #F2F4F6;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --shadow-primary: 0 4px 16px rgba(98, 194, 176, 0.15);
 }
 
 @layer utilities {
