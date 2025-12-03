@@ -101,7 +101,7 @@ const WeeklyReportPage = () => {
     return sunday.toISOString().split('T')[0];
   };
 
-  const sundayDate = weekOffset !== 0 ? getSundayDate(weekOffset) : undefined;
+  const sundayDate = getSundayDate(weekOffset);
   const { data: report, isLoading, refetch, isRefetching } = useGetWeeklyReport(sundayDate);
 
   const formatDateRange = (start: string, end: string) => {
@@ -283,13 +283,28 @@ const WeeklyReportPage = () => {
           <div className="flex flex-col items-center justify-center h-[60vh] text-center">
             <Sparkles size={48} className="text-text-tertiary mb-4" />
             <p className="font-body-sb text-text-primary mb-2">
-              리포트를 불러올 수 없어요
+              아직 리포트가 없어요
             </p>
             <p className="font-body-m text-text-tertiary mb-6">
-              이번 주 학습 기록이 없거나 오류가 발생했어요
+              AI가 이번 주 학습 패턴을 분석해드릴게요
             </p>
-            <Button variant="primary" onClick={() => refetch()}>
-              다시 시도
+            <Button
+              variant="primary"
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              className="gap-2"
+            >
+              {isRefetching ? (
+                <>
+                  <RefreshCw size={18} className="animate-spin" />
+                  분석 중...
+                </>
+              ) : (
+                <>
+                  <Sparkles size={18} />
+                  리포트 작성하기
+                </>
+              )}
             </Button>
           </div>
         )}
