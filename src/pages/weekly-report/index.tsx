@@ -289,7 +289,7 @@ const WeeklyReportPage = () => {
     : 1;
 
   return (
-    <main className="min-h-screen bg-bg-secondary pt-safe pb-(--layout-bottom-bar-height)">
+    <main className="min-h-screen bg-bg-secondary pt-safe">
       <AppBar variant="titleBack" title="주간 리포트" onBack={handleBack} />
 
       <LeaveConfirmModal

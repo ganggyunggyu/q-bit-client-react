@@ -9,6 +9,7 @@ interface AppBarProps extends React.HTMLAttributes<HTMLHeadElement> {
   title?: string;
   inputProps?: InputProps;
   onBellClick?: () => void;
+  onBack?: () => void;
 }
 
 export const AppBar: React.FC<AppBarProps> = ({
@@ -16,26 +17,35 @@ export const AppBar: React.FC<AppBarProps> = ({
   title,
   inputProps,
   onBellClick,
+  onBack,
   className,
   ...props
 }) => {
   const { back } = useRouter();
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      back();
+    }
+  };
+
   const baseClass =
-    'flex items-center w-full h-[--layout-header-height] px-[--layout-page-px] bg-transparent transition-all duration-[--transition-normal]';
+    'flex items-center w-full min-h-[56px] h-[--layout-header-height] px-5 py-3 bg-transparent transition-all duration-[--transition-normal]';
 
   const iconButtonClass =
-    'p-2 rounded-[--radius-sm] text-[--color-primary] hover:bg-[--color-bg-secondary] active:scale-95 transition-all duration-[--transition-fast]';
+    'p-2.5 rounded-xl text-[--color-primary] hover:bg-[--color-bg-secondary] active:scale-95 transition-all duration-[--transition-fast]';
 
   const renderContent = () => {
     switch (variant) {
       case 'titleBack':
         return (
           <>
-            <button onClick={back} className={cn(iconButtonClass, '-ml-2')}>
+            <button onClick={handleBack} className={iconButtonClass}>
               <BackIcon />
             </button>
-            <p className="flex-1 font-title-sb text-[--color-text-primary]">
+            <p className="flex-1 font-title-sb text-[--color-text-primary] ml-1">
               {title}
             </p>
           </>
@@ -44,7 +54,7 @@ export const AppBar: React.FC<AppBarProps> = ({
       case 'titleBell':
         return (
           <>
-            <div className="flex-1 flex items-center gap-2">
+            <div className="flex-1 flex items-center">
               <span className="text-xl font-bold bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
                 {title}
               </span>
@@ -52,12 +62,12 @@ export const AppBar: React.FC<AppBarProps> = ({
             <button
               onClick={onBellClick}
               className={cn(
-                'relative p-2 rounded-full bg-bg-primary shadow-sm',
+                'relative p-2.5 rounded-xl bg-bg-primary shadow-sm',
                 'hover:bg-bg-tertiary active:scale-95 transition-all duration-fast',
               )}
             >
-              <Bell size={20} className="text-text-secondary" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-urgent rounded-full" />
+              <Bell size={22} className="text-text-secondary" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-urgent rounded-full" />
             </button>
           </>
         );
@@ -65,10 +75,10 @@ export const AppBar: React.FC<AppBarProps> = ({
       case 'search':
         return (
           <>
-            <button onClick={back} className={cn(iconButtonClass, '-ml-2')}>
+            <button onClick={handleBack} className={iconButtonClass}>
               <BackIcon />
             </button>
-            <div className="flex-1">
+            <div className="flex-1 ml-1">
               <SearchInput {...inputProps} variant="filled" inputSize="sm" />
             </div>
           </>
@@ -88,7 +98,7 @@ export const AppBar: React.FC<AppBarProps> = ({
     <header
       className={cn(
         baseClass,
-        variant === 'search' ? 'gap-[--space-2]' : 'gap-[--space-3]',
+        variant === 'search' ? 'gap-2' : 'gap-3',
         className,
       )}
       {...props}

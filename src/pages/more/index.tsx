@@ -113,7 +113,7 @@ const MorePage = () => {
     : [];
 
   return (
-    <main className="min-h-screen bg-bg-secondary pb-(--layout-bottom-bar-height) pt-safe">
+    <main className="min-h-screen bg-bg-secondary pt-safe">
       <div className="flex flex-col gap-6 px-(--layout-page-px) pt-6">
         <ProfileCard
           user={user}

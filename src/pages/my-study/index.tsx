@@ -58,23 +58,25 @@ const MyStudyPage = () => {
   };
 
   return (
-    <main className="pt-safe">
-      <Tabs
-        tabKey="study-tab"
-        selected={selectedTab}
-        onSelect={setSelectedTab}
-        tabs={[
-          { id: 'planner', label: '플래너' },
-          { id: 'stats', label: '통계' },
-        ]}
-      />
-      <div className="relative min-h-full overflow-hidden">
+    <main className="flex flex-col h-screen bg-bg-secondary pt-safe">
+      <div className="sticky top-0 z-10 bg-bg-secondary">
+        <Tabs
+          tabKey="study-tab"
+          selected={selectedTab}
+          onSelect={setSelectedTab}
+          tabs={[
+            { id: 'planner', label: '플래너' },
+            { id: 'stats', label: '통계' },
+          ]}
+        />
+      </div>
+      <section className="flex-1 overflow-y-auto">
         <AnimatePresence mode="wait" initial={false}>
           {selectedTab === 'planner' && (
             <motion.div
               key="planner"
               variants={slideVariants}
-              className="h-full"
+              className="min-h-full"
               initial="initial"
               animate="animate"
               exit="exit"
@@ -146,7 +148,7 @@ const MyStudyPage = () => {
             <motion.div
               key="stats"
               variants={slideVariants}
-              className="h-full p-4 flex flex-col gap-4"
+              className="min-h-full p-4 flex flex-col gap-4"
               initial="initial"
               animate="animate"
               exit="exit"
@@ -171,7 +173,7 @@ const MyStudyPage = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </section>
     </main>
   );
 };

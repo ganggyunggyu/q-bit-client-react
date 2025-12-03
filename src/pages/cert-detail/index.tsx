@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Heart, Bell, BellOff, Loader2 } from 'lucide-react';
+import { Trophy, Bell, BellOff, Loader2 } from 'lucide-react';
 
 import {
   useAddRemindCert,
@@ -11,6 +11,7 @@ import {
 } from '@/entities/cert/hooks/cert.hooks';
 import { Button, Tabs, useRouter } from '@/shared';
 import { AppBar, CheerModal } from '@/widgets';
+import { PassedCertSheet } from '@/features/passed-cert';
 import { CertScheduleSection } from './cert-schedule-section';
 
 export const CertDetailPage = () => {
@@ -24,6 +25,7 @@ export const CertDetailPage = () => {
 
   const [selectedTab, setSelectedTab] = React.useState('schedule');
   const [showCheer, setShowCheer] = useState(false);
+  const [showPassedSheet, setShowPassedSheet] = useState(false);
 
   const isReminded = React.useMemo(() => {
     if (!remindCerts || !certId) return false;
@@ -104,6 +106,13 @@ export const CertDetailPage = () => {
         certName={cert.name}
       />
 
+      <PassedCertSheet
+        isOpen={showPassedSheet}
+        onClose={() => setShowPassedSheet(false)}
+        certId={certId}
+        certName={cert.name}
+      />
+
       <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative py-3 pb-safe [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
         <Button
           size="lg"
@@ -121,8 +130,11 @@ export const CertDetailPage = () => {
           )}
           {isReminded ? '리마인드 해제' : '리마인드'}
         </Button>
-        <button className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[--color-primary] text-[--color-primary] hover:bg-[--color-bg-primary] transition-all active:scale-95">
-          <Heart />
+        <button
+          onClick={() => setShowPassedSheet(true)}
+          className="flex items-center justify-center w-12 h-12 rounded-xl bg-green/10 text-green hover:bg-green/20 transition-all active:scale-95"
+        >
+          <Trophy size={22} />
         </button>
       </footer>
     </main>
