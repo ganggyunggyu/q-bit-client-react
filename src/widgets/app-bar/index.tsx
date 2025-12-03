@@ -44,11 +44,20 @@ export const AppBar: React.FC<AppBarProps> = ({
       case 'titleBell':
         return (
           <>
-            <p className="flex-1 font-title-sb text-[--color-text-primary]">
-              {title}
-            </p>
-            <button onClick={onBellClick} className={cn(iconButtonClass, '-mr-2')}>
-              <Bell size={20} />
+            <div className="flex-1 flex items-center gap-2">
+              <span className="text-xl font-bold bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
+                {title}
+              </span>
+            </div>
+            <button
+              onClick={onBellClick}
+              className={cn(
+                'relative p-2 rounded-full bg-bg-primary shadow-sm',
+                'hover:bg-bg-tertiary active:scale-95 transition-all duration-fast',
+              )}
+            >
+              <Bell size={20} className="text-text-secondary" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-urgent rounded-full" />
             </button>
           </>
         );
