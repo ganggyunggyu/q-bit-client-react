@@ -1,5 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   Sparkles,
   TrendingUp,
@@ -12,10 +13,67 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
+  AlertTriangle,
 } from 'lucide-react';
 import { AppBar } from '@/widgets';
 import { Button, AILoadingSpinner } from '@/shared';
-import { useGetWeeklyReport, WeeklyReportResponse, DailyStat } from '@/entities/ai-report';
+import { useGetWeeklyReport, DailyStat } from '@/entities/ai-report';
+
+const LeaveConfirmModal: React.FC<{
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}> = ({ isOpen, onConfirm, onCancel }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-6"
+        onClick={onCancel}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+          className="w-full max-w-sm bg-bg-primary rounded-2xl p-6 shadow-xl"
+        >
+          <div className="flex flex-col items-center text-center">
+            <div className="w-14 h-14 rounded-full bg-cautious/10 flex items-center justify-center mb-4">
+              <AlertTriangle size={28} className="text-cautious" />
+            </div>
+            <h3 className="font-title-sb text-text-primary mb-2">
+              정말 나가시겠어요?
+            </h3>
+            <p className="font-body-m text-text-secondary mb-6">
+              조금만 기다리면 AI 분석 결과가 나와요!
+            </p>
+            <div className="flex gap-3 w-full">
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={onConfirm}
+                className="flex-1"
+              >
+                나가기
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={onCancel}
+                className="flex-1"
+              >
+                기다리기
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
 
 const StatCard: React.FC<{
   label: string;
@@ -90,24 +148,140 @@ const SectionCard: React.FC<{
   </motion.section>
 );
 
+interface WeekInfo {
+  weekNum: number;
+  sundayDate: string;
+  startDate: Date;
+  endDate: Date;
+  label: string;
+  isCurrent: boolean;
+}
+
+const getWeeksInMonth = (year: number, month: number): WeekInfo[] => {
+  const weeks: WeekInfo[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+
+  // 첫 번째 일요일 찾기
+  let currentSunday = new Date(firstDay);
+  const firstDayOfWeek = firstDay.getDay();
+  if (firstDayOfWeek !== 0) {
+    currentSunday.setDate(firstDay.getDate() - firstDayOfWeek);
+  }
+
+  let weekNum = 1;
+  while (currentSunday <= lastDay) {
+    const startDate = new Date(currentSunday);
+    const endDate = new Date(currentSunday);
+    endDate.setDate(endDate.getDate() + 6);
+
+    // 해당 주가 이 달에 포함되는지 확인 (일요일~토요일 중 하나라도 이 달이면 포함)
+    const isInMonth = startDate.getMonth() === month || endDate.getMonth() === month;
+
+    if (isInMonth) {
+      const isCurrent = today >= startDate && today <= endDate;
+      weeks.push({
+        weekNum,
+        sundayDate: startDate.toISOString().split('T')[0],
+        startDate,
+        endDate,
+        label: `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()}`,
+        isCurrent,
+      });
+      weekNum++;
+    }
+
+    currentSunday.setDate(currentSunday.getDate() + 7);
+  }
+
+  return weeks;
+};
+
 const WeeklyReportPage = () => {
-  const [weekOffset, setWeekOffset] = React.useState(0);
+  const navigate = useNavigate();
+  const today = new Date();
+  const [selectedMonth, setSelectedMonth] = React.useState({
+    year: today.getFullYear(),
+    month: today.getMonth(),
+  });
+  const [selectedWeekIndex, setSelectedWeekIndex] = React.useState<number | null>(null);
+  const [showLeaveModal, setShowLeaveModal] = React.useState(false);
 
-  const getSundayDate = (offset: number) => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const sunday = new Date(today);
-    sunday.setDate(today.getDate() - dayOfWeek + offset * 7);
-    return sunday.toISOString().split('T')[0];
-  };
+  const weeks = React.useMemo(
+    () => getWeeksInMonth(selectedMonth.year, selectedMonth.month),
+    [selectedMonth.year, selectedMonth.month],
+  );
 
-  const sundayDate = getSundayDate(weekOffset);
+  // 현재 주 자동 선택
+  React.useEffect(() => {
+    const currentWeekIdx = weeks.findIndex((w) => w.isCurrent);
+    if (currentWeekIdx !== -1) {
+      setSelectedWeekIndex(currentWeekIdx);
+    } else if (weeks.length > 0) {
+      setSelectedWeekIndex(weeks.length - 1);
+    }
+  }, [weeks]);
+
+  const selectedWeek = selectedWeekIndex !== null ? weeks[selectedWeekIndex] : null;
+  const sundayDate = selectedWeek?.sundayDate || '';
+
   const { data: report, isLoading, refetch, isRefetching } = useGetWeeklyReport(sundayDate);
 
-  const formatDateRange = (start: string, end: string) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    return `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()}`;
+  const handlePrevMonth = () => {
+    setSelectedMonth((prev) => {
+      if (prev.month === 0) {
+        return { year: prev.year - 1, month: 11 };
+      }
+      return { ...prev, month: prev.month - 1 };
+    });
+    setSelectedWeekIndex(null);
+  };
+
+  const handleNextMonth = () => {
+    const now = new Date();
+    const isCurrentMonth = selectedMonth.year === now.getFullYear() && selectedMonth.month === now.getMonth();
+    if (isCurrentMonth) return;
+
+    setSelectedMonth((prev) => {
+      if (prev.month === 11) {
+        return { year: prev.year + 1, month: 0 };
+      }
+      return { ...prev, month: prev.month + 1 };
+    });
+    setSelectedWeekIndex(null);
+  };
+
+  const isCurrentMonth =
+    selectedMonth.year === today.getFullYear() && selectedMonth.month === today.getMonth();
+
+  const isAnalyzing = isLoading || isRefetching;
+
+  React.useEffect(() => {
+    if (!isAnalyzing) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isAnalyzing]);
+
+  const handleBack = () => {
+    if (isAnalyzing) {
+      setShowLeaveModal(true);
+    } else {
+      navigate(-1);
+    }
+  };
+
+  const handleLeaveConfirm = () => {
+    setShowLeaveModal(false);
+    navigate(-1);
   };
 
   const maxTotal = report?.dailyStats
@@ -116,13 +290,19 @@ const WeeklyReportPage = () => {
 
   return (
     <main className="min-h-screen bg-bg-secondary pt-safe pb-(--layout-bottom-bar-height)">
-      <AppBar variant="titleBack" title="주간 리포트" />
+      <AppBar variant="titleBack" title="주간 리포트" onBack={handleBack} />
+
+      <LeaveConfirmModal
+        isOpen={showLeaveModal}
+        onConfirm={handleLeaveConfirm}
+        onCancel={() => setShowLeaveModal(false)}
+      />
 
       <div className="px-(--layout-page-px) pt-4">
-        {/* 주차 선택 */}
-        <div className="flex items-center justify-between mb-6">
+        {/* 월 선택 */}
+        <div className="flex items-center justify-between mb-4">
           <button
-            onClick={() => setWeekOffset((prev) => prev - 1)}
+            onClick={handlePrevMonth}
             className="p-2 rounded-lg bg-bg-primary shadow-sm active:scale-95 transition-transform"
           >
             <ChevronLeft size={20} className="text-text-secondary" />
@@ -130,18 +310,61 @@ const WeeklyReportPage = () => {
           <div className="flex items-center gap-2">
             <Calendar size={18} className="text-primary" />
             <span className="font-body-sb text-text-primary">
-              {report ? formatDateRange(report.weekStart, report.weekEnd) : '이번 주'}
+              {selectedMonth.year}년 {selectedMonth.month + 1}월
             </span>
           </div>
           <button
-            onClick={() => setWeekOffset((prev) => Math.min(prev + 1, 0))}
-            disabled={weekOffset >= 0}
+            onClick={handleNextMonth}
+            disabled={isCurrentMonth}
             className={`p-2 rounded-lg bg-bg-primary shadow-sm active:scale-95 transition-transform ${
-              weekOffset >= 0 ? 'opacity-40' : ''
+              isCurrentMonth ? 'opacity-40' : ''
             }`}
           >
             <ChevronRight size={20} className="text-text-secondary" />
           </button>
+        </div>
+
+        {/* 주차 선택 (세로 리스트) */}
+        <div className="flex flex-col gap-2 mb-6">
+          {weeks.map((week, index) => (
+            <button
+              key={week.sundayDate}
+              onClick={() => setSelectedWeekIndex(index)}
+              className={`flex items-center justify-between p-3 rounded-xl transition-all active:scale-[0.98] ${
+                selectedWeekIndex === index
+                  ? 'bg-primary text-white shadow-primary'
+                  : 'bg-bg-primary shadow-sm'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className={`font-body-sb ${
+                    selectedWeekIndex === index ? 'text-white' : 'text-text-primary'
+                  }`}
+                >
+                  {week.weekNum}주차
+                </span>
+                <span
+                  className={`font-caption-m ${
+                    selectedWeekIndex === index ? 'text-white/80' : 'text-text-tertiary'
+                  }`}
+                >
+                  {week.label}
+                </span>
+              </div>
+              {week.isCurrent && (
+                <span
+                  className={`px-2 py-0.5 rounded-full font-caption-m ${
+                    selectedWeekIndex === index
+                      ? 'bg-white/20 text-white'
+                      : 'bg-primary/10 text-primary'
+                  }`}
+                >
+                  이번 주
+                </span>
+              )}
+            </button>
+          ))}
         </div>
 
         {isLoading || isRefetching ? (
