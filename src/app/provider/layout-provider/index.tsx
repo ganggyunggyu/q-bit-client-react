@@ -1,13 +1,13 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { BottomBar, AppBar } from '@/widgets';
+import { BottomBar } from '@/widgets';
 
 const layoutConfig: Record<
   string,
   { header: React.ReactElement | null; hasBottomBar: boolean }
 > = {
   '/': { header: null, hasBottomBar: true },
-  '/more': { header: <AppBar variant="title" title="더보기" />, hasBottomBar: true },
+  '/more': { header: null, hasBottomBar: true },
   '/search': { header: null, hasBottomBar: true },
   '/calendar': { header: null, hasBottomBar: true },
   '/my-cert': {
@@ -25,6 +25,7 @@ const layoutConfig: Record<
   '/onboarding-1': { header: null, hasBottomBar: false },
   '/onboarding-2': { header: null, hasBottomBar: false },
   '/search/:id': { header: null, hasBottomBar: false },
+  '/weekly-report': { header: null, hasBottomBar: false },
 };
 
 interface RouteLayoutProps {
@@ -41,7 +42,7 @@ export const RouteLayout = ({ children }: RouteLayoutProps) => {
   const { header, hasBottomBar } = config;
 
   return (
-    <div className="flex flex-col h-screen touch-manipulation bg-alternative">
+    <div className="flex flex-col h-screen touch-manipulation bg-bg-secondary transition-colors duration-normal">
       {header}
       <main className="flex-1 overflow-y-auto">{children}</main>
       {hasBottomBar && <BottomBar />}

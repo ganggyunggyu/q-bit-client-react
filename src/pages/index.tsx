@@ -19,6 +19,17 @@ const CertDetailPage = lazy(() => import('./cert-detail'));
 const Login = lazy(() => import('./login'));
 const Search = lazy(() => import('./search'));
 const AiRecommendPage = lazy(() => import('./ai-recommend'));
+const WeeklyReportPage = lazy(() => import('./weekly-report'));
+
+// Settings pages
+const ProfileEditPage = lazy(() => import('./settings/profile-edit'));
+const NotificationsPage = lazy(() => import('./settings/notifications'));
+const ThemePage = lazy(() => import('./settings/theme'));
+const InquiryPage = lazy(() => import('./settings/inquiry'));
+const NoticePage = lazy(() => import('./settings/notice'));
+const TermsPage = lazy(() => import('./settings/terms'));
+const PrivacyPage = lazy(() => import('./settings/privacy'));
+const LicensesPage = lazy(() => import('./settings/licenses'));
 
 type RouteElement = {
   path: string;
@@ -60,7 +71,17 @@ const routes = [
   { path: '/search', element: <Search /> },
   { path: '/search/:id', element: <CertDetailPage /> },
   { path: '/ai-recommend', element: <AiRecommendPage /> },
+  { path: '/weekly-report', element: <ProtectedRoute><WeeklyReportPage /></ProtectedRoute> },
   { path: '/auth/login', element: <Login /> },
+  // Settings routes
+  { path: '/settings/profile', element: <ProtectedRoute><ProfileEditPage /></ProtectedRoute> },
+  { path: '/settings/notifications', element: <ProtectedRoute><NotificationsPage /></ProtectedRoute> },
+  { path: '/settings/theme', element: <ThemePage /> },
+  { path: '/settings/inquiry', element: <InquiryPage /> },
+  { path: '/settings/notice', element: <NoticePage /> },
+  { path: '/settings/terms', element: <TermsPage /> },
+  { path: '/settings/privacy', element: <PrivacyPage /> },
+  { path: '/settings/licenses', element: <LicensesPage /> },
 ] as RouteElement[];
 
 export const Routing = () => {
