@@ -6,10 +6,12 @@ import { CertSelector, useTodoState, getLocalDateString } from '@/features/todo'
 import { Button, CheckBoxInput, Tabs } from '@/shared';
 import { WeeklyCalendar, TodoCompletionStats } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus, Sparkles, ChevronRight } from 'lucide-react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MyStudyPage = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTab, setSelectedTab] = React.useState('planner');
   const { todos, setTodos, addTodo, updateTodo } = useTodoState(selectedDate);
@@ -144,14 +146,28 @@ const MyStudyPage = () => {
             <motion.div
               key="stats"
               variants={slideVariants}
-              className="h-full p-4"
+              className="h-full p-4 flex flex-col gap-4"
               initial="initial"
               animate="animate"
               exit="exit"
               custom={-1}
             >
-              <h2 className="font-headline-m mb-4">투두 통계</h2>
+              <h2 className="font-headline-m">투두 통계</h2>
               <TodoCompletionStats />
+
+              <button
+                onClick={() => navigate('/weekly-report')}
+                className="flex items-center justify-between p-4 bg-linear-to-r from-primary to-primary-dark rounded-xl text-white shadow-primary active:scale-[0.98] transition-transform"
+              >
+                <div className="flex items-center gap-3">
+                  <Sparkles size={20} />
+                  <div className="text-left">
+                    <p className="font-body-sb">AI 주간 리포트</p>
+                    <p className="font-caption-m opacity-80">나의 학습 패턴을 분석해보세요</p>
+                  </div>
+                </div>
+                <ChevronRight size={20} />
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
