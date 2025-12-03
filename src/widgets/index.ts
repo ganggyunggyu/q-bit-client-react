@@ -12,3 +12,5 @@ export * from './main-actions';
 export * from './upcoming-certs-section';
 export * from './my-remind-certs-section';
 export * from './more-page';
+export * from './todo-stats';
+export * from './cheer-modal';
