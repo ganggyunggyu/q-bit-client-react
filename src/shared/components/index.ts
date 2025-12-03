@@ -10,3 +10,4 @@ export * from './check-toggle';
 export * from './bottom-sheet';
 export * from './modal';
 export * from './main-loading';
+export * from './spinner';

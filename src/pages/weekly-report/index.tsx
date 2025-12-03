@@ -14,7 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { AppBar } from '@/widgets';
-import { Button, MainLoading } from '@/shared';
+import { Button, AILoadingSpinner } from '@/shared';
 import { useGetWeeklyReport, WeeklyReportResponse, DailyStat } from '@/entities/ai-report';
 
 const StatCard: React.FC<{
@@ -44,12 +44,12 @@ const DailyBar: React.FC<{ stat: DailyStat; maxTotal: number }> = ({ stat, maxTo
     <div className="flex flex-col items-center gap-2 flex-1">
       <div className="relative w-full h-24 flex items-end justify-center">
         <div
-          className="w-6 bg-bg-tertiary rounded-t-md transition-all"
+          className="relative w-6 bg-bg-tertiary rounded-t-md transition-all"
           style={{ height: `${height}%` }}
         >
           <div
-            className="w-full bg-primary rounded-t-md absolute bottom-0"
-            style={{ height: `${completedHeight}%` }}
+            className="absolute bottom-0 left-0 right-0 bg-primary rounded-t-md"
+            style={{ height: stat.total > 0 ? `${(stat.completed / stat.total) * 100}%` : '0%' }}
           />
         </div>
       </div>
@@ -144,10 +144,11 @@ const WeeklyReportPage = () => {
           </button>
         </div>
 
-        {isLoading ? (
-          <div className="flex items-center justify-center h-[60vh]">
-            <MainLoading />
-          </div>
+        {isLoading || isRefetching ? (
+          <AILoadingSpinner
+            message="AI가 학습 패턴을 분석 중이에요"
+            subMessage="최대 30초 정도 걸릴 수 있어요"
+          />
         ) : report ? (
           <div className="flex flex-col gap-6">
             {/* 요약 카드 */}
@@ -281,30 +282,18 @@ const WeeklyReportPage = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-            <Sparkles size={48} className="text-text-tertiary mb-4" />
+            <div className="w-20 h-20 rounded-full bg-bg-tertiary flex items-center justify-center mb-4">
+              <Sparkles size={32} className="text-text-tertiary" />
+            </div>
             <p className="font-body-sb text-text-primary mb-2">
               아직 리포트가 없어요
             </p>
             <p className="font-body-m text-text-tertiary mb-6">
               AI가 이번 주 학습 패턴을 분석해드릴게요
             </p>
-            <Button
-              variant="primary"
-              onClick={() => refetch()}
-              disabled={isRefetching}
-              className="gap-2"
-            >
-              {isRefetching ? (
-                <>
-                  <RefreshCw size={18} className="animate-spin" />
-                  분석 중...
-                </>
-              ) : (
-                <>
-                  <Sparkles size={18} />
-                  리포트 작성하기
-                </>
-              )}
+            <Button variant="primary" onClick={() => refetch()} className="gap-2">
+              <Sparkles size={18} />
+              리포트 작성하기
             </Button>
           </div>
         )}
