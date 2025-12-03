@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Heart, Bell, BellOff, Loader2 } from 'lucide-react';
+
 import {
   useAddRemindCert,
   useGetCertById,
   useGetMyRemindCerts,
   useRemoveRemindCert,
 } from '@/entities/cert/hooks/cert.hooks';
-import { CertSchedule } from '@/entities/cert/model/cert.model';
 import { Button, Tabs, useRouter } from '@/shared';
-import { AppBar } from '@/widgets';
-import { Heart, Bell, BellOff, Loader2 } from 'lucide-react';
+import { AppBar, CheerModal } from '@/widgets';
+import { CertScheduleSection } from './cert-schedule-section';
 
 export const CertDetailPage = () => {
   const { params } = useRouter();
@@ -22,6 +23,7 @@ export const CertDetailPage = () => {
   const { mutate: removeRemindCert, isPending: isRemoving } = useRemoveRemindCert();
 
   const [selectedTab, setSelectedTab] = React.useState('schedule');
+  const [showCheer, setShowCheer] = useState(false);
 
   const isReminded = React.useMemo(() => {
     if (!remindCerts || !certId) return false;
@@ -49,7 +51,7 @@ export const CertDetailPage = () => {
     } else {
       addRemindCert(certId, {
         onSuccess: () => {
-          toast.success('리마인드에 추가되었습니다!');
+          setShowCheer(true);
         },
         onError: () => {
           toast.error('리마인드 추가에 실패했습니다.');
@@ -96,6 +98,12 @@ export const CertDetailPage = () => {
       )}
       {selectedTab === 'way' && <section className="p-4">취득방법 섹션</section>}
       {selectedTab === 'info' && <section className="p-4">정보 섹션</section>}
+      <CheerModal
+        isOpen={showCheer}
+        onClose={() => setShowCheer(false)}
+        certName={cert.name}
+      />
+
       <footer className="absolute bottom-0 left-0 w-full z-10 flex px-4 gap-3 bg-alternative py-3 pb-safe [box-shadow:0_-4px_8px_rgba(0,0,0,0.05)]">
         <Button
           size="lg"
@@ -122,89 +130,3 @@ export const CertDetailPage = () => {
 };
 
 export default CertDetailPage;
-
-interface CertScheduleSectionProps {
-  schedule?: CertSchedule[];
-  hasSchedule: boolean;
-}
-
-export const CertScheduleSection: React.FC<CertScheduleSectionProps> = ({
-  schedule,
-  hasSchedule,
-}) => {
-  const formatDate = (dateStr: string | undefined) => {
-    if (!dateStr) return '-';
-    return `${dateStr.slice(0, 4)}.${dateStr.slice(4, 6)}.${dateStr.slice(6, 8)}`;
-  };
-
-  if (!hasSchedule) {
-    return (
-      <section className="p-4">
-        <p className="text-body-m text-black-tertiary">
-          일정 데이터를 준비중입니다.
-        </p>
-      </section>
-    );
-  }
-
-  return (
-    <section className="p-4 flex flex-col gap-6 overflow-y-auto pb-[120px]">
-      {schedule && schedule.length > 0 ? (
-        schedule.map((sch) => (
-          <div
-            key={sch.round}
-            className="p-4 rounded-2xl border border-[--color-border-gray] bg-white flex flex-col gap-4"
-          >
-            <p className="font-headline-m text-[--color-primary]">{sch.round}</p>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-body-m text-[--color-navy]">필기 접수</p>
-              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
-                {formatDate(sch.writtenRegStart)} ~ {formatDate(sch.writtenRegEnd)}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-body-m text-[--color-navy]">필기 시험</p>
-              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
-                {formatDate(sch.writtenExamStart)} ~ {formatDate(sch.writtenExamEnd)}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-body-m text-[--color-navy]">필기 발표</p>
-              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
-                {formatDate(sch.writtenResultDate)}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-body-m text-[--color-navy]">실기 접수</p>
-              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
-                {formatDate(sch.practicalRegStart)} ~ {formatDate(sch.practicalRegEnd)}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-body-m text-[--color-navy]">실기 시험</p>
-              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
-                {formatDate(sch.practicalExamStart)} ~ {formatDate(sch.practicalExamEnd)}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-body-m text-[--color-navy]">실기 발표</p>
-              <div className="bg-[--color-bg-gray] rounded-xl p-3 text-body-s text-[--color-neutral]">
-                {formatDate(sch.practicalResultDate)}
-              </div>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-body-m text-black-tertiary">
-          등록된 일정이 없습니다.
-        </p>
-      )}
-    </section>
-  );
-};

@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Heart, Search } from 'lucide-react';
-import { AppBar } from '@/widgets';
 import { useGetMyRemindCerts } from '@/entities/cert/hooks/cert.hooks';
 import { Cert } from '@/entities/cert/model/cert.model';
 import { Tabs, Button, useRouter } from '@/shared';
@@ -110,9 +109,7 @@ export const MyCertPage = () => {
   );
 
   return (
-    <main className="flex flex-col min-h-screen bg-bg-secondary">
-      <AppBar variant="title" title="내 자격증" />
-
+    <main className="flex flex-col min-h-screen bg-bg-secondary pt-safe">
       <Tabs
         tabKey="my-cert"
         tabs={[

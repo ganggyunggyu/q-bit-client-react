@@ -1,57 +1,18 @@
 import { slideVariants } from '@/app/motion';
 import { useCreateOrUpdateMemo } from '@/entities/memo/hooks/memo.hooks';
-import {
-  useFindByDate,
-  useCreateTodo,
-  useFindAllTodos,
-} from '@/entities/todo/hooks/todo.hooks';
-import {
-  CreateTodoDto,
-  CreateTodoItemDto,
-  Todo,
-} from '@/entities/todo/model/todo.model';
-import { CertSelector } from '@/features/todo';
+import { useCreateTodo } from '@/entities/todo/hooks/todo.hooks';
+import { CreateTodoDto } from '@/entities/todo/model/todo.model';
+import { CertSelector, useTodoState, getLocalDateString } from '@/features/todo';
 import { Button, CheckBoxInput, Tabs } from '@/shared';
-import { AppBar, WeeklyCalendar } from '@/widgets';
+import { WeeklyCalendar, TodoCompletionStats } from '@/widgets';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import React from 'react';
 
-const createEmptyTodo = (): CreateTodoItemDto => ({
-  title: '',
-  isCompleted: false,
-});
-
-const getLocalDateString = (date: Date) =>
-  new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-    .toISOString()
-    .split('T')[0];
-
-const useTodoState = (selectedDate: Date) => {
-  const dateKey = getLocalDateString(selectedDate);
-  const { data: todoData, isLoading } = useFindByDate(dateKey);
-  const [todos, setTodos] = React.useState<CreateTodoItemDto[]>([]);
-
-  React.useEffect(() => {
-    if (!todoData || isLoading) return;
-
-    const parsedTodos = (
-      todoData.todos.length > 0 ? todoData.todos : [createEmptyTodo()]
-    ).map((t) => ({
-      title: t.title ?? '',
-      isCompleted: !!t.isCompleted,
-    }));
-
-    setTodos(parsedTodos);
-  }, [todoData, isLoading]);
-
-  return { todos, setTodos };
-};
-
 const MyStudyPage = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTab, setSelectedTab] = React.useState('planner');
-  const { todos, setTodos } = useTodoState(selectedDate);
+  const { todos, setTodos, addTodo, updateTodo } = useTodoState(selectedDate);
   const [memo, setMemo] = React.useState('');
   const [selectedCert, setSelectedCert] = React.useState<{
     certId?: string;
@@ -94,14 +55,8 @@ const MyStudyPage = () => {
     });
   };
 
-  const handleAddTodo = () => {
-    if (todos[todos.length - 1]?.title.trim() === '') return;
-    setTodos([...todos, createEmptyTodo()]);
-  };
-
   return (
-    <main className="">
-      <AppBar variant="title" title="내 스터디" />
+    <main className="pt-safe">
       <Tabs
         tabKey="study-tab"
         selected={selectedTab}
@@ -145,24 +100,10 @@ const MyStudyPage = () => {
                       key={`${idx}-${todo.isCompleted}`}
                       label="할일을 입력하세요."
                       checked={Boolean(todo.isCompleted)}
-                      onChange={() => {
-                        const updated = [...todos];
-                        updated[idx] = {
-                          ...todo,
-                          isCompleted: !todo.isCompleted,
-                        };
-                        setTodos(updated);
-                      }}
+                      onChange={() => updateTodo(idx, { isCompleted: !todo.isCompleted })}
                       inputProps={{
                         value: todo.title,
-                        onChange: (e) => {
-                          const updated = [...todos];
-                          updated[idx] = {
-                            ...todo,
-                            title: e.target.value,
-                          };
-                          setTodos(updated);
-                        },
+                        onChange: (e) => updateTodo(idx, { title: e.target.value }),
                       }}
                     />
                   ))}
@@ -171,7 +112,7 @@ const MyStudyPage = () => {
                     className="rounded-3xl rounded-t-none gap-2 bg-white py-3 h-[48px] active:bg-alternative active:border-0"
                     size="lg"
                     disabled={todos[todos.length - 1]?.title.trim() === ''}
-                    onClick={handleAddTodo}
+                    onClick={addTodo}
                   >
                     <div className="bg-divide text-normal rounded-full">
                       <Plus size={20} />
@@ -220,56 +161,3 @@ const MyStudyPage = () => {
 };
 
 export default MyStudyPage;
-
-interface TodoStats {
-  totalTodos: number;
-  completedTodos: number;
-  completionRate: number;
-}
-
-const calculateTodoStats = (todos: Todo[]): TodoStats => {
-  let totalTodos = 0;
-  let completedTodos = 0;
-
-  todos.forEach((todoEntry) => {
-    todoEntry.todos.forEach((todoItem) => {
-      totalTodos++;
-      if (todoItem.isCompleted) {
-        completedTodos++;
-      }
-    });
-  });
-
-  const completionRate =
-    totalTodos === 0 ? 0 : (completedTodos / totalTodos) * 100;
-
-  return {
-    totalTodos,
-    completedTodos,
-    completionRate: parseFloat(completionRate.toFixed(2)),
-  };
-};
-
-const TodoCompletionStats: React.FC = () => {
-  const { data: allTodos, isLoading } = useFindAllTodos({});
-
-  if (isLoading) {
-    return <p>통계 불러오는 중...</p>;
-  }
-
-  if (!allTodos || allTodos.length === 0) {
-    return <p>아직 투두 데이터가 없습니다.</p>;
-  }
-
-  const stats = calculateTodoStats(allTodos);
-
-  return (
-    <div className="bg-white p-4 rounded-2xl shadow-sm">
-      <p className="text-body-m">총 투두 개수: {stats.totalTodos}</p>
-      <p className="text-body-m">완료된 투두: {stats.completedTodos}</p>
-      <p className="font-title-sb text-primary text-lg mt-2">
-        완료율: {stats.completionRate}%
-      </p>
-    </div>
-  );
-};

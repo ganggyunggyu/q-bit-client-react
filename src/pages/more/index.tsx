@@ -16,7 +16,7 @@ import {
 import { useRouter } from '@/shared';
 import { useGetMe } from '@/entities/auth/hooks/auth.hooks';
 import { useAccountActions } from '@/features/more';
-import { AppBar, ProfileCard, MenuSection, MenuItem } from '@/widgets';
+import { ProfileCard, MenuSection, MenuItem } from '@/widgets';
 
 const MorePage = () => {
   const { navigate } = useRouter();
@@ -40,7 +40,7 @@ const MorePage = () => {
         {
           icon: <User size={20} />,
           label: '정보 수정',
-          onClick: () => console.log('정보 수정'),
+          onClick: () => navigate('/settings/profile'),
         },
       ],
     },
@@ -50,12 +50,12 @@ const MorePage = () => {
         {
           icon: <Bell size={20} />,
           label: '푸시 알림',
-          onClick: () => console.log('푸시 알림'),
+          onClick: () => navigate('/settings/notifications'),
         },
         {
           icon: <Sun size={20} />,
           label: '테마 설정',
-          onClick: () => console.log('테마 설정'),
+          onClick: () => navigate('/settings/theme'),
         },
       ],
     },
@@ -65,12 +65,12 @@ const MorePage = () => {
         {
           icon: <MessageSquare size={20} />,
           label: '문의 & 피드백',
-          onClick: () => console.log('문의 & 피드백'),
+          onClick: () => navigate('/settings/inquiry'),
         },
         {
           icon: <Info size={20} />,
           label: '공지사항',
-          onClick: () => console.log('공지사항'),
+          onClick: () => navigate('/settings/notice'),
         },
       ],
     },
@@ -80,17 +80,17 @@ const MorePage = () => {
         {
           icon: <FileText size={20} />,
           label: '이용약관',
-          onClick: () => console.log('이용약관'),
+          onClick: () => navigate('/settings/terms'),
         },
         {
           icon: <Shield size={20} />,
           label: '개인정보처리방침',
-          onClick: () => console.log('개인정보처리방침'),
+          onClick: () => navigate('/settings/privacy'),
         },
         {
           icon: <Code size={20} />,
           label: '오픈소스 라이선스',
-          onClick: () => console.log('오픈소스 라이선스'),
+          onClick: () => navigate('/settings/licenses'),
         },
       ],
     },
@@ -113,9 +113,7 @@ const MorePage = () => {
     : [];
 
   return (
-    <main className="min-h-screen bg-bg-secondary pb-(--layout-bottom-bar-height)">
-      <AppBar variant="title" title="더보기" />
-
+    <main className="min-h-screen bg-bg-secondary pb-(--layout-bottom-bar-height) pt-safe">
       <div className="flex flex-col gap-6 px-(--layout-page-px) pt-6">
         <ProfileCard
           user={user}
