@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Heart, Search } from 'lucide-react';
+import { Bell, Trophy, Search, Calendar, Award } from 'lucide-react';
 import { useGetMyRemindCerts } from '@/entities/cert/hooks/cert.hooks';
 import { Cert } from '@/entities/cert/model/cert.model';
 import { Tabs, Button, useRouter } from '@/shared';
@@ -49,16 +49,63 @@ const EmptyState = ({
   </div>
 );
 
+// 임시 합격 기록 타입 (나중에 entities로 이동)
+type PassedCert = {
+  _id: string;
+  certId: string;
+  certName: string;
+  certType: string;
+  passedDate: string;
+  score?: number;
+  grade?: string;
+};
+
+// 합격 기록 카드 컴포넌트
+const PassedCertCard: React.FC<{ cert: PassedCert }> = ({ cert }) => {
+  const passedDate = new Date(cert.passedDate);
+  const formattedDate = `${passedDate.getFullYear()}.${String(passedDate.getMonth() + 1).padStart(2, '0')}.${String(passedDate.getDate()).padStart(2, '0')}`;
+
+  return (
+    <div className="bg-bg-primary rounded-2xl p-4 shadow-sm">
+      <div className="flex items-start gap-4">
+        <div className="w-12 h-12 rounded-xl bg-green/10 flex items-center justify-center shrink-0">
+          <Trophy size={24} className="text-green" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-caption-m text-text-tertiary">{cert.certType}</p>
+          <p className="font-body-sb text-text-primary truncate">{cert.certName}</p>
+          <div className="flex items-center gap-2 mt-1">
+            <Calendar size={14} className="text-text-tertiary" />
+            <span className="font-caption-m text-text-tertiary">{formattedDate} 취득</span>
+          </div>
+        </div>
+        {cert.score && (
+          <div className="text-right">
+            <p className="font-headline-sb text-primary">{cert.score}점</p>
+            {cert.grade && (
+              <p className="font-caption-m text-text-tertiary">{cert.grade}</p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const MyCertPage = () => {
   const { navigate } = useRouter();
-  const [selectedTab, setSelectedTab] = React.useState<'remind' | 'bookmark'>(
+  const [selectedTab, setSelectedTab] = React.useState<'remind' | 'passed'>(
     'remind',
   );
 
   const { data: remindCerts, isLoading: isRemindCertsLoading } =
     useGetMyRemindCerts();
 
-  const handleTabClick = (tab: 'remind' | 'bookmark') => {
+  // TODO: 실제 API 연동 필요
+  const passedCerts: PassedCert[] = [];
+  const isPassedCertsLoading = false;
+
+  const handleTabClick = (tab: 'remind' | 'passed') => {
     setSelectedTab(tab);
   };
 
@@ -69,7 +116,7 @@ export const MyCertPage = () => {
   const renderRemindContent = () => {
     if (isRemindCertsLoading) {
       return (
-        <div className="flex flex-col gap-3 px-4 py-4">
+        <div className="flex flex-col gap-3 p-4">
           {[1, 2, 3].map((i) => (
             <CertCardSkeleton key={i} />
           ))}
@@ -79,7 +126,7 @@ export const MyCertPage = () => {
 
     if (remindCerts && remindCerts.length > 0) {
       return (
-        <div className="flex flex-col gap-3 px-4 py-4">
+        <div className="flex flex-col gap-3 p-4">
           {remindCerts.map((cert: Cert) => (
             <CertCard key={cert._id} cert={cert} dDay={cert.daysLeft} />
           ))}
@@ -98,29 +145,62 @@ export const MyCertPage = () => {
     );
   };
 
-  const renderBookmarkContent = () => (
-    <EmptyState
-      icon={<Heart size={28} />}
-      title="찜한 자격증이 없어요"
-      description="관심 자격증을 찜해보세요!"
-      actionLabel="자격증 찾기"
-      onAction={handleSearchClick}
-    />
-  );
+  const renderPassedContent = () => {
+    if (isPassedCertsLoading) {
+      return (
+        <div className="flex flex-col gap-3 p-4">
+          {[1, 2, 3].map((i) => (
+            <CertCardSkeleton key={i} />
+          ))}
+        </div>
+      );
+    }
+
+    if (passedCerts && passedCerts.length > 0) {
+      return (
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="font-body-sb text-text-primary">
+              총 {passedCerts.length}개 취득
+            </p>
+            <div className="flex items-center gap-1">
+              <Award size={16} className="text-primary" />
+              <span className="font-caption-sb text-primary">축하해요!</span>
+            </div>
+          </div>
+          {passedCerts.map((cert) => (
+            <PassedCertCard key={cert._id} cert={cert} />
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <EmptyState
+        icon={<Trophy size={28} />}
+        title="아직 합격 기록이 없어요"
+        description="첫 번째 합격을 기록해보세요!"
+        actionLabel="자격증 찾기"
+        onAction={handleSearchClick}
+      />
+    );
+  };
 
   return (
-    <main className="flex flex-col min-h-screen bg-bg-secondary pt-safe">
-      <Tabs
-        tabKey="my-cert"
-        tabs={[
-          { id: 'remind', label: '리마인드' },
-          { id: 'bookmark', label: '찜' },
-        ]}
-        selected={selectedTab}
-        onSelect={handleTabClick}
-      />
+    <main className="flex flex-col h-screen bg-bg-secondary pt-safe">
+      <div className="sticky top-0 z-10 bg-bg-secondary">
+        <Tabs
+          tabKey="my-cert"
+          tabs={[
+            { id: 'remind', label: '리마인드' },
+            { id: 'passed', label: '합격 기록' },
+          ]}
+          selected={selectedTab}
+          onSelect={handleTabClick}
+        />
+      </div>
 
-      <section className="flex-1 flex flex-col overflow-hidden">
+      <section className="flex-1 overflow-y-auto">
         <AnimatePresence mode="wait" initial={false}>
           {selectedTab === 'remind' ? (
             <motion.div
@@ -130,21 +210,21 @@ export const MyCertPage = () => {
               animate="animate"
               exit="exit"
               custom={1}
-              className="flex-1 flex flex-col"
+              className="min-h-full flex flex-col"
             >
               {renderRemindContent()}
             </motion.div>
           ) : (
             <motion.div
-              key="bookmark"
+              key="passed"
               variants={slideVariants}
               initial="initial"
               animate="animate"
               exit="exit"
               custom={-1}
-              className="flex-1 flex flex-col"
+              className="min-h-full flex flex-col"
             >
-              {renderBookmarkContent()}
+              {renderPassedContent()}
             </motion.div>
           )}
         </AnimatePresence>
