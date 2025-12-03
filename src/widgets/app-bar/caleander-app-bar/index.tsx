@@ -51,8 +51,8 @@ export const CaleanderAppBar: React.FC<CaleanderAppBarProps> = ({
   };
 
   return (
-    <header className="flex items-center justify-between w-full p-4 overflow-hidden h-12 bg-normal pt-15">
-      <div className="relative h-6 w-16 overflow-hidden">
+    <header className="flex items-center justify-between w-full px-5 py-4 overflow-hidden min-h-[56px] bg-transparent">
+      <div className="relative h-7 w-20 overflow-hidden">
         <AnimatePresence custom={yearDirection} mode="wait">
           <motion.div
             key={`year-${year}`}
@@ -64,12 +64,12 @@ export const CaleanderAppBar: React.FC<CaleanderAppBarProps> = ({
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="w-full"
           >
-            <p className="font-title-sb text-black-alternative/50">{year}년</p>
+            <p className="font-title-sb text-text-tertiary">{year}년</p>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="relative h-6 w-12 overflow-hidden">
+      <div className="relative h-7 w-14 overflow-hidden">
         <AnimatePresence custom={monthDirection} mode="wait">
           <motion.div
             key={`month-${month}`}
@@ -81,7 +81,7 @@ export const CaleanderAppBar: React.FC<CaleanderAppBarProps> = ({
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="w-full"
           >
-            <p className="font-title-sb">{month}월</p>
+            <p className="font-title-sb text-text-primary">{month}월</p>
           </motion.div>
         </AnimatePresence>
       </div>

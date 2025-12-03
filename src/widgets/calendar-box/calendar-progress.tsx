@@ -5,14 +5,14 @@ type CalendarProgressProps = {
   percent: number;
 };
 
-export const CalendarProgress: React.FC<CalendarProgressProps> = ({
+export const CalendarProgress: React.FC<CalendarProgressProps> = React.memo(({
   percent,
 }) => {
   const radius = 12;
   const circumference = 2 * Math.PI * radius;
   const strokeWidth = 7;
 
-  const percentSpring = useSpring(0, {
+  const percentSpring = useSpring(percent, {
     stiffness: 120,
     damping: 50,
   });
@@ -60,4 +60,4 @@ export const CalendarProgress: React.FC<CalendarProgressProps> = ({
       />
     </svg>
   );
-};
+});

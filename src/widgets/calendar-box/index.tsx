@@ -14,6 +14,33 @@ import { Todo } from '@/entities/todo/model/todo.model';
 import { UI_TIMING } from '@/shared/constants/ui';
 import { CalendarProgress } from './calendar-progress';
 
+type TileContentProps = {
+  dateStr: string;
+  percentage: number | null;
+  isExamDay: boolean;
+};
+
+const TileContent = React.memo<TileContentProps>(
+  ({ percentage, isExamDay }) => {
+    return (
+      <>
+        {percentage !== null && (
+          <div className="absolute top-1/2 -translate-y-1/2">
+            <CalendarProgress percent={percentage} />
+          </div>
+        )}
+        {isExamDay && (
+          <div className="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1" />
+        )}
+      </>
+    );
+  },
+  (prev, next) =>
+    prev.dateStr === next.dateStr &&
+    prev.percentage === next.percentage &&
+    prev.isExamDay === next.isExamDay,
+);
+
 const getMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
@@ -167,32 +194,20 @@ export const CalendarBox = () => {
               });
               const isExamDay = examDates.has(dateStr);
 
-              const content = [];
+              const percentage =
+                matchedTodo && matchedTodo.todos.length > 0
+                  ? calculateCompletionPercentage(matchedTodo.todos)
+                  : null;
 
-              if (matchedTodo && matchedTodo.todos.length > 0) {
-                const percentage = calculateCompletionPercentage(
-                  matchedTodo.todos,
-                );
-                content.push(
-                  <div
-                    key="progress"
-                    className="absolute top-1/2 -translate-y-1/2"
-                  >
-                    <CalendarProgress percent={percentage} />
-                  </div>,
-                );
-              }
+              if (percentage === null && !isExamDay) return null;
 
-              if (isExamDay) {
-                content.push(
-                  <div
-                    key="exam-dot"
-                    className="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"
-                  ></div>,
-                );
-              }
-
-              return content.length > 0 ? <>{content}</> : null;
+              return (
+                <TileContent
+                  dateStr={dateStr}
+                  percentage={percentage}
+                  isExamDay={isExamDay as boolean}
+                />
+              );
             }}
           />
         </motion.div>

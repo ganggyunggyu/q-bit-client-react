@@ -9,7 +9,7 @@ import {
 import { CertSelector } from '@/features/todo';
 import { BottomSheet, Button, CheckBoxInput, MainLoading } from '@/shared';
 import { formatDate } from '@/shared/util';
-import { CalendarBox } from '@/widgets';
+import { VerticalCalendar } from '@/widgets';
 import { Plus } from 'lucide-react';
 import React from 'react';
 
@@ -108,8 +108,8 @@ const Calendar = () => {
   }
 
   return (
-    <main className="flex flex-col">
-      <CalendarBox />
+    <main className="h-screen flex flex-col">
+      <VerticalCalendar />
 
       <BottomSheet
         isBottomSheet={isCalendarBottomSheetOpen}
