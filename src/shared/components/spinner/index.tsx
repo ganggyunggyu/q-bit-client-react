@@ -1,28 +1,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import Lottie from 'lottie-react';
 import { Sparkles, Brain, Zap } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
+import mainSceneJson from '@/assets/lottie/MainScene.json';
 
 interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
+const sizeConfig = {
+  sm: 24,
+  md: 40,
+  lg: 64,
+};
+
 export const Spinner: React.FC<SpinnerProps> = ({ size = 'md', className }) => {
-  const sizeMap = {
-    sm: 'w-4 h-4 border-2',
-    md: 'w-6 h-6 border-2',
-    lg: 'w-10 h-10 border-3',
-  };
+  const dimension = sizeConfig[size];
 
   return (
-    <div
-      className={cn(
-        'rounded-full border-primary border-t-transparent animate-spin',
-        sizeMap[size],
-        className,
-      )}
-    />
+    <div className={cn(className)} style={{ width: dimension, height: dimension }}>
+      <Lottie animationData={mainSceneJson} loop />
+    </div>
   );
 };
 
