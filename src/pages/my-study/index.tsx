@@ -148,13 +148,12 @@ const MyStudyPage = () => {
             <motion.div
               key="stats"
               variants={slideVariants}
-              className="min-h-full p-4 flex flex-col gap-4"
+              className="p-4 space-y-4"
               initial="initial"
               animate="animate"
               exit="exit"
               custom={-1}
             >
-              <h2 className="font-headline-m">투두 통계</h2>
               <TodoCompletionStats />
 
               <button
