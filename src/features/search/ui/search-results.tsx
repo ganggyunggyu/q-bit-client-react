@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, Clock, SearchX, Sparkles } from 'lucide-react';
 import { useSearchCertsByKeyword } from '@/entities/cert/hooks/cert.hooks';
 import { CertCard } from '@/features';
-import { MainLoading } from '@/shared';
+import { Spinner } from '@/shared';
 import { useSearchStore } from '../model/search.store';
 import { cn } from '@/shared/lib';
 
@@ -198,7 +198,7 @@ export const SearchResults: React.FC = () => {
       {/* 로딩 */}
       {showLoading && (
         <div className="flex items-center justify-center py-20">
-          <MainLoading />
+          <Spinner size="lg" />
         </div>
       )}
 

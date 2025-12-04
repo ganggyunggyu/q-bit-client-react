@@ -7,7 +7,7 @@ import {
   CreateTodoItemDto,
 } from '@/entities/todo/model/todo.model';
 import { CertSelector } from '@/features/todo';
-import { BottomSheet, Button, CheckBoxInput, MainLoading } from '@/shared';
+import { BottomSheet, Button, CheckBoxInput, Spinner } from '@/shared';
 import { formatDate } from '@/shared/util';
 import { VerticalCalendar } from '@/widgets';
 import { Plus } from 'lucide-react';
@@ -102,7 +102,7 @@ const Calendar = () => {
   if (isTodoLoading) {
     return (
       <main className="h-screen flex items-center justify-center">
-        <MainLoading />
+        <Spinner size="lg" />
       </main>
     );
   }

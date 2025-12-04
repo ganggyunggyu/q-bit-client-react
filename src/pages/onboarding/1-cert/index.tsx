@@ -5,7 +5,7 @@ import React from 'react';
 import { useSearchParams } from 'react-router';
 import { useSearchCertsByKeyword } from '@/entities/cert/hooks/cert.hooks';
 import { Cert } from '@/entities/cert/model/cert.model'; // 추가
-import { MainLoading } from '@/shared'; // 로딩 스피너를 위해 추가
+import { Spinner } from '@/shared';
 
 const Step1Cert = () => {
   const { navigate } = useRouter();
@@ -65,7 +65,11 @@ const Step1Cert = () => {
           />
         </section>
 
-        {isSearching && <MainLoading />} {/* 로딩 스피너 */}
+        {isSearching && (
+          <div className="flex justify-center py-4">
+            <Spinner size="md" />
+          </div>
+        )}
 
         {searchQuery && !isSearching && searchResults && searchResults.length > 0 && (
           <section className="mb-4 max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-2">

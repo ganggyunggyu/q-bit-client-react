@@ -1,7 +1,7 @@
 import { lazy, Suspense, JSX } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import { MainLoading } from '@/shared';
+import { Spinner } from '@/shared';
 import { ProtectedRoute } from '@/app/provider/protected-route';
 
 import MainPage from './main';
@@ -95,7 +95,7 @@ export const Routing = () => {
             <Suspense
               fallback={
                 <div className="h-screen flex items-center justify-center">
-                  <MainLoading />
+                  <Spinner size="lg" />
                 </div>
               }
             >

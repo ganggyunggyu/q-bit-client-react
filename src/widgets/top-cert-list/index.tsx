@@ -1,5 +1,5 @@
 import { useGetPopularCerts } from '@/entities';
-import { cn, useRouter } from '@/shared';
+import { cn, useRouter, Spinner } from '@/shared';
 import React from 'react';
 
 interface TopCertListProps {
@@ -31,7 +31,16 @@ export const TopCertList: React.FC<TopCertListProps> = ({
     return () => clearInterval(timer);
   }, [count, interval]);
 
-  if (isLoading) return <div>로딩 중이야... 이딴 거 보여줘야 하냐</div>;
+  if (isLoading) {
+    return (
+      <section className="flex flex-col gap-3 rounded-t-2xl">
+        <div className="font-headline-m">{title}</div>
+        <div className="flex justify-center py-8">
+          <Spinner size="lg" />
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="flex flex-col gap-3 rounded-t-2xl">
       <div className="font-headline-m">{title}</div>

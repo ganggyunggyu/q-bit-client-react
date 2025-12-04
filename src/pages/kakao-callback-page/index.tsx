@@ -1,4 +1,4 @@
-import { MainLoading } from '@/shared';
+import { Spinner } from '@/shared';
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const KakaoCallbackPage = () => {
 
   return (
     <main className="h-screen flex items-center justify-center">
-      <MainLoading />
+      <Spinner size="lg" />
     </main>
   );
 };
