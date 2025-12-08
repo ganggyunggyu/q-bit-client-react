@@ -1,60 +1,50 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Drawer } from 'vaul';
 
 type BottomSheetProps = {
   isBottomSheet: boolean;
   setIsBottomSheet: (isBottomSheet: boolean) => void;
+  snapPoints?: (number | string)[];
+  activeSnapPoint?: number | string | null;
+  setActiveSnapPoint?: (snapPoint: number | string | null) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 /**
- * 화면 하단에서 슬라이드 형태로 나타나는 바텀시트 컴포넌트입니다.
+ * 드래그 가능한 바텀시트 컴포넌트 (Vaul 기반)
  *
- * @param isBottomSheet 바텀시트를 표시할지 여부 (`true`면 열림)
- * @param setIsBottomSheet 바텀시트 열림/닫힘 상태를 제어하는 setter 함수
+ * @param isBottomSheet 바텀시트를 표시할지 여부
+ * @param setIsBottomSheet 바텀시트 열림/닫힘 상태를 제어하는 setter
+ * @param snapPoints 스냅 포인트 배열 (예: [0.5, 1])
  * @param children 바텀시트 내부에 보여줄 콘텐츠
  */
 export const BottomSheet: React.FC<BottomSheetProps> = ({
   isBottomSheet,
   setIsBottomSheet,
+  snapPoints,
+  activeSnapPoint,
+  setActiveSnapPoint,
   children,
 }) => {
-  if (typeof window === 'undefined') return null;
+  return (
+    <Drawer.Root
+      open={isBottomSheet}
+      onOpenChange={setIsBottomSheet}
+      snapPoints={snapPoints}
+      activeSnapPoint={activeSnapPoint}
+      setActiveSnapPoint={setActiveSnapPoint}
+    >
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-2xl bg-bg-primary outline-none">
+          {/* 드래그 핸들 */}
+          <div className="mx-auto mt-4 mb-2 h-1.5 w-12 shrink-0 rounded-full bg-text-tertiary/30" />
 
-  return createPortal(
-    <AnimatePresence>
-      {isBottomSheet && (
-        <main className="fixed inset-0 z-50 flex items-end justify-center">
-          {/* 바텀시트의 배경입니다 */}
-          <motion.div
-            className="absolute inset-0 bg-black/30"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setIsBottomSheet(false)}
-          />
-
-          {/* 바텀시트 본체입니다 */}
-          <motion.div
-            className="relative w-full max-w-md bg-alternative rounded-t-2xl p-6 shadow-xl"
-            initial={{ y: '100%', opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '100%', opacity: 0 }}
-            transition={{ type: 'tween', duration: 0.3 }}
-          >
-            <header className="flex justify-center items-center mb-4">
-              <button
-                className="h-[5px] w-1/2 bg-black-alternative rounded-full"
-                onClick={() => setIsBottomSheet(false)}
-              ></button>
-            </header>
-
+          {/* 컨텐츠 */}
+          <div className="flex-1 overflow-y-auto p-6 pt-2">
             {children}
-          </motion.div>
-        </main>
-      )}
-    </AnimatePresence>,
-    document.body,
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 };
