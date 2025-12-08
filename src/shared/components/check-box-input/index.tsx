@@ -27,7 +27,7 @@ export const CheckBoxInput: React.FC<CheckBoxProps> = ({
   };
 
   return (
-    <figure className="relative flex items-center space-x-3 cursor-pointer select-none py-3 px-2 ">
+    <figure className="relative flex items-center space-x-3 cursor-pointer select-none py-3 px-4">
       <button
         onClick={toggleCheck}
         className="w-6 h-6 flex items-center justify-center border-1 border-divide rounded-full z-10"
