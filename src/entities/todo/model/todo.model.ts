@@ -48,3 +48,32 @@ export interface Todo {
   createdAt: string;
   updatedAt: string;
 }
+
+// 연간 투두 요약
+export interface DailyTodoSummary {
+  date: string;
+  totalCount: number;
+  completedCount: number;
+  percentage: number;
+}
+
+export interface YearlyStats {
+  totalDays: number;
+  totalTodos: number;
+  completedTodos: number;
+  averageRate: number;
+}
+
+export interface YearlyTodoResponse {
+  year: number;
+  data: DailyTodoSummary[];
+  stats: YearlyStats;
+}
+
+// 스트릭
+export interface StreakResponse {
+  currentStreak: number;
+  longestStreak: number;
+  lastActiveDate: string;
+  streakStartDate: string;
+}
