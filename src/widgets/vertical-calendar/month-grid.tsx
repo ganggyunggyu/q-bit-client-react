@@ -1,6 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { motion, useSpring, useTransform } from 'framer-motion';
+import { LayoutGrid } from 'lucide-react';
 
 type DayData = {
   percentage: number | null;
@@ -72,17 +73,47 @@ type MonthGridProps = {
   selectedDate: Date;
   onDateSelect: (date: Date) => void;
   getDayData?: (dateStr: string) => DayData | null;
+  onYearViewToggle?: () => void;
+  showYearViewButton?: boolean;
 };
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-export const MonthGrid: React.FC<MonthGridProps> = React.memo(({
-  year,
-  month,
-  selectedDate,
-  onDateSelect,
-  getDayData,
-}) => {
+// 날짜가 특정 월에 속하는지 확인
+const isDateInMonth = (date: Date, year: number, month: number) =>
+  date.getFullYear() === year && date.getMonth() === month;
+
+// custom comparison function - 해당 월에 영향 있을 때만 재렌더링
+const arePropsEqual = (prev: MonthGridProps, next: MonthGridProps) => {
+  // year, month 변경 시 재렌더링
+  if (prev.year !== next.year || prev.month !== next.month) return false;
+
+  // showYearViewButton 변경 시 재렌더링
+  if (prev.showYearViewButton !== next.showYearViewButton) return false;
+
+  // selectedDate가 이 월에 속하거나 속했으면 재렌더링
+  const prevInMonth = isDateInMonth(prev.selectedDate, prev.year, prev.month);
+  const nextInMonth = isDateInMonth(next.selectedDate, next.year, next.month);
+  if (prevInMonth || nextInMonth) {
+    // 같은 날짜 선택이면 스킵
+    if (prev.selectedDate.getTime() === next.selectedDate.getTime()) return true;
+    return false;
+  }
+
+  // 그 외에는 재렌더링 안함
+  return true;
+};
+
+export const MonthGrid: React.FC<MonthGridProps> = React.memo(
+  ({
+    year,
+    month,
+    selectedDate,
+    onDateSelect,
+    getDayData,
+    onYearViewToggle,
+    showYearViewButton = false,
+  }) => {
   const firstDay = dayjs(`${year}-${month + 1}-01`);
   const daysInMonth = firstDay.daysInMonth();
   const startDayOfWeek = firstDay.day();
@@ -122,10 +153,19 @@ export const MonthGrid: React.FC<MonthGridProps> = React.memo(({
   return (
     <div className="px-4">
       {/* 월 헤더 */}
-      <div className="sticky top-0 z-10 bg-bg-secondary py-3">
+      <div className="sticky top-0 z-10 bg-bg-secondary py-3 flex items-center justify-between">
         <h2 className="font-title-sb text-text-primary">
           {year}년 {month + 1}월
         </h2>
+        {showYearViewButton && onYearViewToggle && (
+          <button
+            onClick={onYearViewToggle}
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-bg-tertiary active:scale-95 transition-all"
+            aria-label="연간 보기"
+          >
+            <LayoutGrid size={20} className="text-text-secondary" />
+          </button>
+        )}
       </div>
 
       {/* 요일 헤더 */}
@@ -195,6 +235,6 @@ export const MonthGrid: React.FC<MonthGridProps> = React.memo(({
       </div>
     </div>
   );
-});
+}, arePropsEqual);
 
 MonthGrid.displayName = 'MonthGrid';

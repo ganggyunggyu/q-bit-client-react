@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { MonthGrid } from './month-grid';
+import { YearCalendar } from './year-calendar';
 import { useCalendarStore, useUiStore } from '@/app/store';
 import { useGetMonthTodos } from '@/entities/todo/hooks/todo.hooks';
 import { useGetMyRemindCerts } from '@/entities';
@@ -29,7 +30,7 @@ const generateMonths = (centerDate: Date, range: number): MonthData[] => {
   return months;
 };
 
-export const VerticalCalendar: React.FC = () => {
+export const VerticalCalendar: React.FC = React.memo(() => {
   const { selectedDate, setSelectedDate } = useCalendarStore();
   const { setIsCalendarBottomSheetOpen } = useUiStore();
 
@@ -40,6 +41,12 @@ export const VerticalCalendar: React.FC = () => {
   );
   const [showTodayButton, setShowTodayButton] = React.useState(false);
   const [visibleMonth, setVisibleMonth] = React.useState<string>('');
+  const [showYearView, setShowYearView] = React.useState(false);
+  const [yearViewYear, setYearViewYear] = React.useState(dayjs().year());
+
+  // 핀치 제스처 상태
+  const [pinchScale, setPinchScale] = React.useState(1);
+  const lastTouchDistance = React.useRef<number | null>(null);
 
   const today = dayjs();
   const currentMonthKey = `${today.year()}-${today.month()}`;
@@ -90,9 +97,41 @@ export const VerticalCalendar: React.FC = () => {
     if (currentMonthRef.current && scrollContainerRef.current) {
       const container = scrollContainerRef.current;
       const target = currentMonthRef.current;
-      container.scrollTop = target.offsetTop - 56; // 헤더 높이 보정
+      container.scrollTop = target.offsetTop - 56;
     }
   }, []);
+
+  // 핀치 제스처 핸들러
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const distance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      lastTouchDistance.current = distance;
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && lastTouchDistance.current !== null) {
+      const distance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const scale = distance / lastTouchDistance.current;
+      setPinchScale(Math.max(0.5, Math.min(1.5, scale)));
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (pinchScale < 0.8) {
+      // 핀치 아웃 (줌아웃) → 년뷰로 전환
+      setYearViewYear(visibleYear);
+      setShowYearView(true);
+    }
+    setPinchScale(1);
+    lastTouchDistance.current = null;
+  };
 
   // 스크롤 이벤트 핸들러
   const handleScroll = React.useCallback(() => {
@@ -141,7 +180,7 @@ export const VerticalCalendar: React.FC = () => {
         // 스크롤 위치 보정
         requestAnimationFrame(() => {
           if (container) {
-            container.scrollTop += 2000; // 대략적인 6개월 높이
+            container.scrollTop += 2000;
           }
         });
 
@@ -182,18 +221,49 @@ export const VerticalCalendar: React.FC = () => {
     setIsCalendarBottomSheetOpen(true);
   };
 
+  // 년뷰 토글
+  const handleYearViewToggle = () => {
+    setYearViewYear(visibleYear);
+    setShowYearView(true);
+  };
+
+  // 월 선택 (년뷰에서)
+  const handleMonthSelect = (year: number, month: number) => {
+    setShowYearView(false);
+    // 해당 월로 스크롤
+    setTimeout(() => {
+      const targetKey = `${year}-${month}`;
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const targetElement = container.querySelector(`[data-month-key="${targetKey}"]`);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
   return (
     <div className="relative h-full flex flex-col bg-bg-secondary">
       {/* 스크롤 가능한 캘린더 영역 */}
-      <div
+      <motion.div
         ref={scrollContainerRef}
         onScroll={handleScroll}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         className="flex-1 overflow-y-auto scroll-smooth"
         style={{ scrollBehavior: 'auto' }}
+        animate={{
+          scale: pinchScale < 1 ? pinchScale : 1,
+          opacity: pinchScale < 0.9 ? 0.7 : 1,
+        }}
+        transition={{ duration: 0.1 }}
       >
         <div className="pt-safe">
-          {months.map((monthData) => {
+          {months.map((monthData, idx) => {
             const isCurrentMonth = monthData.key === currentMonthKey;
+            const isFirstVisible = idx === 0 || monthData.key === visibleMonth;
 
             return (
               <div
@@ -208,30 +278,47 @@ export const VerticalCalendar: React.FC = () => {
                   selectedDate={selectedDate}
                   onDateSelect={handleDateSelect}
                   getDayData={getDayData}
+                  onYearViewToggle={handleYearViewToggle}
+                  showYearViewButton={isFirstVisible || monthData.key === visibleMonth}
                 />
               </div>
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* 오늘로 이동 버튼 */}
       <AnimatePresence>
-        {showTodayButton && (
+        {showTodayButton && !showYearView && (
           <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             onClick={scrollToToday}
-            className="absolute bottom-24 right-4 px-4 py-2.5 bg-primary text-white rounded-full shadow-lg flex items-center gap-2 font-body-sb active:scale-95 transition-transform"
+            className="absolute bottom-24 right-4 z-20 px-4 py-2.5 bg-primary text-white rounded-full shadow-lg flex items-center gap-2 font-body-sb active:scale-95 transition-transform"
           >
             <ChevronUp size={18} />
             오늘
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* 년뷰 오버레이 */}
+      <AnimatePresence>
+        {showYearView && (
+          <YearCalendar
+            year={yearViewYear}
+            onMonthSelect={handleMonthSelect}
+            onClose={() => setShowYearView(false)}
+            getDayData={getDayData}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
-};
+});
+
+VerticalCalendar.displayName = 'VerticalCalendar';
 
 export { MonthGrid } from './month-grid';
+export { YearCalendar } from './year-calendar';
