@@ -5,6 +5,8 @@ import {
   UpdateTodoDto,
   UpdateTodoCompletionDto,
   Todo,
+  YearlyTodoResponse,
+  StreakResponse,
 } from '../model/todo.model';
 
 export const todoApi = {
@@ -63,6 +65,16 @@ export const todoApi = {
     const response = await axios.get('/todo/month', {
       params: { year, month },
     });
+    return response.data;
+  },
+
+  getYearlyTodos: async (year: number): Promise<YearlyTodoResponse> => {
+    const response = await axios.get(`/todo/yearly/${year}`);
+    return response.data;
+  },
+
+  getStreak: async (): Promise<StreakResponse> => {
+    const response = await axios.get('/todo/streak');
     return response.data;
   },
 };

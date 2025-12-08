@@ -8,6 +8,8 @@ import {
   UpdateTodoDto,
   UpdateTodoCompletionDto,
   Todo,
+  YearlyTodoResponse,
+  StreakResponse,
 } from '../model/todo.model';
 
 export const todoKeys = {
@@ -15,11 +17,13 @@ export const todoKeys = {
   byDate: (date: string) => ['todoByDate', date] as const,
   week: (sunday: string) => ['weekTodos', sunday] as const,
   month: (year: number, month: number) => ['monthTodos', year, month] as const,
+  yearly: (year: number) => ['yearlyTodos', year] as const,
+  streak: ['streak'] as const,
   exists: (date: string) => ['todoExists', date] as const,
   detail: (id: string) => ['todo', id] as const,
 };
 
-const TODO_QUERY_KEYS = ['todos', 'todoByDate', 'weekTodos', 'monthTodos', 'todoExists'] as const;
+const TODO_QUERY_KEYS = ['todos', 'todoByDate', 'weekTodos', 'monthTodos', 'yearlyTodos', 'streak', 'todoExists'] as const;
 
 const invalidateAllTodoQueries = (queryClient: QueryClient) => {
   TODO_QUERY_KEYS.forEach((key) => {
@@ -114,5 +118,22 @@ export const useGetMonthTodos = (year: number, month: number) => {
     queryKey: ['monthTodos', year, month],
     queryFn: () => todoApi.getMonthTodos(year, month),
     enabled: !!year && !!month,
+  });
+};
+
+// 연간 투두 요약 조회 훅
+export const useGetYearlyTodos = (year: number) => {
+  return useQuery<YearlyTodoResponse>({
+    queryKey: todoKeys.yearly(year),
+    queryFn: () => todoApi.getYearlyTodos(year),
+    enabled: !!year,
+  });
+};
+
+// 스트릭 조회 훅
+export const useGetStreak = () => {
+  return useQuery<StreakResponse>({
+    queryKey: todoKeys.streak,
+    queryFn: () => todoApi.getStreak(),
   });
 };
