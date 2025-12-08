@@ -97,6 +97,10 @@ export const RecommendForm = () => {
   const isLastStep = currentStep === RECOMMEND_STEPS.length - 1;
   const isFirstStep = currentStep === 0;
 
+  if (!step) {
+    return null;
+  }
+
   const handleNext = () => {
     if (!isLastStep) {
       setCurrentStep((prev) => prev + 1);
