@@ -183,6 +183,26 @@ npm run preview
 vercel.json
 ```
 
+## 트러블슈팅
+
+실제로 겪었던 문제들을 커밋 이력 기준으로 정리했다.
+
+1. 카카오 로그인 후 콜백 처리가 이상하게 실패하는 경우가 있었다. 카카오 개발자 콘솔에 등록한 redirect URI와 클라이언트/서버 라우트가 미묘하게 달랐다.
+2. AI 자격증 추천 폼에서 특정 시점에 `TypeError: Cannot read properties of undefined`가 떴다.
+3. 초기 라우트 구성에서 모든 페이지를 한 번에 정적으로 import하고 있었다.
+
+## 원인분석
+
+1. 클라이언트 라우트는 `/auth/kakao-callback`(하이픈)으로 되어 있는데, 서버와 카카오 개발자 콘솔 설정은 `/auth/kakao/callback`(슬래시)을 쓰고 있어서 콜백 경로가 어긋났다.
+2. `RECOMMEND_STEPS[currentStep]`으로 현재 스텝 정보를 가져오는데, `currentStep`이 배열 범위를 벗어나는 시점(마지막 스텝 이후 등)에 `step`이 `undefined`가 되고, 그 값을 그대로 렌더링에 사용해서 에러가 났다.
+3. `src/pages/index.tsx`에서 `more`, `admin-components`, `my-cert`, `my-study`, `kakao-callback-page` 등 거의 모든 페이지를 정적 `import`로 불러오고 있어서, 실제로 자주 안 쓰는 페이지까지 초기 번들에 다 포함됐다.
+
+## 해결
+
+1. 클라이언트 라우트와 레이아웃 설정(`layout-provider`), 콜백 페이지의 서버 요청 URL을 전부 `/auth/kakao/callback`으로 통일해서 카카오 콘솔 설정과 맞췄다(커밋 `68bde74`).
+2. `RecommendForm`에서 `step`이 없으면 바로 `null`을 반환하도록 방어 코드를 추가해 렌더링 자체를 막았다(`src/features/ai-recommend/recommend-form.tsx`, 커밋 `b57a9b0`).
+3. `more`, `admin-components`, `my-cert`, `my-study` 등 주요 페이지들을 `React.lazy`로 전환해서 초기 번들에서 빠지고 필요할 때만 로드되도록 바꿨다(`src/pages/index.tsx`, 커밋 `68bde74`).
+
 ## 라이선스
 
 Private
