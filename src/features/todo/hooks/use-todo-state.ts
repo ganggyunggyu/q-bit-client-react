@@ -41,5 +41,5 @@ export const useTodoState = (selectedDate: Date) => {
     setTodos(updated);
   };
 
-  return { todos, setTodos, addTodo, updateTodo };
+  return { todos, setTodos, addTodo, updateTodo, isLoading };
 };

@@ -1,48 +1,14 @@
 import toast from 'react-hot-toast';
 import { useCalendarStore, useUiStore } from '@/app/store';
 import { RemainingDateLabel } from '@/entities';
-import { useCreateTodo, useFindByDate } from '@/entities/todo/hooks/todo.hooks';
-import {
-  CreateTodoDto,
-  CreateTodoItemDto,
-} from '@/entities/todo/model/todo.model';
-import { CertSelector } from '@/features/todo';
+import { useCreateTodo } from '@/entities/todo/hooks/todo.hooks';
+import { CreateTodoDto } from '@/entities/todo/model/todo.model';
+import { CertSelector, useTodoState, getLocalDateString } from '@/features/todo';
 import { BottomSheet, Button, CheckBoxInput, Spinner } from '@/shared';
 import { formatDate } from '@/shared/util';
 import { VerticalCalendar } from '@/widgets';
 import { Plus } from 'lucide-react';
 import React from 'react';
-
-const createEmptyTodo = (): CreateTodoItemDto => ({
-  title: '',
-  isCompleted: false,
-});
-
-const getLocalDateString = (date: Date) =>
-  new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-    .toISOString()
-    .split('T')[0];
-
-const useTodoState = (selectedDate: Date) => {
-  const dateKey = getLocalDateString(selectedDate);
-  const { data: todoData, isLoading } = useFindByDate(dateKey);
-  const [todos, setTodos] = React.useState<CreateTodoItemDto[]>([]);
-
-  React.useEffect(() => {
-    if (!todoData || isLoading) return;
-
-    const parsedTodos = (
-      todoData.todos.length > 0 ? todoData.todos : [createEmptyTodo()]
-    ).map((t) => ({
-      title: t.title ?? '',
-      isCompleted: !!t.isCompleted,
-    }));
-
-    setTodos(parsedTodos);
-  }, [todoData, isLoading]);
-
-  return { todos, setTodos, isLoading };
-};
 
 const Calendar = () => {
   const { isCalendarBottomSheetOpen, setIsCalendarBottomSheetOpen } =
@@ -52,6 +18,7 @@ const Calendar = () => {
   const {
     todos,
     setTodos,
+    addTodo,
     isLoading: isTodoLoading,
   } = useTodoState(selectedDate);
   const { mutate: createTodo } = useCreateTodo();
@@ -92,11 +59,6 @@ const Calendar = () => {
         setSelectedCert({});
       },
     });
-  };
-
-  const handleAddTodo = () => {
-    if (todos[todos.length - 1]?.title.trim() === '') return;
-    setTodos([...todos, createEmptyTodo()]);
   };
 
   if (isTodoLoading) {
@@ -164,7 +126,7 @@ const Calendar = () => {
               className="rounded-3xl rounded-t-none gap-2 bg-white py-3 h-[48px] active:bg-alternative active:border-0"
               size="lg"
               disabled={todos[todos.length - 1]?.title.trim() === ''}
-              onClick={handleAddTodo}
+              onClick={addTodo}
             >
               <div className="bg-divide text-normal rounded-full">
                 <Plus size={20} />

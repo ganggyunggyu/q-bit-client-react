@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { LayoutGrid } from 'lucide-react';
+import { WEEKDAYS } from './constants';
 
 type DayData = {
   percentage: number | null;
@@ -76,8 +77,6 @@ type MonthGridProps = {
   onYearViewToggle?: () => void;
   showYearViewButton?: boolean;
 };
-
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 // 날짜가 특정 월에 속하는지 확인
 const isDateInMonth = (date: Date, year: number, month: number) =>

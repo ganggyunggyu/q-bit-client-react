@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { WEEKDAYS } from './constants';
 
 type DayData = {
   percentage: number | null;
@@ -15,8 +16,6 @@ interface MiniMonthProps {
   getDayData?: (dateStr: string) => DayData | null;
   isCurrentMonth: boolean;
 }
-
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const MiniMonth: React.FC<MiniMonthProps> = React.memo(({
   year,
